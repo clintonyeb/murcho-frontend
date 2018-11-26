@@ -1,18 +1,30 @@
 const tailwindcss = require('tailwindcss')
 const purgecss = require('@fullhuman/postcss-purgecss')
+const cssnano = require('cssnano')
+const postcssImport = require('postcss-import')
 
 module.exports = {
   plugins: [
+    postcssImport,
     tailwindcss('./tailwind.js'),
-    require('autoprefixer'),
+    cssnano({
+      preset: 'default'
+    }),
     purgecss({
       content: [
-        './public/index.html',
-        './src/**/*.vue',
-        './src/**/*.js',
-        './src/*.vue',
-        './src/*.js'
+        './src/**/*.vue'
+      ],
+      extractors: [
+        {
+          extractor: class TailwindExtractor {
+            static extract (content) {
+              return content.match(/[A-z0-9-:/]+/g) || []
+            }
+          },
+          extensions: ['vue']
+        }
       ]
-    })
+    }),
+    require('autoprefixer')
   ]
 }
