@@ -31,6 +31,18 @@
   }
 }
 
+nav {
+  .nav-items {
+    a {
+      color: #B8C2CC;
+      &.router-link-active {
+        color: #606F7B;
+        border-bottom: 2px solid #6CB2EB;
+      }
+    }
+  }
+}
+
 @keyframes slide {
   from { background-position: 0 0; }
   to { background-position: -400px 0; }
@@ -71,4 +83,8 @@
 
 .dashed-underline {
   border-bottom: 1px dashed #b8c2cc;
+}
+
+.border-animated {
+  transition : all 300ms ease-in-out;
 }

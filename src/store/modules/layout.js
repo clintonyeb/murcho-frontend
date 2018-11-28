@@ -56,6 +56,13 @@ const mutations = {
     state.tags[payload.id] = payload.data.tags
   },
   SET_LOGIN_DATA (state, data) {
+    /**
+     * data: {
+        message: '',
+        type: '',
+        route: '',
+      }
+     */
     state.login.message = data.message
     state.login.type = data.type
     state.login.route = data.route

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-function validateUser () {
+function hasToken () {
   return sessionStorage.getItem('auth_token') !== null
 }
 
@@ -19,20 +19,39 @@ export default new Router({
     {
       path: '/',
       beforeEnter (to, from, next) {
-        if (!validateUser()) return next({ name: 'login' })
+        if (!hasToken()) return next({ name: 'login' })
         next()
       },
       component: () => import(/* webpackChunkName: "home" */ './pages/Home.vue'),
       children: [
         {
           path: '',
+          redirect: { name: 'overview' }
+        },
+        {
+          path: 'overview',
           name: 'overview',
           component: () => import(/* webpackChunkName: "overview" */ './views/Overview.vue')
         },
         {
-          path: 'members',
-          name: 'members',
+          path: 'people',
+          name: 'people',
           component: () => import(/* webpackChunkName: "members" */ './views/Members.vue')
+        },
+        {
+          path: 'groups',
+          name: 'groups',
+          component: () => import(/* webpackChunkName: "groups" */ './views/Members.vue')
+        },
+        {
+          path: 'events',
+          name: 'events',
+          component: () => import(/* webpackChunkName: "events" */ './views/Members.vue')
+        },
+        {
+          path: 'services',
+          name: 'services',
+          component: () => import(/* webpackChunkName: "services" */ './views/Members.vue')
         },
       ]
     }

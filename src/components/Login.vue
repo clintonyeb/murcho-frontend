@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="absolute flex items-center text-white text-sm font-bold px-4 py-3 w-full mb-4 animated tada" role="alert" v-if="shouldDisplayMessage"
-      :class="alertClass">
+      :class="alertClass" style="animation-delay: 2s;">
       <svg class="h-4 w-4 fill-current text-white mr-4" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         x="0px" y="0px" viewBox="0 0 483.537 483.537" style="enable-background:new 0 0 483.537 483.537;" xml:space="preserve"
         v-if="displayMessageType === MESSAGE_TYPES.error">
@@ -233,7 +233,7 @@
             sessionStorage.setItem('auth_token', response.auth_token)
             sessionStorage.setItem('email', email)
 
-            const route = this.reRoutePath || 'members'
+            const route = this.reRoutePath || 'overview'
             this.$router.replace({
               name: route
             })

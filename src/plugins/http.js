@@ -122,6 +122,12 @@ class Http {
   _handleHTTPError (http) {
     if (http.status >= 200 && http.status <= 300) return true
     else if (http.status === 401) {
+      // set authentication message here
+      this.$store.commit('SET_LOGIN_DATA', {
+        message: 'You have been logged out. Please login to continue.',
+        type: 'error',
+        route: router.currentRoute.name
+      })
       return router.replace({ name: 'login' })
     } else {
       store.commit('SHOW_MESSAGE', {

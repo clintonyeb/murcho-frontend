@@ -1,16 +1,20 @@
 <template>
   <div class="home">
-    <!-- <bar /> -->
+    <top-nav />
     <router-view />
-    <notify />
   </div>
 </template>
 
 <script>
+import TopNav from '@/components/TopNav'
+
   export default {
     name: 'home',
     created() {
       this.initializeApp(err => {})
+    },
+    components: {
+      TopNav
     }
   }
 
