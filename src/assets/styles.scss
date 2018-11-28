@@ -1,0 +1,74 @@
+.is-dashed {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px dashed #b8c2cc;
+  line-height: 0.1em;
+  margin: 10px 0 20px;
+
+  span {
+    background: #F8FAFC;
+    padding: 0 15px;
+  }
+}
+
+.solid-line {
+  display: inline-block;
+  border-bottom: 2px solid whitesmoke;
+  width: 80px;
+  margin-right: 15px;
+
+  &.is-active {
+    border-bottom-color: blue;
+  }
+}
+
+#login {
+  #form-section {
+    background-image: url(https://s3.ap-south-1.amazonaws.com/murch-assets/pattern.png);
+    background-repeat: repeat;
+    background-position: 0 0;
+    animation: slide 20s linear infinite;
+  }
+}
+
+@keyframes slide {
+  from { background-position: 0 0; }
+  to { background-position: -400px 0; }
+}
+
+@keyframes cover-slide {
+  from { background-position: 40px 0; }
+  to { background-position: 0 0; }
+}
+
+#login-cover {
+  animation: cover-slide 20s linear 0 1;
+}
+
+@keyframes fade {
+	0% {
+		opacity: 1;
+	}
+	25% {
+		opacity: 1;
+	}
+	75% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+.spinner {
+  animation: spinner 1.2s infinite ease-in-out both;
+}
+
+@keyframes spinner {
+  from { transform: rotate(0deg)   }
+  to   { transform: rotate(360deg) }
+}
+
+.dashed-underline {
+  border-bottom: 1px dashed #b8c2cc;
+}
