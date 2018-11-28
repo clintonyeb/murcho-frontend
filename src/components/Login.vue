@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="absolute flex items-center text-white text-sm font-bold px-4 py-3 w-full mb-4 animated tada" role="alert" v-if="shouldDisplayMessage"
-      :class="alertClass" style="animation-delay: 2s;">
+      :class="alertClass" style="animation-delay: 1s;">
       <svg class="h-4 w-4 fill-current text-white mr-4" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         x="0px" y="0px" viewBox="0 0 483.537 483.537" style="enable-background:new 0 0 483.537 483.537;" xml:space="preserve"
         v-if="displayMessageType === MESSAGE_TYPES.error">
@@ -33,7 +33,7 @@
       <div class="mt-16">
         <div class="control mb-4 mt-4 h-16">
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Email')">
-            <button class="border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12 cursor-not-allowed">
+            <button class="border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
 
               <svg class="h-6 w-6 fill-current text-grey-light" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 350 350" style="enable-background:new 0 0 50 50;"
@@ -56,7 +56,7 @@
 
         <div class="control mt-4 mb-4 h-16">
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Password')">
-            <button class="border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12 cursor-not-allowed">
+            <button class="border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
 
               <svg class="h-6 w-6 fill-current text-grey-light" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 58" style="enable-background:new 0 0 50 50;"

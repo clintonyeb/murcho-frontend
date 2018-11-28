@@ -17,7 +17,7 @@
       <div class="mt-16">
         <div class="control mb-4 mt-4 h-16">
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Email')">
-            <button class="border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12 cursor-not-allowed">
+            <button class="border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
 
               <svg class="h-6 w-6 fill-current text-grey-light" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 350 350" style="enable-background:new 0 0 50 50;"
