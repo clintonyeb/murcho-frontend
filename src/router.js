@@ -40,8 +40,20 @@ export default new Router({
         },
         {
           path: 'groups',
-          name: 'groups',
-          component: () => import(/* webpackChunkName: "groups" */ './views/Temp.vue')
+          component: () => import(/* webpackChunkName: "groups" */ './views/Groups.vue'),
+          children: [
+            {
+              path: '',
+              name: 'groups',
+              component: () => import(/* webpackChunkName: "group-list" */ './views/GroupList.vue')
+            },
+            {
+              path: ':id',
+              name: 'group-items',
+              props: true,
+              component: () => import(/* webpackChunkName: "group-items" */ './views/GroupDetail.vue')
+            }
+          ]
         },
         {
           path: 'events',
@@ -52,7 +64,7 @@ export default new Router({
           path: 'services',
           name: 'services',
           component: () => import(/* webpackChunkName: "services" */ './views/Temp.vue')
-        },
+        }
       ]
     }
   ]

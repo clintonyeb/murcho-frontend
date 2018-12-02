@@ -48,7 +48,6 @@
     },
     computed: {
       alertClass() {
-        console.log(this.alert.type, MESSAGE_TYPES.error)
         switch (this.alert.type) {
           case MESSAGE_TYPES.warning:
             return ['bg-yellow-dark']

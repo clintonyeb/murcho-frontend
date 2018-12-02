@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex align-center justify-between mt-8 flex-wrap grid-view" name="fade" is="transition-group" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
 
-    <div class="w-1/3 p-2" v-for="(person, index) in people" :key="person.id" @click="personRowClicked(person.id)">
+    <div class="w-1/3 p-1" v-for="(person, index) in people" :key="person.id" @click="personRowClicked(person.id)">
       <div class="w-full shadow-md p-6 rounded-sm cursor-pointer person-item hover:text-grey-darkest hover:bg-blue-lightest select-none"
       :class="{'bg-blue-lightest text-grey-darkest': (selectedPeople.indexOf(person.id) !== -1 || activePerson === person.id)}">
         <div class="w-full  inline-flex items-start justify-between">
@@ -28,7 +28,7 @@
               </svg>
 
               <div v-show="activePerson === person.id" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden z-10"
-                style="min-width: 200px; animation-duration: 300ms; top: 100%; right: -70%;">
+                style="min-width: 200px; animation-duration: 300ms; top: 100%; right: -100%;">
                 <a v-for="action in personActions" :key="action.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                   @click="activePerson = null; $emit('action', {action: action.value, person: person.id, index: index});">
                   <span v-html="action.icon" class="mr-2 group-hover:text-white"></span>
@@ -71,6 +71,7 @@
     smsIcon,
     fileIcon,
   } from '@/utils/icons'
+  import viewMixin from '@/mixins/views'
 
   export default {
     props: ['page', 'pagesEnded', 'people'],
@@ -142,28 +143,9 @@
         } else {
           this.selectedPeople.push(personId)
         }
-      },
-      personMoreClicked() {
-        console.log('more')
-      },
-    },
-    filters: {
-      formatDate(dateString) {
-        const monthNames = [
-          "Jan", "Feb", "Mar",
-          "Apr", "May", "Jun", "Jul",
-          "Aug", "Sep", "Oct",
-          "Nov", "Dec"
-        ];
-
-        const date = new Date(dateString)
-        const day = date.getDate();
-        const monthIndex = date.getMonth();
-        const year = date.getFullYear();
-
-        return day + ' ' + monthNames[monthIndex] + ' ' + year;
       }
-    }
+    },
+    mixins: [viewMixin]
   }
 
 </script>

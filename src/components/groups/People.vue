@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex align-center justify-between mt-8 list-view">
+  <div class="w-full flex align-center justify-between list-view">
     <table class="w-full border-separate table-auto relative" style="border-spacing: 0 .4rem;">
       <thead>
         <tr class="text-grey text-xs text-left">
@@ -11,12 +11,8 @@
           </th>
           <th class="pb-4"></th>
           <th class="pb-4">FIRST NAME</th>
-          <th class="pb-4">LAST NAME</th>
-          <th class="pb-4">EMAIL</th>
-          <th class="pb-4">PHONE</th>
-          <th class="pb-4">STATUS</th>
-          <th class="pb-4">GROUPS</th>
-          <th class="pb-4">CREATED AT</th>
+          <th class="pb-4">SECOND NAME</th>
+          <th class="pb-4">CONTACT</th>
           <th class="pb-4">
             <div class="inline-flex">
               <button class="bg-white text-grey-dark mr-1 h-6 w-6 rounded" :class="page === 1 ? '' : 'hover:bg-grey-light hover:text-white'"
@@ -48,46 +44,12 @@
               <span class="checkmark"></span>
             </label>
           </td>
-          <td class="w-6 h-6 text-right px-1 py-2" @click="people.selected = true">
+          <td class="w-6 h-6 text-right px-2 py-2 mr-4" @click="people.selected = true">
             <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.photo" class="" :size="25" />
           </td>
           <td class="px-1 py-2">{{person.first_name}}</td>
           <td class="px-1 py-2">{{person.last_name}}</td>
-          <td class="px-1 py-2">{{person.email}}</td>
-          <td class="px-1 py-2">{{person.phone_number}}</td>
-          <td class="px-1 py-2">{{person.membership_status | capitalize}}</td>
-          <td class="px-1 py-2 w-64">
-            <div class="inline-flex">
-              <div class="truncate mr-2" style="width: 18rem;">
-                <span v-for="group in person.groups.slice(0, 3)" :key="group.id" class="bg-grey-lighter font-hairline text-grey-darker mr-1 p-1 rounded w-24 truncate">
-                  {{group.name}}
-                </span>
-              </div>
-
-              <on-click-outside :do="() => activeHiddenGroup = null" v-if="(hidden = person.groups.slice(3)).length">
-                <div class="inline-flex items-center justify-center cursor-pointer relative">
-
-                  <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-4 p-1 cursor-pointer bg-grey-lighter font-hairline text-grey-darker rounded"
-                    role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" @click.stop="activeHiddenGroup = person.id">
-                    <path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"
-                      style="padding: .5rem;"></path>
-                  </svg>
-
-                  <div v-show="activeHiddenGroup === person.id" class="inline-flex mt-px shadow-md rounded bg-white border absolute animated zoomIn flex flex-col z-10"
-                    style="min-width: 250px; animation-duration: 300ms; top: 100%; right: -70%;">
-                    <div class="inline-flex flex-wrap">
-                      <span v-for="group in hidden" :key="group.id" class="h-6 text-sm bg-grey-lighter font-hairline text-grey-darker m-2 p-1 rounded whitespace-no-wrap">
-                      {{group.name}}
-                    </span>
-                    </div>
-                  </div>
-
-                </div>
-              </on-click-outside>
-
-            </div>
-          </td>
-          <td class="px-1 py-2">{{person.created_at | formatDate}}</td>
+          <td class="px-1 py-2">{{person.phone_number || person.email}}</td>
           <td class="w-1 text-center" @click.stop="activePerson = person.id">
 
             <on-click-outside :do="() => activePerson = null">
@@ -134,7 +96,7 @@
 
   export default {
     props: ['page', 'pagesEnded', 'people'],
-    name: 'ListView',
+    name: 'GridView',
     data() {
       return {
         selectedPeople: [],
@@ -180,20 +142,13 @@
             icon: trashIcon
           }
         ],
-        activePerson: null,
-        activeHiddenGroup: null,
+        activePerson: null
       }
     },
     components: {
       Avatar
     },
     methods: {
-      fullyVisible(el) {
-        const container = el.parent.width
-        const rightPos = el.style.right
-        console.log(container, rightPos)
-        return true
-      },
       selectAll() {
         const el = this.$refs['select-all']
         const state = el.checked

@@ -15,6 +15,9 @@ export default {
     OnClickOutside
   },
   methods: {
+    setPageTitle (title) {
+      document.title = `${title} | Murch`
+    },
     getPersonName (firstName, lastName) {
       return firstName + ' ' + lastName
     },
@@ -131,12 +134,14 @@ export default {
       }
     },
     encodeId (id) {
+      if (!id) return ''
       if (!hash) {
         hash = new Hashids(this.salt)
       }
       return hash.encode(id)
     },
     decodeHash (h) {
+      if (!h) return ''
       if (!hash) {
         hash = new Hashids(this.salt)
       }
