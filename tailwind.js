@@ -100,7 +100,6 @@ module.exports = {
   fonts: {
     'sans': [
       'Roboto',
-      'Lato',
       'system-ui',
       'BlinkMacSystemFont',
       '-apple-system',
@@ -115,6 +114,7 @@ module.exports = {
       'sans-serif'
     ],
     'serif': [
+      'Lato',
       'Constantia',
       'Lucida Bright',
       'Lucidabright',

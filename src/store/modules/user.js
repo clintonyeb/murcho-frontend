@@ -1,34 +1,25 @@
 const state = {
   userId: '',
-  first_name: '',
-  last_name: '',
-  joined: '',
-  thumbnail: '',
-  rel_status: '',
-  origin: '',
-  address: '',
+  full_name: '',
+  photo: '',
   phone_number: '',
   email: '',
-  gender: '',
-  user_type: '',
+  access_level: '',
   authToken: '',
-  salt: ''
+  salt: '',
+  church_id: ''
 }
 
 const mutations = {
   SET_USER (state, payload) {
     state.userId = payload.id
-    state.first_name = payload.first_name
-    state.last_name = payload.last_name
-    state.joined = payload.joined
-    state.thumbnail = payload.thumbnail
-    state.rel_status = payload.rel_status
-    state.address = payload.address
-    state.phone_number = payload.phone_number
+    state.full_name = payload.full_name
+    state.photo = payload.photo
     state.email = payload.email
-    state.gender = payload.gender
-    state.user_type = payload.user_type
+    state.phone_number = payload.phone_number
+    state.access_level = payload.access_level
     state.salt = payload.salt
+    state.church_id = payload.church_id
   },
   SET_TOKEN (state, token) {
     state.authToken = token

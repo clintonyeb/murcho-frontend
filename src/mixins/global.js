@@ -1,5 +1,7 @@
 import store from '@/store'
 import Hashids from 'hashids'
+import OnClickOutside from '@/components/OnClickOutside'
+
 let hash = null
 
 export default {
@@ -8,6 +10,9 @@ export default {
       doneExecutingDelayedFuncs: false,
       delayedFuncs: []
     }
+  },
+  components: {
+    OnClickOutside
   },
   methods: {
     getPersonName (firstName, lastName) {
@@ -35,7 +40,7 @@ export default {
         cb(error)
       }
     },
-    setDelayedFuncs (fs) {
+    readyCallbacks (fs) {
       this.delayedFuncs = fs
       this.callDelayedFuncs(this.appReady)
     },
@@ -144,12 +149,6 @@ export default {
     },
     authToken () {
       return store.state.user.authToken
-    },
-    userId () {
-      return store.state.user.userId
-    },
-    userType () {
-      return store.state.user.user_type
     },
     salt () {
       return store.state.user.salt

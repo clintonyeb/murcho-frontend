@@ -1,5 +1,8 @@
 import router from '../router'
 import store from '../store'
+import {
+  MESSAGE_TYPES
+} from '@/utils'
 
 class Http {
   url (path) {
@@ -122,17 +125,16 @@ class Http {
   _handleHTTPError (http) {
     if (http.status >= 200 && http.status <= 300) return true
     else if (http.status === 401) {
-      // set authentication message here
-      this.$store.commit('SET_LOGIN_DATA', {
+      store.commit('SET_LOGIN_DATA', {
         message: 'You have been logged out. Please login to continue.',
-        type: 'error',
+        type: MESSAGE_TYPES.error,
         route: router.currentRoute.name
       })
       return router.replace({ name: 'login' })
     } else {
-      store.commit('SHOW_MESSAGE', {
-        message: 'Error processing request',
-        type: 'is-danger'
+      store.commit('CALL_ALERT', {
+        message: 'There was an error processing your request..',
+        type: MESSAGE_TYPES.error
       })
       return false
     }

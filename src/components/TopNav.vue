@@ -100,8 +100,6 @@
 </template>
 
 <script>
-  import OnClickOutside from '@/components/OnClickOutside'
-
   const logoutIcon =
     `
   <svg class="h-4 w-4 fill-current text-red relative group-hover:text-white" version="1.1 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -140,9 +138,6 @@
           handler: this.logout
         }, ]
       }
-    },
-    components: {
-      OnClickOutside
     },
     methods: {
       handleClickOutside() {

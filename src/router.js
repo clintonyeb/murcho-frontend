@@ -36,22 +36,22 @@ export default new Router({
         {
           path: 'people',
           name: 'people',
-          component: () => import(/* webpackChunkName: "members" */ './views/Members.vue')
+          component: () => import(/* webpackChunkName: "members" */ './views/People.vue')
         },
         {
           path: 'groups',
           name: 'groups',
-          component: () => import(/* webpackChunkName: "groups" */ './views/Members.vue')
+          component: () => import(/* webpackChunkName: "groups" */ './views/Temp.vue')
         },
         {
           path: 'events',
           name: 'events',
-          component: () => import(/* webpackChunkName: "events" */ './views/Members.vue')
+          component: () => import(/* webpackChunkName: "events" */ './views/Temp.vue')
         },
         {
           path: 'services',
           name: 'services',
-          component: () => import(/* webpackChunkName: "services" */ './views/Members.vue')
+          component: () => import(/* webpackChunkName: "services" */ './views/Temp.vue')
         },
       ]
     }

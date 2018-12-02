@@ -1,5 +1,7 @@
 <template>
-  
+  <div>
+    No Content Here
+  </div>
 </template>
 
 <script>

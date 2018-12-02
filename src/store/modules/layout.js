@@ -14,6 +14,11 @@ const state = {
     message: '',
     type: '',
     route: ''
+  },
+  alert: {
+    state: false,
+    message: '',
+    type: ''
   }
 }
 
@@ -73,6 +78,16 @@ const mutations = {
     state.login.type = ''
     state.login.route = ''
     state.login.state = false
+  },
+  CALL_ALERT (state, data) {
+    state.alert.message = data.message
+    state.alert.type = data.type
+    state.alert.state = true
+  },
+  CLEAR_ALERT (state) {
+    state.alert.message = ''
+    state.alert.type = ''
+    state.alert.state = false
   }
 }
 

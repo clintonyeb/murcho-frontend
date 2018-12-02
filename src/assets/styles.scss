@@ -1,5 +1,5 @@
 * {
-  outline:none !important;
+  outline: none !important;
 }
 
 .is-dashed {
@@ -39,6 +39,7 @@ nav {
   .nav-items {
     a {
       color: #B8C2CC;
+
       &.router-link-active {
         color: #606F7B;
         border-bottom: 2px solid #6CB2EB;
@@ -48,13 +49,23 @@ nav {
 }
 
 @keyframes slide {
-  from { background-position: 0 0; }
-  to { background-position: -400px 0; }
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: -400px 0;
+  }
 }
 
 @keyframes cover-slide {
-  from { background-position: 40px 0; }
-  to { background-position: 0 0; }
+  from {
+    background-position: 40px 0;
+  }
+
+  to {
+    background-position: 0 0;
+  }
 }
 
 #login-cover {
@@ -62,18 +73,21 @@ nav {
 }
 
 @keyframes fade {
-	0% {
-		opacity: 1;
-	}
-	25% {
-		opacity: 1;
-	}
-	75% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 0;
-	}
+  0% {
+    opacity: 1;
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 .spinner {
@@ -81,10 +95,135 @@ nav {
 }
 
 @keyframes spinner {
-  from { transform: rotate(0deg)   }
-  to   { transform: rotate(360deg) }
+  from {
+    transform: rotate(0deg)
+  }
+
+  to {
+    transform: rotate(360deg)
+  }
 }
 
 .dashed-underline {
   border-bottom: 1px dashed #b8c2cc;
+}
+
+.bg-blue-lightest-more {
+  background-color: hsl(0, 0, 97%);
+}
+
+#people {
+  .person-item {
+    transition: all 300ms linear;
+
+    &:hover {
+      box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2),
+        0 6px 20px 0 rgba(0, 0, 0, .15);
+    }
+  }
+}
+
+.list-view {
+  .checkbox {
+    &.container {
+      position: relative;
+      user-select: none;
+      cursor: pointer;
+  
+      input {
+        position: absolute;
+        opacity: 0;
+        height: 0;
+        width: 0;
+      }
+  
+      input:checked~.checkmark {
+        background-color: #6CB2EB;
+        border: 2px solid #6CB2EB;
+      }
+  
+      input:checked~.checkmark:after {
+        display: block;
+      }
+  
+      .checkmark:after {
+        left: 5px;
+        top: 1px;
+        width: 5px;
+        height: 10px;
+        border: solid #fff;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+      }
+    }
+  
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 18px;
+      width: 18px;
+      border: 2px solid #b8c2cc;
+      border-radius: 5px;
+      transition: background-color 1s cubic-bezier(.165, .84, .44, 1);
+  
+      &:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+    }
+  }
+}
+
+.grid-view {
+  .checkbox {
+    &.container {
+      position: relative;
+      user-select: none;
+      cursor: pointer;
+  
+      input {
+        position: absolute;
+        opacity: 0;
+        height: 0;
+        width: 0;
+      }
+  
+      input:checked~.checkmark {
+        background-color: #6CB2EB;
+        border: 2px solid #6CB2EB;
+      }
+  
+      input:checked~.checkmark:after {
+        display: block;
+      }
+  
+      .checkmark:after {
+        left: 5px;
+        top: 1px;
+        width: 5px;
+        height: 10px;
+        border: solid #fff;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+      }
+    }
+  
+    .checkmark {
+      position: absolute;
+      right: 0;
+      height: 18px;
+      width: 18px;
+      border: 2px solid #b8c2cc;
+      border-radius: 5px;
+      transition: background-color 1s cubic-bezier(.165, .84, .44, 1);
+  
+      &:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+    }
+  }
 }
