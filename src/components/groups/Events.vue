@@ -1,6 +1,6 @@
 <template>
   <div>
-    Events
+    Group Events
   </div>
 </template>
 

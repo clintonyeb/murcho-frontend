@@ -43,7 +43,7 @@
 
         <div class="w-full mt-4 inline-flex align-center justify-between">
           <p class="text-grey text-xs">
-            {{group.people_count || 0}} people
+            {{group.people_count}} {{pluralize('person', group.people_count)}}
           </p>
           <p class="text-grey text-xs">
             {{group.event_count || 0}} events
@@ -72,6 +72,8 @@ import viewMixin from '@/mixins/views'
     fileIcon,
   } from '@/utils/icons'
 
+  const pluralize = require('pluralize')
+
   export default {
     props: ['page', 'pagesEnded', 'groups'],
     name: 'GridView',
@@ -89,7 +91,8 @@ import viewMixin from '@/mixins/views'
             icon: trashIcon
           }
         ],
-        activeGroup: null
+        activeGroup: null,
+        pluralize: pluralize
       }
     },
     mixins: [viewMixin]

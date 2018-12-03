@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="w-1/3 h-screen">
-      <div class="mx-auto w-full">
+      <div class="mx-auto w-full m-2">
         <events />
       </div>
     </div>

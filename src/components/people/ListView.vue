@@ -68,7 +68,7 @@
                 <div class="inline-flex items-center justify-center cursor-pointer relative">
 
                   <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-4 p-1 cursor-pointer bg-grey-lighter font-hairline text-grey-darker rounded"
-                    role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" @click.stop="activeHiddenGroup = person.id">
+                    role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" @click.stop="activeHiddenGroup = activeHiddenGroup ? null : person.id">
                     <path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"
                       style="padding: .5rem;"></path>
                   </svg>

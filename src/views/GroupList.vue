@@ -85,8 +85,8 @@
                 </button>
 
                 <button class="bg-blue text-white mr-4 h-8 rounded p-3 inline-flex items-center justify-between">
-                  <span v-html="icons.plus" class="mr-2 text-white"></span>
-                  <span class="mr-2">Add Person</span>
+                  <span v-html="icons.group" class="mr-2 text-white"></span>
+                  <span class="mr-2">Add Group</span>
                 </button>
 
                 <!-- <on-click-outside :do="() => moreMenu = false">
@@ -130,7 +130,7 @@
 import GridView from '@/components/groups/GridView'
   import {
     filterIcon,
-    userPlusIcon
+    groupIcon
   } from '@/utils/icons'
 
   export default {
@@ -200,7 +200,7 @@ import GridView from '@/components/groups/GridView'
         ],
         icons: {
           filter: filterIcon,
-          plus: userPlusIcon
+          group: groupIcon
         },
       }
     },
