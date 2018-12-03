@@ -21,7 +21,7 @@
                 </svg>
 
                 <div v-show="activeGroup === group.id" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden z-10"
-                  style="min-width: 200px; animation-duration: 300ms; top: 100%; right: -100%;">
+                  style="min-width: 200px; top: 100%; right: -100%;">
                   <a v-for="action in groupActions" :key="action.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                     @click="activeGroup = null; $emit('action', {action: action.value, group: group.id, index: index});">
                     <span v-html="action.icon" class="mr-2 group-hover:text-white"></span>

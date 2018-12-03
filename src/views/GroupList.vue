@@ -34,7 +34,7 @@
                   </div>
 
                   <div v-show="orderMenu" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
-                    style="min-width: 200px; animation-duration: 300ms; top: 100%;">
+                    style="min-width: 200px; top: 100%;">
                     <a v-for="order in groupOrders" :key="order.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                       @click="setGroupOrder(order)">
                       <span class="group-hover:text-white">{{order.text}}</span>
@@ -65,7 +65,7 @@
                   </div>
 
                   <div v-show="sortMenu" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
-                    style="min-width: 200px; animation-duration: 300ms; top: 100%;">
+                    style="min-width: 200px; top: 100%;">
                     <a v-for="sort in groupSorts" :key="sort.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                       @click="setGroupSort(sort)">
                       <span class="group-hover:text-white">{{sort.text}}</span>
@@ -88,28 +88,6 @@
                   <span v-html="icons.group" class="mr-2 text-white"></span>
                   <span class="mr-2">Add Group</span>
                 </button>
-
-                <!-- <on-click-outside :do="() => moreMenu = false">
-                  <div class="inline-flex items-center justify-center cursor-pointer relative">
-
-                    <button class="bg-blue-light text-white h-8 w-8 rounded hover:bg-grey-light hover:text-white" @click="moreMenu = !moreMenu">
-                      <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-6 p-1 cursor-pointer hover:bg-grey-light rounded-full align-middle"
-                        role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"
-                          style="padding: .5rem;"></path>
-                      </svg>
-                    </button>
-
-                    <div v-show="moreMenu" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
-                      style="min-width: 200px; animation-duration: 300ms; right: 100%; top: 100%;">
-                      <a v-for="more in peopleMores" :key="more.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                        @click="setPeopleMore(more)">
-                        <span v-html="view.icon" class="mr-2 group-hover:text-white"></span>
-                        <span class="group-hover:text-white">{{more.text}}</span>
-                      </a>
-                    </div>
-                  </div>
-                </on-click-outside> -->
               </div>
             </div>
 

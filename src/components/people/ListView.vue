@@ -3,7 +3,7 @@
     <table class="w-full border-separate table-auto relative" style="border-spacing: 0 .4rem;">
       <thead>
         <tr class="text-grey text-xs text-left">
-          <th class="pb-4">
+          <th class="pb-4 pl-4">
             <label class="container checkbox">
               <input type="checkbox" @click="selectAll" ref="select-all">
               <span class="checkmark"></span>
@@ -74,7 +74,7 @@
                   </svg>
 
                   <div v-show="activeHiddenGroup === person.id" class="inline-flex mt-px shadow-md rounded bg-white border absolute animated zoomIn flex flex-col z-10"
-                    style="min-width: 250px; animation-duration: 300ms; top: 100%; right: -70%;">
+                    style="min-width: 250px; top: 100%; right: -70%;">
                     <div class="inline-flex flex-wrap">
                       <span v-for="group in hidden" :key="group.id" class="h-6 text-sm bg-grey-lighter font-hairline text-grey-darker m-2 p-1 rounded whitespace-no-wrap">
                       {{group.name}}
@@ -100,7 +100,7 @@
                 </svg>
 
                 <div v-show="activePerson === person.id" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden z-10"
-                  style="min-width: 200px; animation-duration: 300ms; top: 100%; right: -70%;">
+                  style="min-width: 200px; top: 100%; right: -70%;">
                   <a v-for="action in personActions" :key="action.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                     @click="activePerson = null; $emit('action', {action: action.value, person: person.id, index: index})">
                     <span v-html="action.icon" class="mr-2 group-hover:text-white"></span>
@@ -211,7 +211,12 @@
         }
       }
     },
-    mixins: [viewMixin]
+    mixins: [viewMixin],
+    watch: {
+      selectedPeople(val) {
+        this.$emit('selected', val.length)
+      }
+    }
   }
 
 </script>

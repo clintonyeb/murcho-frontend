@@ -62,7 +62,7 @@
                 </svg>
 
                 <div v-show="activePerson === person.id" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden z-10"
-                  style="min-width: 200px; animation-duration: 300ms; top: 100%; right: -70%;">
+                  style="min-width: 200px; top: 100%; right: -70%;">
                   <a v-for="action in personActions" :key="action.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                     @click="activePerson = null; $emit('action', {action: action.value, person: person.id, index: index})">
                     <span v-html="action.icon" class="mr-2 group-hover:text-white"></span>

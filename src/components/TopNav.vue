@@ -83,7 +83,7 @@
                 </svg>
               </div>
 
-              <div v-show="userMenu" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-r animated zoomIn flex flex-col overflow-hidden" style="min-width: 200px; animation-duration: 300ms;">
+              <div v-show="userMenu" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-r animated zoomIn flex flex-col overflow-hidden" style="min-width: 200px;">
                 <a v-for="menu in userMenuItems" :key="menu.id" class="cursor-pointer no-underline flex items-center justify-center px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light" @click="menu.handler">
                   <span v-html="menu.icon" class="mr-2 group-hover:text-white"></span>
                   <span class="group-hover:text-white">{{menu.text}}</span>

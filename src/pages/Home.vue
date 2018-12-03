@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="flex items-center text-white text-sm font-bold px-4 py-3 w-full animated slideInDown font-sans" role="alert"
-      v-if="alert.state" :class="alertClass" style="animation-duration: 1s;">
+      v-if="alert.state" :class="alertClass">
       <svg class="h-4 w-4 fill-current text-white mr-4" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         x="0px" y="0px" viewBox="0 0 483.537 483.537" style="enable-background:new 0 0 483.537 483.537;" xml:space="preserve"
         v-if="alert.type === MESSAGE_TYPES.error">

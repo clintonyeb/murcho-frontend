@@ -50,8 +50,8 @@
 </template>
 
 <script>
-  import Login from '@/components/Login'
-  import Forgotten from '@/components/Forgotten'
+  import Login from '@/components/login/Login'
+  import Forgotten from '@/components/login/Forgotten'
 
   export default {
     name: 'LoginPage',

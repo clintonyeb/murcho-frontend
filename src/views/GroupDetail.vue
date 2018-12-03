@@ -32,8 +32,7 @@
                 type="text" placeholder="Search and Add People To Group.." @input="searchPeople" v-model="search">
             </div>
 
-            <div v-show="searchedPeople.length" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-l animated zoomIn flex flex-col overflow-hidden w-full max-w-sm z-10"
-              style="animation-duration: 300ms;">
+            <div v-show="searchedPeople.length" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-l animated zoomIn flex flex-col overflow-hidden w-full max-w-sm z-10">
               <a v-for="person in searchedPeople" :key="person.id" class="cursor-pointer no-underline flex items-center px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                 @click="searchPersonClicked(person.id)">
                 <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.photo" class="mr-3" :size="40" />
