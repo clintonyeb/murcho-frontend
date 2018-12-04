@@ -86,6 +86,7 @@ export default {
       })
     },
     callDelayedFuncs (ready) {
+      if (!this.delayedFuncs.length) return false
       if (!this.doneExecutingDelayedFuncs && ready === true) {
         this.doneExecutingDelayedFuncs = true
         this.delayedFuncs.forEach(f => f())

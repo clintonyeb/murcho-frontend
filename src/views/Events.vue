@@ -7,105 +7,35 @@
           <div class="flex items-center justify-between w-full">
             <div class="flex items-baseline justify-between">
               <h3 class="text-blue-light font-medium text-2xl mr-6">
-                People
+                Calendar &amp; Events
               </h3>
-              <p class="text-grey-dark text-xs mr-6 leading-loose">
-                {{total}} Total
-              </p>
-
-              <on-click-outside :do="() => orderMenu = false">
-                <div class="inline-flex items-center justify-center cursor-pointer relative mr-4" @click="orderMenu = !orderMenu">
-                  <div class="self-end">
-                    <p class="text-grey-dark text-xs font-hairline">
-                      Sort by:
-                    </p>
-                  </div>
-                  <div class="inline-flex items-center">
-                    <p class="text-xs ml-1 font-hairline">
-                      {{order.text}}
-                    </p>
-                    <svg class="h-2 w-2 fill-current text-grey-dark ml-1 self-center" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
-                      viewBox="0 0 292.362 292.362" style="enable-background:new 0 0 292.362 292.362;" xml:space="preserve">
-                      <g>
-                        <path d="M286.935,69.377c-3.614-3.617-7.898-5.424-12.848-5.424H18.274c-4.952,0-9.233,1.807-12.85,5.424C1.807,72.998,0,77.279,0,82.228c0,4.948,1.807,9.229,5.424,12.847l127.907,127.907c3.621,3.617,7.902,5.428,12.85,5.428s9.233-1.811,12.847-5.428L286.935,95.074c3.613-3.617,5.427-7.898,5.427-12.847C292.362,77.279,290.548,72.998,286.935,69.377z" />
-                      </g>
-                    </svg>
-                  </div>
-
-                  <div v-show="orderMenu" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
-                    style="min-width: 200px; top: 100%;">
-                    <a v-for="order in peopleOrders" :key="order.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                      @click="setPeopleOrder(order)">
-                      <span class="group-hover:text-white">{{order.text}}</span>
-                    </a>
-                  </div>
-
-                </div>
-              </on-click-outside>
-
-              <on-click-outside :do="() => sortMenu = false">
-                <div class="inline-flex items-center justify-center cursor-pointer relative" @click="sortMenu = !sortMenu">
-                  <div class="self-end">
-                    <p class="text-grey-dark text-xs font-hairline">
-                      Order:
-                    </p>
-                  </div>
-                  <div class="inline-flex items-center">
-                    <p class="text-xs ml-1 font-hairline">
-                      {{sort.text}}
-                    </p>
-                    <svg class="h-2 w-2 fill-current text-grey-dark ml-1 self-center" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
-                      viewBox="0 0 292.362 292.362" style="enable-background:new 0 0 292.362 292.362;" xml:space="preserve">
-                      <g>
-                        <path d="M286.935,69.377c-3.614-3.617-7.898-5.424-12.848-5.424H18.274c-4.952,0-9.233,1.807-12.85,5.424C1.807,72.998,0,77.279,0,82.228c0,4.948,1.807,9.229,5.424,12.847l127.907,127.907c3.621,3.617,7.902,5.428,12.85,5.428s9.233-1.811,12.847-5.428L286.935,95.074c3.613-3.617,5.427-7.898,5.427-12.847C292.362,77.279,290.548,72.998,286.935,69.377z" />
-                      </g>
-                    </svg>
-                  </div>
-
-                  <div v-show="sortMenu" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
-                    style="min-width: 200px; top: 100%;">
-                    <a v-for="sort in peopleSorts" :key="sort.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                      @click="setPeopleSort(sort)">
-                      <span class="group-hover:text-white">{{sort.text}}</span>
-                    </a>
-                  </div>
-                </div>
-              </on-click-outside>
-
             </div>
 
             <div class="flex items-baseline justify-between">
-              <div class="inline-flex">
+              <div class="inline-flex items-center">
 
-                <on-click-outside :do="() => viewMenu = false">
-                  <div class="inline-flex items-center justify-center cursor-pointer relative">
-
-                    <button class="bg-white text-grey-dark mr-4 h-8 w-8 rounded hover:bg-grey-light hover:text-white"
-                      @click="viewMenu = !viewMenu">
-                      <span v-html="view.icon" class="h-4 w-4"></span>
-                    </button>
-
-                    <div v-show="viewMenu" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
-                      style="min-width: 200px; right: 25%; top: 100%;">
-                      <a v-for="view in PeopleViews" :key="view.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                        @click="setPeopleView(view)">
-                        <span v-html="view.icon" class="mr-2 group-hover:text-white"></span>
-                        <span class="group-hover:text-white">{{view.text}}</span>
-                      </a>
-                    </div>
-                  </div>
-                </on-click-outside>
-
-                <button class="bg-white text-grey-dark mr-4 h-8 rounded p-3 inline-flex items-center justify-between">
-                  <span class="mr-2">Filter</span>
-                  <span v-html="icons.filter"></span>
+                <div class="mr-4 inline-flex items-center">
+                  <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-l">
+                  <span v-html="icons.back" class="text-grey"></span>
                 </button>
+                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center justify-between border border-grey-light">
+                  <span class="mr-2">June 2018</span>
+                  <svg class="h-2 w-2 fill-current text-grey ml-2" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
+                  viewBox="0 0 292.362 292.362" style="enable-background:new 0 0 292.362 292.362;" xml:space="preserve">
+                  <g>
+                    <path d="M286.935,69.377c-3.614-3.617-7.898-5.424-12.848-5.424H18.274c-4.952,0-9.233,1.807-12.85,5.424C1.807,72.998,0,77.279,0,82.228c0,4.948,1.807,9.229,5.424,12.847l127.907,127.907c3.621,3.617,7.902,5.428,12.85,5.428s9.233-1.811,12.847-5.428L286.935,95.074c3.613-3.617,5.427-7.898,5.427-12.847C292.362,77.279,290.548,72.998,286.935,69.377z" />
+                  </g>
+                </svg>
+                </button>
+                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-r">
+                  <span v-html="icons.forward"></span>
+                </button>
+                </div>
 
                 <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded-l">
                   <span v-html="icons.plus" class="mr-2 text-white"></span>
-                  <span class="mr-2">Add Person</span>
+                  <span class="mr-2">Create Event</span>
                 </button>
 
                 <on-click-outside :do="() => moreMenu = false">
@@ -119,26 +49,12 @@
                           style="padding: .5rem;"></path>
                       </svg>
                     </button>
-
-                    <div v-show="moreMenu" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
-                      style="min-width: 200px; right: 0; top: 100%;">
-                      <a v-for="more in peopleMores" :key="more.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                        @click="setPeopleMore(more)">
-                        <span v-html="view.icon" class="mr-2 group-hover:text-white"></span>
-                        <span class="group-hover:text-white">{{more.text}}</span>
-                      </a>
-                    </div>
                   </div>
                 </on-click-outside>
               </div>
             </div>
           </div>
         </div>
-
-        <list-view v-if="view.value === 'list-view'" :people="people" :page="page" :pagesEnded="ended" @back="goBack"
-          @forward="goForward" @action="handlePersonAction" @selected="selectedPeopleCount = $event"></list-view>
-        <grid-view v-else-if="view.value === 'grid-view'" :page="page" :pagesEnded="ended" @back="goBack" @forward="goForward"
-          :people="people" @action="handlePersonAction" @selected="selectedPeopleCount = $event"></grid-view>
 
       </div>
     </div>
@@ -253,24 +169,12 @@
 </template>
 
 <script>
-  import ListView from '@/components/people/ListView'
-  import GridView from '@/components/people/GridView'
   import Email from '@/components/people/Email'
   import Sms from '@/components/people/SMS'
   import OnClickOutside from '@/components/OnClickOutside'
   import {
-    listViewIcon,
-    gridViewIcon,
-    smallListViewIcon,
-    filterIcon,
-    userPlusIcon,
-    trashIcon,
-    editIcon,
-    groupIcon,
-    removeGroupIcon,
-    mailIcon,
-    smsIcon,
-    fileIcon,
+    leftIcon,
+    rightIcon
   } from '@/utils/icons'
     import {
     MESSAGE_TYPES
@@ -352,73 +256,26 @@
           }
         ],
         viewMenu: false,
-        PeopleViews: [{
-            id: 1,
-            text: 'List View',
-            value: 'list-view',
-            icon: listViewIcon
-          },
-          {
-            id: 2,
-            text: 'Grid View',
-            value: 'grid-view',
-            icon: gridViewIcon
-          }
-        ],
         view: null,
         icons: {
-          filter: filterIcon,
-          plus: userPlusIcon,
-          sms: smsIcon
+          back: leftIcon,
+          forward: rightIcon
         },
         peopleMores: [{
           text: 'Import From Excel',
           value: 'excel'
         }],
         moreMenu: false,
-        bulkActions: [{
-            id: 1,
-            text: 'Email People',
-            value: 'email',
-            icon: mailIcon,
-          },
-          {
-            id: 2,
-            text: 'SMS People',
-            value: 'sms',
-            icon: smsIcon,
-          },
-          {
-            id: 3,
-            text: 'Assign Groups',
-            value: 'add-tags',
-            icon: groupIcon,
-          },
-          {
-            id: 4,
-            text: 'Export People',
-            value: 'export',
-            icon: fileIcon,
-          },
-          {
-            id: 8,
-            text: 'Delete People',
-            value: 'delete-people',
-            icon: trashIcon,
-          }
-        ],
       }
     },
     components: {
-      ListView,
-      GridView,
       Email,
       Sms
     },
     created() {
-      this.setUpPeopleUI()
-      this.readyCallbacks([this.refresh])
-      this.setPageTitle('People')
+      // this.setUpPeopleUI()
+      // this.readyCallbacks([this.refresh])
+      this.setPageTitle('Events')
     },
     computed: {
       alertClass() {
