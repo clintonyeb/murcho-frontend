@@ -15,11 +15,11 @@
               <div class="inline-flex items-center">
 
                 <div class="mr-4 inline-flex items-center">
-                  <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-l">
+                  <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-l" @click="previousMonth">
                   <span v-html="icons.back" class="text-grey"></span>
                 </button>
-                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center justify-between border border-grey-light">
-                  <span class="mr-2">June 2018</span>
+                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center justify-between border border-grey-light w-48">
+                  <span class="mr-2">{{displayedMonth}}</span>
                   <svg class="h-2 w-2 fill-current text-grey ml-2" version="1.1" xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
                   viewBox="0 0 292.362 292.362" style="enable-background:new 0 0 292.362 292.362;" xml:space="preserve">
@@ -28,7 +28,7 @@
                   </g>
                 </svg>
                 </button>
-                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-r">
+                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-r" @click="nextMonth">
                   <span v-html="icons.forward"></span>
                 </button>
                 </div>
@@ -56,121 +56,20 @@
           </div>
         </div>
 
+        <div class="w-full flex align-center justify-between mt-8">
+          <calendar :selectedMonth="selectedMonth"></calendar>
+        </div>
+
       </div>
     </div>
     <div class="w-1/5 h-screen max-w-xs">
-      <template v-if="selectedPeopleCount">
-        <p class="mx-auto p-4 px-8 w-full relative inline-flex items-center justify-center">
-          <span class="mt-2" @click="$store.commit('CLEAR_ALERT')">
-            <svg class="fill-current h-4 w-4 text-grey-darker" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <title>Close</title>
-              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-            </svg>
-          </span>
-        </p>
-
-        <div class="mt-6 py-1">
-          <p class="text-grey">
-            Bulk Actions
-          </p>
-          <div class="w-full mt-8 inline-flex justify-between items-center">
-            <p class="text-grey-dark text-xs italic">
-              {{selectedPeopleCount}} {{pluralize('person', selectedPeopleCount)}} selected.
-            </p>
-            <p class="" v-show="selectedPeopleCount">
-              <button class="text-white bg-blue-light text-xs mr-4 p-2 rounded">
-                Add selected
-              </button>
-            </p>
-            <p class="inline-flex items-center">
-              <button class="text-red-light text-xs">
-                Clear
-              </button>
-            </p>
-          </div>
-
-          <div class="mt-8 animated zoomIn">
-            <div v-for="action in bulkActions" :key="action.id" class="cursor-pointer mb-2 p-3 bg-white text-grey-dark rounded hover:shadow hover:text-grey-darker hover:bg-blue-lighter select-none"
-              @click="actionHandler(action.value)">
-              <p class="inline-flex">
-                <span v-html="action.icon" class="mr-2 group-hover:text-white"></span>
-                <span>{{action.text}}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </template>
+      
     </div>
-
-    <transition enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
-      <div class="bg-white p-6 fixed pin-t pin-r w-1/3 h-screen shadow-lg z-20" v-show="takingAction" style="animation-duration: 500ms;">
-        <div class="w-full inline-flex items-center justify-between">
-          <p class="inline-flex text-grey" v-if="activeAction === 'email'">
-            <span>
-              <svg version="1.1" class="w-5 h5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-                <path d="M510.576,264.536l-58.431-157.94c-2.122-5.739-6.353-10.307-11.913-12.863c-5.559-2.556-11.78-2.796-17.519-0.672L137.796,198.467c-5.739,2.123-10.307,6.354-12.864,11.912c-2.556,5.559-2.795,11.781-0.672,17.519l58.431,157.94c2.122,5.739,6.353,10.307,11.913,12.864c3.05,1.403,6.299,2.107,9.559,2.107c2.682,0,5.37-0.476,7.961-1.435l284.918-105.406h0.001C508.886,289.585,514.958,276.382,510.576,264.536z M407.052,123.279l-88.377,126.344l-149.327-38.405L407.052,123.279zM200.044,366.731l-50.683-137l117.382,30.192L200.044,366.731z M224.863,370.237l65.152-104.33l30.642,7.882c0.951,0.241,1.913,0.367,2.852,0.367c3.688,0,7.216-1.787,9.392-4.891l18.133-25.944l117.369,36.818L224.863,370.237zM364.814,223.638l69.463-99.324l50.703,137.019L364.814,223.638z" />
-                <path d="M133.44,388.976c-2.194-5.933-8.786-8.961-14.715-6.768l-43.162,15.968c-5.933,2.196-8.962,8.784-6.768,14.716c1.71,4.623,6.086,7.482,10.743,7.482c1.319,0,2.663-0.23,3.973-0.715l43.16-15.968C132.606,401.498,135.635,394.909,133.44,388.976z" />
-                <path d="M75.023,282.646c-2.196-5.933-8.785-8.96-14.716-6.768l-26.643,9.857c-5.933,2.196-8.962,8.783-6.768,14.716c1.71,4.622,6.087,7.482,10.743,7.482c1.319,0,2.663-0.23,3.973-0.715l26.643-9.857C74.188,295.168,77.218,288.579,75.023,282.646z" />
-                <path d="M41.995,369.408c-2.196-5.933-8.785-8.962-14.716-6.768l-19.797,7.324c-5.933,2.196-8.962,8.784-6.768,14.716c1.71,4.622,6.086,7.482,10.743,7.482c1.319,0,2.663-0.23,3.973-0.715l19.797-7.324C41.161,381.929,44.19,375.341,41.995,369.408z" />
-              </svg>
-            </span>
-            <span>Sending Email..</span>
-          </p>
-
-          <p class="inline-flex text-grey" v-if="activeAction === 'sms'">
-            <span v-html="icons.sms" class="mr-2"></span>
-            <span>Sending SMS..</span>
-          </p>
-
-          <svg class="fill-current h-6 w-6 text-blue-light" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-            @click="takingAction = false">
-            <title>Close</title>
-            <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-          </svg>
-        </div>
-
-        <div class="mt-16 pa-4">
-          <div class="absolute flex items-center text-white text-sm font-bold px-4 py-3 w-full mb-4 animated tada" role="alert"
-            v-if="shouldDisplayMessage" :class="alertClass" style="animation-delay: 1s;">
-            <svg class="h-4 w-4 fill-current text-white mr-4" version="1.1" xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 483.537 483.537" style="enable-background:new 0 0 483.537 483.537;"
-              xml:space="preserve" v-if="displayMessageType === MESSAGE_TYPES.error">
-              <g>
-                <path d="M479.963,425.047L269.051,29.854c-5.259-9.88-15.565-16.081-26.782-16.081h-0.03c-11.217,0-21.492,6.171-26.782,16.051L3.603,425.016c-5.046,9.485-4.773,20.854,0.699,29.974c5.502,9.15,15.413,14.774,26.083,14.774H453.12c10.701,0,20.58-5.594,26.083-14.774C484.705,445.84,484.979,434.471,479.963,425.047z M242.239,408.965c-16.781,0-30.399-13.619-30.399-30.399c0-16.78,13.619-30.399,30.399-30.399c16.75,0,30.399,13.619,30.399,30.399C272.638,395.346,259.02,408.965,242.239,408.965zM272.669,287.854c0,16.811-13.649,30.399-30.399,30.399c-16.781,0-30.399-13.589-30.399-30.399V166.256c0-16.781,13.619-30.399,30.399-30.399c16.75,0,30.399,13.619,30.399,30.399V287.854z" />
-              </g>
-            </svg>
-
-            <svg class="fill-current h-4 w-4 text-white mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-              v-else-if="displayMessageType === MESSAGE_TYPES.warning">
-              <path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" /></svg>
-
-            <svg class="fill-current text-white h-4 w-4 text-white mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-              v-else>
-              <path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z" /></svg>
-
-            <p>{{displayMessage}}</p>
-
-            <span class="absolute pin-t pin-b pin-r px-4 py-3" @click="shouldDisplayMessage = false">
-              <svg class="fill-current h-4 w-4 text-white" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <title>Close</title>
-                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-              </svg>
-            </span>
-
-          </div>
-
-          <email v-if="activeAction === 'email'" />
-          <sms v-if="activeAction === 'sms'" />
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
 <script>
-  import Email from '@/components/people/Email'
-  import Sms from '@/components/people/SMS'
+  import Calendar from '@/components/events/Calendar'
   import OnClickOutside from '@/components/OnClickOutside'
   import {
     leftIcon,
@@ -179,98 +78,29 @@
     import {
     MESSAGE_TYPES
   } from '@/utils'
+  import { 
+    format,
+    addMonths,
+    subMonths
+  } from 'date-fns'
 
-  const pluralize = require('pluralize')
+  // const pluralize = require('pluralize')
+  const dateFormat = "MMMM YYYY";
 
   export default {
     name: 'People',
     data() {
       return {
-        displayMessage: '',
-        displayMessageType: MESSAGE_TYPES.info,
-        shouldDisplayMessage: false,
-        MESSAGE_TYPES: MESSAGE_TYPES,
-        activeAction: null,
-        takingAction: false,
-        pluralize: pluralize,
-        selectedPeopleCount: 0,
-        people: [],
-        total: 0,
-        loadingMore: false,
-        page: 1,
-        ended: false,
-        order: null,
-        peopleOrders: [{
-            id: 1,
-            text: 'Date Updated',
-            value: 'updated_at'
-          },
-          {
-            id: 2,
-            text: 'Date Created',
-            value: 'created_at'
-          },
-          {
-            id: 3,
-            text: 'First Name',
-            value: 'first_name'
-          },
-          {
-            id: 4,
-            text: 'Last Name',
-            value: 'last_name'
-          },
-          {
-            id: 5,
-            text: 'Phone Number',
-            value: 'phone_number'
-          },
-          {
-            id: 6,
-            text: 'Email Address',
-            value: 'email'
-          },
-          {
-            id: 7,
-            text: 'Membership Status',
-            value: 'membership_status'
-          },
-          {
-            id: 8,
-            text: 'Date Joined',
-            value: 'date_joined'
-          }
-        ],
-        orderMenu: false,
-        sort: null,
-        sortMenu: false,
-        peopleSorts: [{
-            id: 1,
-            text: 'Descending',
-            value: 'DESC'
-          },
-          {
-            id: 2,
-            text: 'Ascending',
-            value: 'ASC'
-          }
-        ],
-        viewMenu: false,
-        view: null,
+        currentMonth: new Date(),
+        selectedMonth: new Date(),
         icons: {
           back: leftIcon,
           forward: rightIcon
-        },
-        peopleMores: [{
-          text: 'Import From Excel',
-          value: 'excel'
-        }],
-        moreMenu: false,
+        }
       }
     },
     components: {
-      Email,
-      Sms
+      Calendar
     },
     created() {
       // this.setUpPeopleUI()
@@ -278,144 +108,24 @@
       this.setPageTitle('Events')
     },
     computed: {
-      alertClass() {
-        switch (this.displayMessageType) {
-          case MESSAGE_TYPES.warning:
-            return ['bg-yellow-dark']
-          case MESSAGE_TYPES.error:
-            return ['bg-red-light']
-          default:
-            return ['bg-blue-light']
-        }
-      }
+      displayedMonth(){
+        return format(this.selectedMonth, dateFormat, {
+          awareOfUnicodeTokens: true
+        })
+      },
     },
     methods: {
+      previousMonth(){
+        this.selectedMonth = subMonths(this.selectedMonth, 1)
+      },
+      nextMonth(){
+        this.selectedMonth = addMonths(this.selectedMonth, 1)
+      },
       actionHandler(value) {
         this.activeAction = value
         this.takingAction = true;
       },
-      setUpPeopleUI() {
-        if (!this.order) {
-          const order = localStorage.getItem('people-order')
-          this.order = this.peopleOrders.find(o => o.value === order) || this.peopleOrders[0]
-        }
-
-        if (!this.sort) {
-          const sort = localStorage.getItem('people-sort')
-          this.sort = this.peopleSorts.find(s => s.value === sort) || this.peopleSorts[0]
-        }
-
-        if (!this.view) {
-          const view = localStorage.getItem('people-view')
-          this.view = this.PeopleViews.find(v => v.value === view) || this.PeopleViews[0]
-        }
-      },
-      handlePersonAction(data) {
-        switch (data.action) {
-          case 'delete':
-            this.deletePerson(data.person, data.index)
-            break;
-
-          default:
-            break;
-        }
-      },
-      async deletePerson(personId, index) {
-        const path = `people/${personId}`
-        const url = this.$http.url(path)
-
-        try {
-          await this.$http.delete(url, this.authToken)
-          this.people.splice(index, 1)
-          this.total--
-        } catch (err) {
-
-        } finally {}
-      },
-      async setPeopleView(view) {
-        if (view.id === this.view.id) {
-          this.viewMenu = false;
-          return
-        }
-
-        this.view = view;
-        await this.$nextTick()
-        this.viewMenu = false;
-
-        localStorage.setItem('people-view', view.value)
-      },
-      async setPeopleOrder(order) {
-        if (order.id === this.order.id) {
-          this.orderMenu = false;
-          return
-        }
-
-        this.order = order;
-        await this.$nextTick()
-        this.orderMenu = false;
-
-        localStorage.setItem('people-order', order.value)
-        this.refresh(false)
-      },
-      async setPeopleSort(sort) {
-        if (sort.id === this.sort.id) {
-          this.sortMenu = false;
-          return
-        }
-
-        this.sort = sort;
-        await this.$nextTick()
-        this.sortMenu = false;
-
-        localStorage.setItem('people-sort', sort.value)
-        this.refresh(false)
-      },
-      goBack() {
-        if (this.page === 1) return false
-        const page = this.page - 1;
-        this.getPeople(page)
-      },
-      goForward() {
-        if (this.ended) return false
-        const page = this.page + 1;
-        this.getPeople(page)
-      },
-      refresh(isNew = true) {
-        this.getPeople()
-        if (isNew) this.getPeopleCount()
-      },
-      async getPeopleCount() {
-        const path = 'total_people'
-        const url = this.$http.url(path)
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-          this.total = response
-        } catch (error) {}
-
-      },
-      async getPeople(page = 1, size = 25) {
-        const path = `people?page=${page}&size=${size}&order=${this.order.value}&sort=${this.sort.value}`
-        const url = this.$http.url(path)
-        this.loadingMore = true
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-
-          if (response.length) {
-            this.people = response
-            this.page = page
-          }
-
-          if (response.length < size) this.ended = true
-          else this.ended = false
-        } catch (err) {
-
-        } finally {
-          this.loadingMore = false
-        }
-      }
+      setUpPeopleUI() {},
     },
   }
-
 </script>
