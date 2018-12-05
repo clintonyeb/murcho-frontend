@@ -42,7 +42,7 @@
         </p>
       </div>
 
-      <div class="w-full mt-6">
+      <div class="w-full mt-6" v-if="eventDetail.location">
         <p class="w-full inline-flex items-center justify-between mb-1">
           <span class="font-black mr-2" :class="`text-${event.color}-lighter`">Location</span>
           <span class="text-grey-dark">{{eventDetail.location}}</span>

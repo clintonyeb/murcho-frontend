@@ -333,7 +333,3 @@
   }
 
 </script>
-
-<style>
-
-</style>

@@ -275,7 +275,3 @@ import GridView from '@/components/groups/GridView'
   }
 
 </script>
-
-<style>
-
-</style>

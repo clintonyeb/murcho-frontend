@@ -242,3 +242,14 @@ nav {
   border-style: solid;
   border-color: transparent white transparent transparent;
 }
+
+// Flatpickr
+
+.flatpickr-confirm {
+	height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	background: #6CB2EB
+}

@@ -52,7 +52,7 @@
 
             <div v-if="addingEventDay === day.id" class="event-detail mt-px text-sm shadow-lg text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col z-20 flex flex-col"
               style="top: 0; left: 105%; width: 20rem;">
-              <create-event :start_date="day.value" @close="addingEventDay = null"></create-event>
+              <create-event :start_date="day.value" @close="addingEventDay = null" :calendar_id="calendar.id" @saved="eventCreated"></create-event>
             </div>
 
           </td>
@@ -95,12 +95,13 @@
         pluralize: pluralize,
         showingMoreDay: null,
         hoveredDay: null,
-        addingEventDay: null
+        addingEventDay: null,
+        calendar: {}
       }
     },
     created() {
       this.daysInAWeek()
-      this.getEventsForSelectedMonth(this.selectedMonth)
+      this.readyCallbacks([() => this.getEventsForSelectedMonth(this.selectedMonth), this.getCalendar])
     },
     components: {
       Event,
@@ -159,6 +160,23 @@
       }
     },
     methods: {
+      eventCreated(event){
+        this.events.unshift(event)
+        this.addingEventDay = null
+      },
+      async getCalendar(){
+        const path = `calendars`
+        const url = this.$http.url(path)
+
+        try {
+          const response = await this.$http.get(url, this.authToken)
+          this.calendar = response[0]
+        } catch (err) {
+
+        } finally {
+          // this.loadingMore = false
+        }
+      },
       showMore(day, events) {
         if (day.id === this.showingMoreDay) {
           return events

@@ -9,7 +9,3 @@ export default {
 name: 'Events'
 }
 </script>
-
-<style>
-
-</style>
