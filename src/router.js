@@ -63,7 +63,7 @@ export default new Router({
         {
           path: 'services',
           name: 'services',
-          component: () => import(/* webpackChunkName: "services" */ './views/Temp.vue')
+          component: () => import(/* webpackChunkName: "services" */ './views/Services.vue')
         }
       ]
     }

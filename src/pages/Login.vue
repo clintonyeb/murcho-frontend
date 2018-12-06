@@ -81,6 +81,9 @@
         currentPage: 'login'
       }
     },
+    created(){
+      this.setPageTitle('Login')
+    },
     computed: {
       cover() {
         return this.coverImages[this.currentCoverIndex]
