@@ -7,7 +7,7 @@
         :class="{'bg-blue-lightest text-grey-darkest': (selectedPeople.indexOf(person.id) !== -1 || activePerson === person.id)}">
         <div class="w-full  inline-flex items-start justify-between">
           <div class="w-full inline-flex items-center">
-            <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.photo" class="mr-3" :size="40" />
+            <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.thumbnail" class="mr-3" :size="40" />
             <div>
               <p class="text-grey-darker flex">
                 {{person.first_name}} {{person.last_name}}

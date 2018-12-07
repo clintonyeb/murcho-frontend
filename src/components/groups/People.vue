@@ -45,7 +45,7 @@
             </label>
           </td>
           <td class="w-6 h-6 text-right px-2 py-2 mr-4" @click="people.selected = true">
-            <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.photo" class="" :size="25" />
+            <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.thumbnail" class="" :size="25" />
           </td>
           <td class="px-1 py-2">{{person.first_name}}</td>
           <td class="px-1 py-2">{{person.last_name}}</td>

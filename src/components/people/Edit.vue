@@ -356,6 +356,7 @@
                       const file_url = await this.uploadFile(file)
                       console.log(file_url, 'file')
                       fields[key] = file_url
+                      fields['thumbnail'] = file_url
                     } catch (error) {
                       fields[key] = null
                       console.log(error)

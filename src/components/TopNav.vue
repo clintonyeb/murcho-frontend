@@ -13,20 +13,25 @@
     </div>
     <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto h-8">
       <div class="text-sm lg:flex-grow nav-items">
-        <router-link :to="{name: 'overview'}" class="block mt-4 lg:inline-block lg:mt-0 mr-10 no-underline font-bold py-6">
-          Dashboard
+        <router-link :to="{name: 'overview'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
+          <span v-html="icons.overview" class="mr-1"></span>
+          <span>Dashboard</span>
         </router-link>
-        <router-link :to="{name: 'people'}" class="block mt-4 lg:inline-block lg:mt-0 mr-10 no-underline font-bold py-6">
-          My People
+        <router-link :to="{name: 'people'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
+          <span v-html="icons.people" class="mr-1"></span>
+          <span>My People</span>
         </router-link>
-        <router-link :to="{name: 'groups'}" class="block mt-4 lg:inline-block lg:mt-0 mr-10 no-underline font-bold py-6">
-          My Groups
+        <router-link :to="{name: 'groups'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
+          <span v-html="icons.group" class="mr-1"></span>
+          <span>My Groups</span>
         </router-link>
-        <router-link :to="{name: 'events'}" class="block mt-4 lg:inline-block lg:mt-0 mr-10 no-underline font-bold py-6">
-          My Events
+        <router-link :to="{name: 'events'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
+          <span v-html="icons.event" class="mr-1"></span>
+          <span>My Events</span>
         </router-link>
-        <router-link :to="{name: 'services'}" class="block mt-4 lg:inline-block lg:mt-0 mr-10 no-underline font-bold py-6">
-          All Services
+        <router-link :to="{name: 'services'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
+          <span v-html="icons.service" class="mr-1"></span>
+          <span>All Services</span>
         </router-link>
       </div>
       <div class="block">
@@ -49,21 +54,25 @@
           </div>
 
           <button class="p-1 h-12 w-12 ml-6">
-            <svg class="h-8 w-8 fill-current text-red font-bold bg-red-lightest rounded-full flex items-center justify-center p-2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-              x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+            <svg class="h-8 w-8 fill-current text-red font-bold bg-red-lightest rounded-full flex items-center justify-center p-2"
+              version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+              viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
               <g>
                 <g>
-                  <path d="M467.819,431.851l-36.651-61.056c-16.896-28.181-25.835-60.437-25.835-93.312V224c0-82.325-67.008-149.333-149.333-149.333S106.667,141.675,106.667,224v53.483c0,32.875-8.939,65.131-25.835,93.312l-36.651,61.056c-1.984,3.285-2.027,7.403-0.149,10.731c1.899,3.349,5.461,5.419,9.301,5.419h405.333c3.84,0,7.403-2.069,9.301-5.419C469.845,439.253,469.803,435.136,467.819,431.851z M72.171,426.667l26.944-44.907C118.016,350.272,128,314.219,128,277.483V224c0-70.592,57.408-128,128-128s128,57.408,128,128v53.483c0,36.736,9.984,72.789,28.864,104.277l26.965,44.907H72.171z" stroke-width="10" />
+                  <path d="M467.819,431.851l-36.651-61.056c-16.896-28.181-25.835-60.437-25.835-93.312V224c0-82.325-67.008-149.333-149.333-149.333S106.667,141.675,106.667,224v53.483c0,32.875-8.939,65.131-25.835,93.312l-36.651,61.056c-1.984,3.285-2.027,7.403-0.149,10.731c1.899,3.349,5.461,5.419,9.301,5.419h405.333c3.84,0,7.403-2.069,9.301-5.419C469.845,439.253,469.803,435.136,467.819,431.851z M72.171,426.667l26.944-44.907C118.016,350.272,128,314.219,128,277.483V224c0-70.592,57.408-128,128-128s128,57.408,128,128v53.483c0,36.736,9.984,72.789,28.864,104.277l26.965,44.907H72.171z"
+                    stroke-width="10" />
                 </g>
               </g>
               <g>
                 <g>
-                  <path d="M256,0c-23.531,0-42.667,19.136-42.667,42.667v42.667C213.333,91.221,218.112,96,224,96s10.667-4.779,10.667-10.667V42.667c0-11.776,9.557-21.333,21.333-21.333s21.333,9.557,21.333,21.333v42.667C277.333,91.221,282.112,96,288,96s10.667-4.779,10.667-10.667V42.667C298.667,19.136,279.531,0,256,0z" stroke-width="10" />
+                  <path d="M256,0c-23.531,0-42.667,19.136-42.667,42.667v42.667C213.333,91.221,218.112,96,224,96s10.667-4.779,10.667-10.667V42.667c0-11.776,9.557-21.333,21.333-21.333s21.333,9.557,21.333,21.333v42.667C277.333,91.221,282.112,96,288,96s10.667-4.779,10.667-10.667V42.667C298.667,19.136,279.531,0,256,0z"
+                    stroke-width="10" />
                 </g>
               </g>
               <g>
                 <g>
-                  <path d="M302.165,431.936c-3.008-5.077-9.515-6.741-14.613-3.819c-5.099,2.987-6.805,9.536-3.819,14.613c2.773,4.715,4.288,10.368,4.288,15.936c0,17.643-14.357,32-32,32c-17.643,0-32-14.357-32-32c0-5.568,1.515-11.221,4.288-15.936c2.965-5.099,1.259-11.627-3.819-14.613c-5.141-2.923-11.627-1.259-14.613,3.819c-4.715,8.064-7.211,17.301-7.211,26.731C202.667,488.085,226.581,512,256,512s53.333-23.915,53.376-53.333C309.376,449.237,306.88,440,302.165,431.936z" stroke-width="10" />
+                  <path d="M302.165,431.936c-3.008-5.077-9.515-6.741-14.613-3.819c-5.099,2.987-6.805,9.536-3.819,14.613c2.773,4.715,4.288,10.368,4.288,15.936c0,17.643-14.357,32-32,32c-17.643,0-32-14.357-32-32c0-5.568,1.515-11.221,4.288-15.936c2.965-5.099,1.259-11.627-3.819-14.613c-5.141-2.923-11.627-1.259-14.613,3.819c-4.715,8.064-7.211,17.301-7.211,26.731C202.667,488.085,226.581,512,256,512s53.333-23.915,53.376-53.333C309.376,449.237,306.88,440,302.165,431.936z"
+                    stroke-width="10" />
                 </g>
               </g>
             </svg>
@@ -83,8 +92,10 @@
                 </svg>
               </div>
 
-              <div v-show="userMenu" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-r animated zoomIn flex flex-col overflow-hidden" style="min-width: 200px;">
-                <a v-for="menu in userMenuItems" :key="menu.id" class="cursor-pointer no-underline flex items-center justify-center px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light" @click="menu.handler">
+              <div v-show="userMenu" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-r animated zoomIn flex flex-col overflow-hidden"
+                style="min-width: 200px;">
+                <a v-for="menu in userMenuItems" :key="menu.id" class="cursor-pointer no-underline flex items-center justify-center px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
+                  @click="menu.handler">
                   <span v-html="menu.icon" class="mr-2 group-hover:text-white"></span>
                   <span class="group-hover:text-white">{{menu.text}}</span>
                 </a>
@@ -100,9 +111,14 @@
 </template>
 
 <script>
- import {
-   logoutIcon
- } from '@/utils/icons'
+  import {
+    logoutIcon,
+    eventIcon,
+    groupIcon,
+    peopleIcon,
+    servicesIcon,
+    dashboardIcon
+  } from '@/utils/icons'
 
   export default {
     name: 'TopBar',
@@ -114,7 +130,14 @@
           text: 'Logout',
           icon: logoutIcon,
           handler: this.logout
-        }, ]
+        }, ],
+        icons: {
+          event: eventIcon,
+          group: groupIcon,
+          people: peopleIcon,
+          service: servicesIcon,
+          overview: dashboardIcon
+        }
       }
     },
     methods: {

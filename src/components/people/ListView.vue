@@ -49,7 +49,7 @@
             </label>
           </td>
           <td class="w-6 h-6 text-right px-1 py-2" @click="people.selected = true">
-            <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.photo" class="" :size="25" />
+            <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.thumbnail" class="" :size="25" />
           </td>
           <td class="px-1 py-2">{{person.first_name}}</td>
           <td class="px-1 py-2">{{person.last_name}}</td>
@@ -108,10 +108,10 @@
                     style="padding: .5rem;"></path>
                 </svg>
 
-                <div v-show="activePerson === person.id" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden z-10"
+                <div v-if="activePerson === person.id" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden z-10"
                   style="min-width: 200px; top: 100%; right: -70%;">
                   <a v-for="action in personActions" :key="action.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                    @click="actionClicked(action, person, index)">
+                    @click.stop="actionClicked(action, person, index)">
                     <span v-html="action.icon" class="mr-2 group-hover:text-white"></span>
                     <span class="group-hover:text-white">{{action.text}}</span>
                   </a>
@@ -137,6 +137,7 @@
     mailIcon,
     smsIcon,
     fileIcon,
+    viewIcon
   } from '@/utils/icons'
   import viewMixin from '@/mixins/views'
 
@@ -146,7 +147,13 @@
     data() {
       return {
         selectedPeople: [],
-        personActions: [{
+        personActions: [
+          {
+            text: 'View Person',
+            value: 'view',
+            icon: viewIcon
+          },
+          {
             text: 'Edit Person',
             value: 'edit',
             icon: editIcon
