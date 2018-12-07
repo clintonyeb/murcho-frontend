@@ -3,7 +3,7 @@
     <div>
       <div class="control mt-4 mb-4">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Message">
             SMS Message
           </label>
           <div class="inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Message')">

@@ -3,7 +3,7 @@
     <div class="w-full p-6 relative">
 
       <div class="w-full control mb-6">
-        <label class="block text-grey text-sm font-bold mb-2 h-4" for="username">
+        <label class="block text-grey text-sm font-bold mb-2 h-4" for="Subject">
           Event Title
         </label>
         <div class="h-8 inline-flex border w-full rounded-sm relative" :class="getInputColor('Subject')">
@@ -17,7 +17,7 @@
 
       <div class="w-full control mt-4 mb-6">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Description">
             Event Description (optional)
           </label>
           <div class="inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Description')">
@@ -32,7 +32,7 @@
       </div>
 
       <div class="w-full control mt-4 mb-6">
-        <label class="block text-grey text-sm font-bold mb-2" for="username">
+        <label class="block text-grey text-sm font-bold mb-2" for="Start Date">
           Start Date &amp; Time
         </label>
         <div class="h-8 inline-flex border w-full rounded-sm relative" :class="getInputColor('Start Date')">
@@ -45,7 +45,7 @@
       </div>
 
       <div class="w-full control mt-4 mb-6">
-        <label class="block text-grey text-sm font-bold mb-2" for="username">
+        <label class="block text-grey text-sm font-bold mb-2" for="Duration Format">
           Event Duration
         </label>
         <div class="w-full inline-flex items-top justify-between">
@@ -74,7 +74,7 @@
       </div>
 
       <div class="w-full control mt-4 mb-6">
-        <label class="block text-grey text-sm font-bold mb-2" for="username">
+        <label class="block text-grey text-sm font-bold mb-2" for="Location">
           Event Location (optional)
         </label>
         <div class="h-8 inline-flex border w-full rounded-sm relative" :class="getInputColor('Location')">
@@ -87,7 +87,7 @@
       </div>
 
       <div class="w-full control mt-4">
-        <label class="block text-grey text-sm font-bold mb-2" for="username">
+        <label class="block text-grey text-sm font-bold mb-2" for="Color">
           Color Category
         </label>
         <div class="w-full inline-flex items-top justify-between">

@@ -29,7 +29,6 @@
 </template>
 
 <script>
-  import Avatar from 'vue-avatar'
   import {
     trashIcon,
     editIcon,
@@ -90,9 +89,6 @@
         ],
         activePerson: null
       }
-    },
-    components: {
-      Avatar
     },
     methods: {
       personRowClicked(personId) {

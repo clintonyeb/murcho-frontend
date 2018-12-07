@@ -3,7 +3,7 @@
     <div>
       <div class="control mb-12 mt-4 h-16">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Subject">
             Email Subject
           </label>
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Subject')">
@@ -18,7 +18,7 @@
 
       <div class="control mt-4 mb-4">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Message">
             Email Message
           </label>
           <div class="inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Message')">

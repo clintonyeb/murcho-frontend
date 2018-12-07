@@ -1,6 +1,7 @@
 import store from '@/store'
 import Hashids from 'hashids'
 import OnClickOutside from '@/components/OnClickOutside'
+import Avatar from 'vue-avatar'
 
 let hash = null
 
@@ -12,7 +13,8 @@ export default {
     }
   },
   components: {
-    OnClickOutside
+    OnClickOutside,
+    Avatar
   },
   methods: {
     setPageTitle (title) {

@@ -129,7 +129,6 @@
 </template>
 
 <script>
-  import Avatar from 'vue-avatar'
   import {
     trashIcon,
     editIcon,
@@ -159,13 +158,13 @@
             icon: groupIcon
           },
           {
-            id: 3,
+            id: 2,
             text: 'Send Email',
             value: 'email',
             icon: mailIcon
           },
           {
-            id: 5,
+            id: 3,
             text: 'Send SMS',
             value: 'sms',
             icon: smsIcon
@@ -180,9 +179,6 @@
         activePerson: null,
         activeHiddenGroup: null,
       }
-    },
-    components: {
-      Avatar
     },
     methods: {
       async removeGroupFromPerson(groupId, personId, personIndex){

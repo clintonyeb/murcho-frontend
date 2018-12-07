@@ -61,8 +61,6 @@
   import Groups from '@/components/groups/ListView'
   import People from '@/components/groups/People'
   import Events from '@/components/groups/Events'
-  import Avatar from 'vue-avatar'
-
   import {
     filterIcon,
     userPlusIcon
@@ -163,7 +161,6 @@
       Groups,
       People,
       Events,
-      Avatar
     },
     methods: {
       groupItemClicked(groupId) {

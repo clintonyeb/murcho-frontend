@@ -3,7 +3,7 @@
     <div class="w-full inline-flex">
       <div class="w-full control mr-1">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="First Name">
             First Name
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('First Name')">
@@ -18,7 +18,7 @@
 
       <div class="w-full control mb-1">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Last Name">
             Last Name
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Last Name')">
@@ -51,7 +51,7 @@
 
       <div class="w-full control ml-1">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Phone Number">
             Phone Number
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Phone Number')">
@@ -69,11 +69,12 @@
     <div class="w-full inline-flex mt-4">
       <div class="w-full control mr-1">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Date Joined">
             Date Person Joined
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Date Joined')">
-            <input type="text" placeholder="Enter Date Person Joined" class="ml-2 text-grey-darker" name="Date Joined" tabindex="5" ref="date_joined">
+            <input type="text" placeholder="Enter Date Person Joined" class="ml-2 text-grey-darker" name="Date Joined"
+              tabindex="5" ref="date_joined">
           </div>
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Date Joined')">
             {{getInputErrorMessage('Date Joined')}}
@@ -83,7 +84,7 @@
 
       <div class="w-full control ml-1">
         <div class="w-full">
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Membership Status">
             Membership Status
           </label>
           <div class="w-full h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Membership Status')">
@@ -95,6 +96,30 @@
           <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Membership Status')">
             {{getInputErrorMessage('Membership Status')}}
           </p>
+        </div>
+      </div>
+
+    </div>
+
+     <div class="w-full inline-flex items-center mt-4">
+      <div class="w-2/3 control mr-1">
+        <div>
+          <label class="block text-grey text-sm font-bold mb-2" for="Profile Photo">
+            Profile Photo
+          </label>
+          <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Profile Photo')">
+            <input type="file" placeholder="Upload Profile Photo" class="ml-2 text-grey-darker" name="Profile Photo"
+              tabindex="6">
+          </div>
+          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Profile Photo')">
+            {{getInputErrorMessage('Profile Photo')}}
+          </p>
+        </div>
+      </div>
+
+      <div class="w-1/3 control ml-1">
+        <div class="w-full">
+         <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.photo" class="m-auto" style="border-radius: 3px;" :size="70" :rounded="false" />
         </div>
       </div>
 
@@ -137,7 +162,7 @@
 
       </div>
     </div>
-    
+
   </div>
 </template>
 
@@ -216,9 +241,9 @@
           }
 
           const changedFields = this.getChangedFields(fields, this.person)
-          console.log('changed', changedFields)
+          // console.log('changed', changedFields)
 
-          if(!Object.keys(changedFields).length) {
+          if (!Object.keys(changedFields).length) {
             // this.$emit('updated', null)
             return false
           }
@@ -231,7 +256,7 @@
           try {
             const response = await this.$http.put(url, changedFields, this.authToken)
             this.$emit('updated', response)
-          } catch(err) {
+          } catch (err) {
             console.log(err);
           } finally {
             this.loadingForm = false
@@ -247,10 +272,10 @@
             const ori = original[key];
             const ob = object[key]
 
-            if(ori instanceof Date) {
-              if(ori.getTime() !== ob.getTime()) fields[key] = object[key]
+            if (ori instanceof Date) {
+              if (ori.getTime() !== ob.getTime()) fields[key] = object[key]
             } else {
-              if(ori !== ob) fields[key] = object[key]
+              if (ori !== ob) fields[key] = object[key]
             }
           }
         }
@@ -259,7 +284,6 @@
       },
       initializeDatePickers() {
         const defaultDate = new Date(this.person.date_joined)
-        console.log(defaultDate)
 
         dateJoinedComp = flatpickr(this.$refs['date_joined'], {
           dateFormat: "J M, Y",
