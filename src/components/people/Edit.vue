@@ -88,8 +88,8 @@
             Membership Status
           </label>
           <div class="w-full h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Membership Status')">
-            <select name="Membership Status" v-model="membership_status" class="w-full bg-white select-none" v-validate="{required: true}"
-              tabindex="6" id="Membership Status">
+            <select name="Membership Status" v-model="membership_status" class="ml-2 w-full bg-white select-none text-grey-darker"
+              v-validate="{required: true}" tabindex="6" id="Membership Status">
               <option v-for="status in membershipStatuses" :key="status.id" :value="status.value">{{status.text}}</option>
             </select>
           </div>
@@ -101,25 +101,33 @@
 
     </div>
 
-     <div class="w-full inline-flex items-center mt-4">
+    <div class="w-full inline-flex items-center mt-4">
       <div class="w-2/3 control mr-1">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="Profile Photo">
+          <label class="block text-grey text-sm font-bold mb-2">
             Profile Photo
           </label>
-          <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Profile Photo')">
-            <input type="file" id="Profile Photo" placeholder="Upload Profile Photo" class="ml-2 text-grey-darker" name="Profile Photo"
-              tabindex="6">
+          <div class="h-32 relative" :class="getInputColor('Profile Photo')">
+            <input type="file" id="Profile Photo" placeholder="Upload Profile Photo" class="text-grey-darker is-custom"
+              name="Profile Photo" tabindex="6" @change="photoUploaded" v-validate.continues="{image: true, ext: ['jpeg', 'jpg', 'png', 'svg']}"
+              ref="avatar-input">
+            <label class="cursor-pointer hover:shadow w-full h-24 bg-grey-lighter p-2 rounded-lg absolute inline-flex items-center justify-center text-grey hover:text-grey-dark"
+              for="Profile Photo">
+              Click to choose a photo
+            </label>
+            <p class="text-red-light text-xs italic animated shake absolute pin-b" v-show="getInputState('Profile Photo')">
+              {{getInputErrorMessage('Profile Photo')}}
+            </p>
           </div>
-          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Profile Photo')">
-            {{getInputErrorMessage('Profile Photo')}}
-          </p>
         </div>
       </div>
 
-      <div class="w-1/3 control ml-1">
-        <div class="w-full">
-         <avatar :username="`${person.first_name} ${person.last_name}`" :src="person.photo" class="m-auto" style="border-radius: 3px;" :size="70" :rounded="false" />
+      <div class="w-1/3 control">
+        <div class="w-full flex-col items-center justify-center">
+          <avatar :username="`${first_name} ${last_name}`" :src="photo" class="m-auto" :size="70" :rounded="false" ref="avatar" />
+          <p class="text-xs text-grey hover:underline cursor-pointer mt-1 text-center hover:text-grey-dark" @click="photo = null" v-if="photo">
+            Remove
+          </p>
         </div>
       </div>
 
@@ -206,29 +214,49 @@
             text: 'Former Member',
             value: 'former_member'
           }
-        ]
+        ],
       }
     },
-    created() {
-      this.first_name = this.person.first_name
-      this.last_name = this.person.last_name
-      this.email = this.person.email
-      this.phone_number = this.person.phone_number
-      this.date_joined = this.person.date_joined
-      this.membership_status = this.person.membership_status
-      this.photo = this.person.photo
-
-    },
     mounted() {
-      this.initializeDatePickers()
+      this.setup(this.person)
     },
     beforeDestroy() {
       if (dateJoinedComp !== null) dateJoinedComp.destroy()
     },
     methods: {
+      setup(person) {
+        this.first_name = person.first_name
+        this.last_name = person.last_name
+        this.email = person.email
+        this.phone_number = person.phone_number
+        this.date_joined = person.date_joined
+        this.membership_status = person.membership_status
+        this.photo = person.photo
+
+        this.initializeDatePickers()
+      },
+      photoUploaded(event) {
+        const file = event.target.files && event.target.files[0]
+
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.photo = e.target.result
+          }
+
+          reader.readAsDataURL(file);
+
+        } else {
+          this.photo = null
+        }
+
+      },
       editPerson() {
-        this.validateForm(async state => {
+        if(this.loadingForm) return false
+        this.validateForm(state => {
           if (!state) return false
+
+           this.loadingForm = true
 
           const fields = {
             first_name: this.first_name,
@@ -240,30 +268,74 @@
             photo: this.photo
           }
 
-          const changedFields = this.getChangedFields(fields, this.person)
-          // console.log('changed', changedFields)
+          this.getChangedFields(fields, this.person, async (err, changedFields) => {
+            if (err || !Object.keys(changedFields).length) {
+              this.loadingForm = false
+              return false
+            }
 
-          if (!Object.keys(changedFields).length) {
-            // this.$emit('updated', null)
-            return false
-          }
+            const path = `people/${this.person.id}`
+            const url = this.$http.url(path)
 
-          const path = `people/${this.person.id}`
+            try {
+              const response = await this.$http.put(url, changedFields, this.authToken)
+              this.$emit('updated', response)
+            } catch (err) {
+              console.log(err);
+            } finally {
+              this.loadingForm = false
+            }
+          })
+        })
+      },
+      getSignedURL(fileName, contentType) {
+        return new Promise(async (resolve, reject) => {
+          const path = 'sign_url_for_upload'
           const url = this.$http.url(path)
 
-          this.loadingForm = true
-
           try {
-            const response = await this.$http.put(url, changedFields, this.authToken)
-            this.$emit('updated', response)
+            const response = await this.$http.post(
+              url, {
+                file_name: fileName,
+                content_type: contentType
+              },
+              this.authToken
+            )
+            resolve(response)
           } catch (err) {
-            console.log(err);
-          } finally {
-            this.loadingForm = false
+            reject(err)
+          } finally {}
+        })
+      },
+      getFileURL(name) {
+        return `https://s3.ap-south-1.amazonaws.com/murch-app/${name}`
+      },
+      uploadFile(file) {
+        return new Promise(async (resolve, reject) => {
+          try {
+            const data = await this.getSignedURL(file.name, file.type)
+
+            const request = new XMLHttpRequest()
+            request.open('PUT', data.signed_url, true)
+            request.setRequestHeader('Content-Type', file.type)
+            request.setRequestHeader('Access-Control-Allow-Origin', '*')
+            request.setRequestHeader('Accept', 'application/json')
+
+            request.onload = () => {
+              if (request.status >= 200 && request.status < 300) {
+                resolve(this.getFileURL(data.file_name))
+              } else {
+                reject("Error uploading file")
+              }
+            }
+
+            request.send(file)
+          } catch (error) {
+            reject(error)
           }
         })
       },
-      getChangedFields(object, original) {
+      async getChangedFields(object, original, cb) {
         original.date_joined = new Date(original.date_joined) // fix comparing string to date object
         const fields = {}
 
@@ -275,12 +347,32 @@
             if (ori instanceof Date) {
               if (ori.getTime() !== ob.getTime()) fields[key] = object[key]
             } else {
-              if (ori !== ob) fields[key] = object[key]
+              if (ori !== ob) {
+                if (key === 'photo') {
+                  // upload photo and assign url here
+                  const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
+                  if (file) {
+                    try {
+                      const file_url = await this.uploadFile(file)
+                      console.log(file_url, 'file')
+                      fields[key] = file_url
+                    } catch (error) {
+                      fields[key] = null
+                      console.log(error)
+                      cb(error)
+                    }
+                  } else {
+                    fields[key] = null
+                  }
+                } else {
+                  fields[key] = object[key]
+                }
+              }
             }
           }
         }
 
-        return fields;
+        cb(null, fields);
       },
       initializeDatePickers() {
         const defaultDate = new Date(this.person.date_joined)
@@ -304,6 +396,11 @@
       getInputState(name) {
         return this.errors.has(name)
       },
+    },
+    watch: {
+      person(val) {
+        this.setup(val)
+      }
     }
   }
 
