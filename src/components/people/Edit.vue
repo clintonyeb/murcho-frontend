@@ -8,7 +8,7 @@
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('First Name')">
             <input type="text" placeholder="Enter First Name" class="ml-2 text-grey-darker" v-model="first_name" name="First Name"
-              v-validate="{required: true}" tabindex="1" v-autofocus>
+              v-validate="{required: true}" tabindex="1" v-autofocus id="First Name">
           </div>
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('First Name')">
             {{getInputErrorMessage('First Name')}}
@@ -23,7 +23,7 @@
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Last Name')">
             <input type="text" placeholder="Enter Last Name" class="ml-2 text-grey-darker" v-model="last_name" name="Last Name"
-              v-validate="{required: true}" tabindex="2">
+              v-validate="{required: true}" tabindex="2" id="Last Name">
           </div>
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Last Name')">
             {{getInputErrorMessage('Last Name')}}
@@ -36,12 +36,12 @@
     <div class="w-full inline-flex mt-4">
       <div class="w-full control mr-1">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="username">
+          <label class="block text-grey text-sm font-bold mb-2" for="Email Address">
             Email Address
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Email Address')">
             <input type="email" placeholder="Enter Email Address" class="ml-2 text-grey-darker" v-model="email" name="Email Address"
-              v-validate.continues="{email: true}" tabindex="3">
+              v-validate.continues="{email: true}" tabindex="3" id="Email Address">
           </div>
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Email Address')">
             {{getInputErrorMessage('Email Address')}}
@@ -56,7 +56,7 @@
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Phone Number')">
             <input type="text" placeholder="Enter Phone Number" class="ml-2 text-grey-darker" v-model="phone_number"
-              name="Phone Number" tabindex="4">
+              name="Phone Number" tabindex="4" id="Phone Number">
           </div>
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Phone Number')">
             {{getInputErrorMessage('Phone Number')}}
@@ -74,7 +74,7 @@
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Date Joined')">
             <input type="text" placeholder="Enter Date Person Joined" class="ml-2 text-grey-darker" name="Date Joined"
-              tabindex="5" ref="date_joined">
+              tabindex="5" ref="date_joined" id="Date Joined">
           </div>
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Date Joined')">
             {{getInputErrorMessage('Date Joined')}}
@@ -89,7 +89,7 @@
           </label>
           <div class="w-full h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Membership Status')">
             <select name="Membership Status" v-model="membership_status" class="w-full bg-white select-none" v-validate="{required: true}"
-              tabindex="6">
+              tabindex="6" id="Membership Status">
               <option v-for="status in membershipStatuses" :key="status.id" :value="status.value">{{status.text}}</option>
             </select>
           </div>
@@ -108,7 +108,7 @@
             Profile Photo
           </label>
           <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Profile Photo')">
-            <input type="file" placeholder="Upload Profile Photo" class="ml-2 text-grey-darker" name="Profile Photo"
+            <input type="file" id="Profile Photo" placeholder="Upload Profile Photo" class="ml-2 text-grey-darker" name="Profile Photo"
               tabindex="6">
           </div>
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Profile Photo')">

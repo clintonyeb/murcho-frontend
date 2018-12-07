@@ -8,7 +8,7 @@
           </label>
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Subject')">
             <input type="text" placeholder="Email Subject" class="ml-2" v-model="subject" name="Subject" v-validate="{required: true}"
-              tabindex="1" v-autofocus>
+              tabindex="1" v-autofocus id="Subject">
           </div>
           <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Subject')">
             {{getInputErrorMessage('Subject')}}
@@ -24,7 +24,7 @@
           <div class="inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Message')">
 
             <textarea name="Message" placeholder="Enter Message Here.." class="ml-4 w-full h-48 p-1 resize-none"
-              v-model="message" v-validate="{required: true}" tabindex="2"></textarea>
+              v-model="message" v-validate="{required: true}" tabindex="2" id="Message"></textarea>
           </div>
           <p class="text-red-light text-xs pt-1 h-1 italic pt-1 animated shake" v-show="getInputState('Message')">
             {{getInputErrorMessage('Message')}}

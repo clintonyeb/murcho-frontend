@@ -8,7 +8,7 @@
         </label>
         <div class="h-8 inline-flex border w-full rounded-sm relative" :class="getInputColor('Subject')">
           <input type="text" placeholder="Event Title" class="ml-2" v-model="title" name="Title" v-validate="{required: true}"
-            tabindex="1" v-autofocus>
+            tabindex="1" v-autofocus id="Subject">
         </div>
         <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Title')">
           {{getInputErrorMessage('Title')}}
@@ -23,7 +23,7 @@
           <div class="inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Description')">
 
             <textarea name="Description" placeholder="Event Description.." class="ml-2 w-full h-24 p-1 resize-none"
-              v-model="description" tabindex="2"></textarea>
+              v-model="description" tabindex="2" id="Description"></textarea>
           </div>
           <p class="text-red-light text-xs pt-1 h-1 italic pt-1 animated shake" v-show="getInputState('Description')">
             {{getInputErrorMessage('Description')}}
@@ -37,7 +37,7 @@
         </label>
         <div class="h-8 inline-flex border w-full rounded-sm relative" :class="getInputColor('Start Date')">
           <input type="text" placeholder="Event Start Date" class="ml-2 w-full" name="Start Date" v-validate="{required: true}"
-            tabindex="3" id="start_date" ref="start_date">
+            tabindex="3" ref="start_date" id="Start Date">
         </div>
         <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Start Date')">
           {{getInputErrorMessage('Start Date')}}
@@ -51,7 +51,7 @@
         <div class="w-full inline-flex items-top justify-between">
           <div class="flex-grow w-full">
             <div class="w-full h-8 inline-flex border w-full rounded-sm relative mr-1" :class="getInputColor('Duration Format')">
-              <select name="Duration Format" v-model="duration_format" class="w-full bg-white select-none" v-validate="{required: true}" tabindex="4">
+              <select name="Duration Format" v-model="duration_format" class="w-full bg-white select-none" v-validate="{required: true}" tabindex="4" id="Duration Format">
                 <option v-for="dur in durations" :key="dur.id" :value="dur.value">{{dur.text}}</option>
               </select>
             </div>
@@ -79,7 +79,7 @@
         </label>
         <div class="h-8 inline-flex border w-full rounded-sm relative" :class="getInputColor('Location')">
           <input type="text" placeholder="Event Location" v-model="location" class="ml-2 w-full" name="Location"
-            tabindex="6">
+            tabindex="6" id="Location">
         </div>
         <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Location')">
           {{getInputErrorMessage('Location')}}
@@ -93,7 +93,7 @@
         <div class="w-full inline-flex items-top justify-between">
           <div class="flex-grow w-full">
             <div class="w-full h-8 inline-flex border w-full rounded-sm relative mr-1" :class="getInputColor('Color')">
-              <select name="Color" v-model="color" class="w-full bg-white select-none" v-validate="{required: true}" tabindex="4">
+              <select name="Color" v-model="color" class="w-full bg-white select-none" v-validate="{required: true}" tabindex="4" id="Color">
                 <option v-for="col in colors" :key="col.id" :value="col.value">{{col.text}}</option>
               </select>
             </div>
