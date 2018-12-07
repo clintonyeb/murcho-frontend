@@ -136,14 +136,14 @@
         </div>
 
         <list-view v-if="view.value === 'list-view'" :people="people" :page="page" :pagesEnded="ended" @back="goBack"
-          @forward="goForward" @action="handlePersonAction" @selected="selectedPeopleCount = $event"></list-view>
+          @forward="goForward" @action="handlePersonAction" @selected="selectedPeople = $event"></list-view>
         <grid-view v-else-if="view.value === 'grid-view'" :page="page" :pagesEnded="ended" @back="goBack" @forward="goForward"
-          :people="people" @action="handlePersonAction" @selected="selectedPeopleCount = $event"></grid-view>
+          :people="people" @action="handlePersonAction" @selected="selectedPeople = $event"></grid-view>
 
       </div>
     </div>
     <div class="w-1/5 h-screen max-w-xs">
-      <template v-if="selectedPeopleCount">
+      <template v-if="selectedPeople.length">
         <p class="mx-auto p-4 px-8 w-full relative inline-flex items-center justify-center">
           <span class="mt-2" @click="$store.commit('CLEAR_ALERT')">
             <svg class="fill-current h-4 w-4 text-grey-darker" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -159,9 +159,9 @@
           </p>
           <div class="w-full mt-8 inline-flex justify-between items-center">
             <p class="text-grey-dark text-xs italic">
-              {{selectedPeopleCount}} {{pluralize('person', selectedPeopleCount)}} selected.
+              {{selectedPeople.length}} {{pluralize('person', selectedPeople.length)}} selected.
             </p>
-            <p class="" v-show="selectedPeopleCount">
+            <p class="" v-show="selectedPeople.length">
               <button class="text-white bg-blue-light text-xs mr-4 p-2 rounded">
                 Add selected
               </button>
@@ -207,6 +207,11 @@
             <span>Sending SMS..</span>
           </p>
 
+          <p class="inline-flex text-grey" v-if="activeAction === 'edit-person'">
+            <span v-html="icons.edit" class="mr-2"></span>
+            <span>Editing Person..</span>
+          </p>
+
           <svg class="fill-current h-6 w-6 text-blue-light" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
             @click="takingAction = false">
             <title>Close</title>
@@ -246,6 +251,8 @@
 
           <email v-if="activeAction === 'email'" />
           <sms v-if="activeAction === 'sms'" />
+          <edit-person v-if="activeAction === 'edit-person'" :person="editingPerson" @updated="updatePerson"></edit-person>
+          <add-groups v-if="activeAction === 'add-groups' && actionablePeople.length" :people="actionablePeople" @groups-added="groupsCreated"></add-groups>
         </div>
       </div>
     </transition>
@@ -257,7 +264,9 @@
   import GridView from '@/components/people/GridView'
   import Email from '@/components/people/Email'
   import Sms from '@/components/people/SMS'
-  import OnClickOutside from '@/components/OnClickOutside'
+  import EditPerson from '@/components/people/Edit'
+  import AddGroups from '@/components/people/AddGroups'
+
   import {
     listViewIcon,
     gridViewIcon,
@@ -272,7 +281,7 @@
     smsIcon,
     fileIcon,
   } from '@/utils/icons'
-    import {
+  import {
     MESSAGE_TYPES
   } from '@/utils'
 
@@ -289,7 +298,7 @@
         activeAction: null,
         takingAction: false,
         pluralize: pluralize,
-        selectedPeopleCount: 0,
+        selectedPeople: [],
         people: [],
         total: 0,
         loadingMore: false,
@@ -369,7 +378,8 @@
         icons: {
           filter: filterIcon,
           plus: userPlusIcon,
-          sms: smsIcon
+          sms: smsIcon,
+          edit: editIcon
         },
         peopleMores: [{
           text: 'Import From Excel',
@@ -407,13 +417,17 @@
             icon: trashIcon,
           }
         ],
+        editingPerson: {},
+        actionablePeople: []
       }
     },
     components: {
       ListView,
       GridView,
       Email,
-      Sms
+      Sms,
+      EditPerson,
+      AddGroups
     },
     created() {
       this.setUpPeopleUI()
@@ -433,6 +447,23 @@
       }
     },
     methods: {
+      hideActionDrawer(){
+        this.editingPerson = null
+        this.activeAction = null
+        this.takingAction = false
+      },
+      groupsCreated(){
+        this.hideActionDrawer()
+        this.refresh()
+      },// receive person and update accorsindly
+      updatePerson(person) {
+        if (person) {
+          const index = this.people.findIndex(p => person.id === p.id)
+          this.people.splice(index, 1, person)
+        }
+
+        this.hideActionDrawer()
+      },
       actionHandler(value) {
         this.activeAction = value
         this.takingAction = true;
@@ -454,11 +485,33 @@
         }
       },
       handlePersonAction(data) {
+        // console.log(data.action)
         switch (data.action) {
           case 'delete':
             this.deletePerson(data.person, data.index)
             break;
+          case 'edit':
+            const person = this.people.find(per => per.id === data.person)
+            if (!person) return false
 
+            this.editingPerson = person
+            this.activeAction = 'edit-person'
+            this.takingAction = true
+            break;
+          case 'add-groups':
+            this.actionablePeople.push(data.person)
+
+            this.activeAction = 'add-groups'
+            this.takingAction = true
+            break
+          case 'email':
+          case 'sms':
+            this.activeAction = data.action
+            this.takingAction = true;
+            break
+          case 'removed-group':
+            this.people.splice(data.personIndex, 1, data.person)
+            break
           default:
             break;
         }

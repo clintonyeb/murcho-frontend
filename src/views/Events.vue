@@ -70,7 +70,7 @@
 
 <script>
   import Calendar from '@/components/events/Calendar'
-  import OnClickOutside from '@/components/OnClickOutside'
+
   import {
     leftIcon,
     rightIcon

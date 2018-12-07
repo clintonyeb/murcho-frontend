@@ -59,8 +59,17 @@
           <td class="px-1 py-2 w-64">
             <div class="inline-flex">
               <div class="truncate mr-2" style="width: 18rem;">
-                <span v-for="group in person.groups.slice(0, 3)" :key="group.id" class="bg-grey-lighter font-hairline text-grey-darker mr-1 p-1 rounded w-24 truncate">
-                  {{group.name}}
+                <span v-for="group in person.groups.slice(0, 3)" :key="group.id" class="inline-flex items-center justify-between bg-grey-lighter font-hairline text-grey-darker mr-1 p-1 rounded w-24 truncate">
+                  <p>
+                    {{group.name}}
+                  </p>
+                  <span class="hover:bg-grey rounded" @click.stop="removeGroupFromPerson(group.id, person.id)">
+                    <svg class="fill-current h-4 w-4 text-grey-dark" role="button" xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20">
+                      <title>Close</title>
+                      <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                    </svg>
+                  </span>
                 </span>
               </div>
 
@@ -77,8 +86,8 @@
                     style="min-width: 250px; top: 100%; right: -70%;">
                     <div class="inline-flex flex-wrap">
                       <span v-for="group in hidden" :key="group.id" class="h-6 text-sm bg-grey-lighter font-hairline text-grey-darker m-2 p-1 rounded whitespace-no-wrap">
-                      {{group.name}}
-                    </span>
+                        {{group.name}}
+                      </span>
                     </div>
                   </div>
 
@@ -102,7 +111,7 @@
                 <div v-show="activePerson === person.id" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden z-10"
                   style="min-width: 200px; top: 100%; right: -70%;">
                   <a v-for="action in personActions" :key="action.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                    @click="activePerson = null; $emit('action', {action: action.value, person: person.id, index: index})">
+                    @click="actionClicked(action, person, index)">
                     <span v-html="action.icon" class="mr-2 group-hover:text-white"></span>
                     <span class="group-hover:text-white">{{action.text}}</span>
                   </a>
@@ -120,7 +129,7 @@
 </template>
 
 <script>
-  import Avatar from '@/components/Avatar'
+  import Avatar from 'vue-avatar'
   import {
     trashIcon,
     editIcon,
@@ -145,15 +154,9 @@
           },
           {
             id: 1,
-            text: 'Add Group',
-            value: 'add-group',
+            text: 'Add Groups',
+            value: 'add-groups',
             icon: groupIcon
-          },
-          {
-            id: 2,
-            text: 'Remove Groups',
-            value: 'remove-groups',
-            icon: removeGroupIcon
           },
           {
             id: 3,
@@ -166,12 +169,6 @@
             text: 'Send SMS',
             value: 'sms',
             icon: smsIcon
-          },
-          {
-            id: 6,
-            text: 'Export As CSV',
-            value: 'export',
-            icon: fileIcon
           },
           {
             id: 4,
@@ -188,6 +185,35 @@
       Avatar
     },
     methods: {
+      async removeGroupFromPerson(groupId, personId, personIndex){
+        const path = 'remove_person_groups'
+        const url = this.$http.url(path)
+
+        try {
+          const response = await this.$http.post(url, {
+            person_id: personId,
+            group_id: groupId
+          }, this.authToken)
+          
+          this.$emit('action', {
+            action: 'removed-group',
+            person: response,
+            personIndex: personIndex
+          })
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loadingForm = false
+        }
+      },
+      actionClicked(action, person, index) {
+        this.activePerson = null;
+        this.$emit('action', {
+          action: action.value,
+          person: person.id,
+          index: index
+        })
+      },
       fullyVisible(el) {
         const container = el.parent.width
         const rightPos = el.style.right
@@ -214,7 +240,7 @@
     mixins: [viewMixin],
     watch: {
       selectedPeople(val) {
-        this.$emit('selected', val.length)
+        this.$emit('selected', val)
       }
     }
   }

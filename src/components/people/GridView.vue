@@ -62,7 +62,7 @@
 </template>
 
 <script>
-  import Avatar from '@/components/Avatar'
+  import Avatar from 'vue-avatar'
   import {
     trashIcon,
     editIcon,

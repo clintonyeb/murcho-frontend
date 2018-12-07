@@ -61,7 +61,7 @@
   import Groups from '@/components/groups/ListView'
   import People from '@/components/groups/People'
   import Events from '@/components/groups/Events'
-  import Avatar from '@/components/Avatar'
+  import Avatar from 'vue-avatar'
 
   import {
     filterIcon,
