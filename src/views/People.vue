@@ -103,7 +103,7 @@
                   <span v-html="icons.filter"></span>
                 </button>
 
-                <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded-l">
+                <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded-l" @click="createPerson">
                   <span v-html="icons.plus" class="mr-2 text-white"></span>
                   <span class="mr-2">Add Person</span>
                 </button>
@@ -154,22 +154,13 @@
         </p>
 
         <div class="mt-6 py-1">
-          <p class="text-grey">
-            Bulk Actions
-          </p>
-          <div class="w-full mt-8 inline-flex justify-between items-center">
-            <p class="text-grey-dark text-xs italic">
-              {{selectedPeople.length}} {{pluralize('person', selectedPeople.length)}} selected.
+          <div class="w-full inline-flex justify-between justify-center">
+            <p class="text-grey">
+              Bulk Actions
             </p>
-            <p class="" v-show="selectedPeople.length">
-              <button class="text-white bg-blue-light text-xs mr-4 p-2 rounded">
-                Add selected
-              </button>
-            </p>
-            <p class="inline-flex items-center">
-              <button class="text-red-light text-xs">
-                Clear
-              </button>
+            <p class="">
+              <span class="text-grey-darker mr-1">{{selectedPeople.length}}</span> <span class="text-grey-dark">{{pluralize('person',
+                selectedPeople.length)}} selected.</span>
             </p>
           </div>
 
@@ -249,11 +240,28 @@
 
           </div>
 
-          <email v-if="activeAction === 'email'" />
-          <sms v-if="activeAction === 'sms'" />
+          <email v-if="activeAction === 'email'" :people_ids="actionablePeople" @sent=" hideActionDrawer" />
+          <sms v-if="activeAction === 'sms'" :people_ids="actionablePeople" @sent=" hideActionDrawer" />
           <edit-person v-if="activeAction === 'edit-person'" :person="editingPerson" @updated="updatePerson"></edit-person>
-          <add-groups v-if="activeAction === 'add-groups' && actionablePeople.length" :people="actionablePeople" @groups-added="groupsCreated"></add-groups>
+          <add-groups v-if="activeAction === 'add-groups' && actionablePeople.length" :people="actionablePeople"
+            @groups-added="groupsCreated"></add-groups>
         </div>
+      </div>
+    </transition>
+
+    <transition enter-active-class="animated zoomIn" leave-active-class="animated zoomOut">
+      <div class="bg-white p-6 fixed shadow-lg z-20" style="top: 50%; left: 50%; transform: translate(-50%, -50%); animation-duration: 500ms;"
+        v-if="modal" @keyup.esc.stop="closeModal">
+        <!-- <div class="background-tint fixed w-full h-full bg-black"></div> -->
+
+        <svg class="cursor-pointer fill-current h-5 w-5 text-blue-light float-right mr-2" role="button" xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20" @click="closeModal">
+          <title>Close</title>
+          <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+        </svg>
+
+        <create v-if="activeAction === 'create'" @close="closeModal" @created="personCreated"></create>
+        <view-person v-if="activeAction === 'view'" :person="editingPerson" @close="closeModal"></view-person>
       </div>
     </transition>
   </div>
@@ -266,6 +274,8 @@
   import Sms from '@/components/people/SMS'
   import EditPerson from '@/components/people/Edit'
   import AddGroups from '@/components/people/AddGroups'
+  import Create from '@/components/people/Create'
+  import ViewPerson from '@/components/people/View'
 
   import {
     listViewIcon,
@@ -291,6 +301,7 @@
     name: 'People',
     data() {
       return {
+        modal: false,
         displayMessage: '',
         displayMessageType: MESSAGE_TYPES.info,
         shouldDisplayMessage: false,
@@ -427,7 +438,9 @@
       Email,
       Sms,
       EditPerson,
-      AddGroups
+      AddGroups,
+      Create,
+      ViewPerson
     },
     created() {
       this.setUpPeopleUI()
@@ -447,15 +460,27 @@
       }
     },
     methods: {
-      hideActionDrawer(){
+      personCreated(person) {
+        this.people.unshift(person)
+        this.closeModal()
+      },
+      closeModal() {
+        this.modal = false
+        this.activeAction = null
+      },
+      createPerson() {
+        this.activeAction = 'create'
+        this.modal = true
+      },
+      hideActionDrawer() {
         this.editingPerson = null
         this.activeAction = null
         this.takingAction = false
       },
-      groupsCreated(){
+      groupsCreated() {
         this.hideActionDrawer()
         this.refresh()
-      },// receive person and update accorsindly
+      }, // receive person and update accorsindly
       updatePerson(person) {
         if (person) {
           const index = this.people.findIndex(p => person.id === p.id)
@@ -488,31 +513,36 @@
         // console.log(data.action)
         switch (data.action) {
           case 'delete':
-            this.deletePerson(data.person, data.index)
+            this.deletePerson(data.person.id, data.index)
             break;
           case 'edit':
-            const person = this.people.find(per => per.id === data.person)
-            if (!person) return false
-
-            this.editingPerson = person
+            this.editingPerson = data.person
             this.activeAction = 'edit-person'
             this.takingAction = true
             break;
           case 'add-groups':
-            this.actionablePeople.push(data.person)
+            this.actionablePeople = [data.person.id]
 
             this.activeAction = 'add-groups'
             this.takingAction = true
             break
           case 'email':
           case 'sms':
+            this.actionablePeople = [data.person.id]
+
             this.activeAction = data.action
             this.takingAction = true;
             break
           case 'removed-group':
-            this.people.splice(data.personIndex, 1, data.person)
+            this.people.splice(data.personIndex, 1, data.person.id)
+            break
+          case 'view':
+            this.editingPerson = data.person
+            this.activeAction = 'view'
+            this.modal = true
             break
           default:
+            throw new Error("Invalid action provided.")
             break;
         }
       },

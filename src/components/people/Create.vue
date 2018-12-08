@@ -6,25 +6,22 @@
           <label class="block text-grey text-sm font-bold mb-2" for="First Name">
             First Name
           </label>
-          <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('First Name')">
-            <input type="text" placeholder="Enter First Name" class="ml-2 text-grey-darker" v-model="first_name" name="First Name"
-              v-validate="{required: true}" tabindex="1" v-autofocus id="First Name">
-          </div>
+          <input type="text" placeholder="Enter First Name" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
+            v-model="first_name" name="First Name" v-validate="{required: true}" tabindex="1" v-autofocus id="First Name"
+            :class="getInputColor('First Name')">
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('First Name')">
             {{getInputErrorMessage('First Name')}}
           </p>
         </div>
       </div>
 
-      <div class="w-full control mb-1">
+      <div class="w-full control mb-1 ml-1">
         <div>
           <label class="block text-grey text-sm font-bold mb-2" for="Last Name">
             Last Name
           </label>
-          <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Last Name')">
-            <input type="text" placeholder="Enter Last Name" class="ml-2 text-grey-darker" v-model="last_name" name="Last Name"
-              v-validate="{required: true}" tabindex="2" id="Last Name">
-          </div>
+          <input type="text" placeholder="Enter Last Name" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
+            v-model="last_name" name="Last Name" v-validate="{required: true}" tabindex="2" id="Last Name" :class="getInputColor('Last Name')">
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Last Name')">
             {{getInputErrorMessage('Last Name')}}
           </p>
@@ -39,10 +36,8 @@
           <label class="block text-grey text-sm font-bold mb-2" for="Email Address">
             Email Address
           </label>
-          <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Email Address')">
-            <input type="email" placeholder="Enter Email Address" class="ml-2 text-grey-darker" v-model="email" name="Email Address"
-               tabindex="3" id="Email Address">
-          </div>
+          <input type="email" placeholder="Enter Email Address" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
+            v-model="email" name="Email Address" tabindex="3" id="Email Address" :class="getInputColor('Email Address')">
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Email Address')">
             {{getInputErrorMessage('Email Address')}}
           </p>
@@ -54,10 +49,8 @@
           <label class="block text-grey text-sm font-bold mb-2" for="Phone Number">
             Phone Number
           </label>
-          <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Phone Number')">
-            <input type="text" placeholder="Enter Phone Number" class="ml-2 text-grey-darker" v-model="phone_number"
-              name="Phone Number" tabindex="4" id="Phone Number">
-          </div>
+          <input type="text" placeholder="Enter Phone Number" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
+            v-model="phone_number" name="Phone Number" tabindex="4" id="Phone Number" :class="getInputColor('Phone Number')">
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Phone Number')">
             {{getInputErrorMessage('Phone Number')}}
           </p>
@@ -72,10 +65,8 @@
           <label class="block text-grey text-sm font-bold mb-2" for="Date Joined">
             Date Person Joined
           </label>
-          <div class="h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Date Joined')">
-            <input type="text" placeholder="Enter Date Person Joined" class="ml-2 text-grey-darker" name="Date Joined"
-              tabindex="5" ref="date_joined" id="Date Joined">
-          </div>
+          <input type="text" placeholder="Enter Date Person Joined" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
+            name="Date Joined" tabindex="5" ref="date_joined" id="Date Joined" :class="getInputColor('Date Joined')">
           <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Date Joined')">
             {{getInputErrorMessage('Date Joined')}}
           </p>
@@ -87,12 +78,10 @@
           <label class="block text-grey text-sm font-bold mb-2" for="Membership Status">
             Membership Status
           </label>
-          <div class="w-full h-10 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Membership Status')">
-            <select name="Membership Status" v-model="membership_status" class="ml-2 w-full bg-white select-none text-grey-darker"
-              v-validate="{required: true}" tabindex="6" id="Membership Status">
-              <option v-for="status in membershipStatuses" :key="status.id" :value="status.value">{{status.text}}</option>
-            </select>
-          </div>
+          <select name="Membership Status" v-model="membership_status" class="w-full bg-white text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
+            v-validate="{required: true}" tabindex="6" id="Membership Status" :class="getInputColor('Membership Status')">
+            <option v-for="status in membershipStatuses" :key="status.id" :value="status.value">{{status.text}}</option>
+          </select>
           <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Membership Status')">
             {{getInputErrorMessage('Membership Status')}}
           </p>
@@ -122,10 +111,11 @@
         </div>
       </div>
 
-      <div class="w-1/3 control">
+      <div class="w-1/3 control" v-if="photo">
         <div class="w-full flex-col items-center justify-center">
           <avatar :username="`${first_name} ${last_name}`" :src="photo" class="m-auto" :size="70" :rounded="false" ref="avatar" />
-          <p class="text-xs text-grey hover:underline cursor-pointer mt-1 text-center hover:text-grey-dark" @click="photo = null" v-if="photo">
+          <p class="text-xs text-grey hover:underline cursor-pointer mt-1 text-center hover:text-grey-dark" @click="photo = null"
+            v-if="photo">
             Remove
           </p>
         </div>
@@ -135,8 +125,8 @@
 
     <div class="mt-8 mb-4 inline-flex justify-start w-full">
       <div class="w-full inline-flex justify-between items-center">
-        <button class="inline-flex flex-auto items-center justify-center h-10 bg-blue rounded-sm text-white shadow-md"
-          @click="editPerson">
+        <button class="inline-flex flex-auto items-center justify-center h-10 bg-blue rounded-sm text-white shadow-md mr-2"
+          @click="submit">
           <svg version="1.1" class="h-6 w-6 fill-current mr-4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
             <path d="M506.955,1.314c-3.119-1.78-6.955-1.75-10.045,0.078L313.656,109.756c-4.754,2.811-6.329,8.943-3.518,13.697c2.81,4.753,8.942,6.328,13.697,3.518l131.482-77.749L210.411,303.335L88.603,266.069l158.965-94c4.754-2.812,6.329-8.944,3.518-13.698c-2.81-4.753-8.943-6.33-13.697-3.518L58.91,260.392c-3.41,2.017-5.309,5.856-4.84,9.791s3.216,7.221,7.004,8.38l145.469,44.504L270.72,439.88c0.067,0.121,0.136,0.223,0.207,0.314c1.071,1.786,2.676,3.245,4.678,4.087c1.253,0.527,2.57,0.784,3.878,0.784c2.563,0,5.086-0.986,6.991-2.849l73.794-72.12l138.806,42.466c0.96,0.293,1.945,0.438,2.925,0.438c2.116,0,4.206-0.672,5.948-1.961C510.496,409.153,512,406.17,512,403V10C512,6.409,510.074,3.093,506.955,1.314z M271.265,329.23c-1.158,1.673-1.779,3.659-1.779,5.694v61.171l-43.823-79.765l193.921-201.21L271.265,329.23z M289.486,411.309v-62.867l48.99,14.988L289.486,411.309z M492,389.483l-196.499-60.116L492,45.704V389.483z" />
@@ -147,7 +137,7 @@
             <path d="M387.704,416.139c-3.906-3.904-10.236-3.904-14.142,0l-49.58,49.58c-3.905,3.905-3.905,10.237,0,14.143c1.953,1.952,4.512,2.929,7.071,2.929s5.118-0.977,7.071-2.929l49.58-49.58C391.609,426.377,391.609,420.045,387.704,416.139z" />
             <path d="M283.5,136.31c-1.86-1.86-4.44-2.93-7.07-2.93s-5.21,1.07-7.07,2.93c-1.859,1.86-2.93,4.44-2.93,7.08c0,2.63,1.07,5.2,2.93,7.06c1.86,1.87,4.44,2.93,7.07,2.93s5.21-1.06,7.07-2.93c1.859-1.86,2.93-4.43,2.93-7.06C286.43,140.75,285.36,138.17,283.5,136.31z" />
           </svg>
-          <span class="font-bold">SAVE CHANGES</span>
+          <span class="font-bold">ADD PERSON</span>
           <svg class="spinner ml-2 h-6 w-6 text-grey-light fill-current animated fadeIn" version="1.1" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
             xml:space="preserve" v-if="loadingForm">
@@ -164,9 +154,10 @@
           </svg>
         </button>
 
-        <a class="flex-grow text-right text-grey hover:text-grey-dark hover:underline cursor-pointer">
-          Want More Options?
-        </a>
+        <button class="inline-flex flex-auto items-center justify-center h-10 rounded-sm text-red-light underline ml-2"
+          @click="$emit('close')">
+          <span class="font-bold">CANCEL</span>
+        </button>
 
       </div>
     </div>
@@ -191,8 +182,7 @@
   let dateJoinedComp = null;
 
   export default {
-    props: ['person'],
-    name: 'EditPerson',
+    name: 'Create',
     data() {
       return {
         loadingForm: false,
@@ -200,7 +190,7 @@
         last_name: '',
         email: '',
         phone_number: '',
-        membership_status: '',
+        membership_status: 'member',
         photo: '',
         membershipStatuses: [{
             text: 'Member',
@@ -218,23 +208,12 @@
       }
     },
     mounted() {
-      this.setup(this.person)
+      this.initializeDatePickers()
     },
     beforeDestroy() {
       if (dateJoinedComp !== null) dateJoinedComp.destroy()
     },
     methods: {
-      setup(person) {
-        this.first_name = person.first_name
-        this.last_name = person.last_name
-        this.email = person.email
-        this.phone_number = person.phone_number
-        this.date_joined = person.date_joined
-        this.membership_status = person.membership_status
-        this.photo = person.photo
-
-        this.initializeDatePickers()
-      },
       photoUploaded(event) {
         const file = event.target.files && event.target.files[0]
 
@@ -251,35 +230,35 @@
         }
 
       },
-      editPerson() {
-        if(this.loadingForm) return false
+      submit() {
+        if (this.loadingForm) return false
         this.validateForm(state => {
           if (!state) return false
 
-           this.loadingForm = true
+          this.loadingForm = true
 
-          const fields = {
-            first_name: this.first_name,
-            last_name: this.last_name,
-            email: this.email,
-            phone_number: this.phone_number,
-            date_joined: dateJoinedComp.selectedDates[0],
-            membership_status: this.membership_status,
-            photo: this.photo
-          }
-
-          this.getChangedFields(fields, this.person, async (err, changedFields) => {
-            if (err || !Object.keys(changedFields).length) {
-              this.loadingForm = false
+          this.uploadPhoto(async (err, fileURL) => {
+            if (err) {
               return false
             }
 
-            const path = `people/${this.person.id}`
+            const fields = {
+              first_name: this.first_name,
+              last_name: this.last_name,
+              email: this.email,
+              phone_number: this.phone_number,
+              date_joined: dateJoinedComp.selectedDates[0],
+              membership_status: this.membership_status,
+              photo: fileURL || null,
+              thumbnail: fileURL || null
+            }
+
+            const path = `people`
             const url = this.$http.url(path)
 
             try {
-              const response = await this.$http.put(url, changedFields, this.authToken)
-              this.$emit('updated', response)
+              const response = await this.$http.post(url, fields, this.authToken)
+              this.$emit('created', response)
             } catch (err) {
               console.log(err);
             } finally {
@@ -335,48 +314,22 @@
           }
         })
       },
-      async getChangedFields(object, original, cb) {
-        original.date_joined = new Date(original.date_joined) // fix comparing string to date object
-        const fields = {}
+      async uploadPhoto(cb) {
+        const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
 
-        for (const key in object) {
-          if (object.hasOwnProperty(key)) {
-            const ori = original[key];
-            const ob = object[key]
-
-            if (ori instanceof Date) {
-              if (ori.getTime() !== ob.getTime()) fields[key] = object[key]
-            } else {
-              if (ori !== ob) {
-                if (key === 'photo') {
-                  // upload photo and assign url here
-                  const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
-                  if (file) {
-                    try {
-                      const file_url = await this.uploadFile(file)
-                      console.log(file_url, 'file')
-                      fields[key] = file_url
-                      fields['thumbnail'] = file_url
-                    } catch (error) {
-                      fields[key] = null
-                      console.log(error)
-                      cb(error)
-                    }
-                  } else {
-                    fields[key] = null
-                  }
-                } else {
-                  fields[key] = object[key]
-                }
-              }
-            }
+        if (file) {
+          try {
+            const file_url = await this.uploadFile(file)
+            cb(null, file_url)
+          } catch (error) {
+            cb(error)
           }
+        } else {
+          cb(null, false)
         }
-
-        cb(null, fields);
       },
       initializeDatePickers() {
-        const defaultDate = new Date(this.person.date_joined)
+        const defaultDate = new Date()
 
         dateJoinedComp = flatpickr(this.$refs['date_joined'], {
           dateFormat: "J M, Y",

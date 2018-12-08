@@ -60,8 +60,6 @@
 </template>
 
 <script>
-import viewMixin from '@/mixins/views'
-
   import {
     trashIcon,
     editIcon,
@@ -95,7 +93,6 @@ import viewMixin from '@/mixins/views'
         pluralize: pluralize
       }
     },
-    mixins: [viewMixin]
   }
 
 </script>

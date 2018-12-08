@@ -53,9 +53,9 @@
           </td>
           <td class="px-1 py-2">{{person.first_name}}</td>
           <td class="px-1 py-2">{{person.last_name}}</td>
-          <td class="px-1 py-2">{{person.email}}</td>
-          <td class="px-1 py-2">{{person.phone_number}}</td>
-          <td class="px-1 py-2">{{person.membership_status | capitalize}}</td>
+          <td class="px-1 py-2">{{person.email || '-'}}</td>
+          <td class="px-1 py-2">{{person.phone_number || '-'}}</td>
+          <td class="px-1 py-2">{{person.membership_status | fromKebabToString}}</td>
           <td class="px-1 py-2 w-64">
             <div class="inline-flex">
               <div class="truncate mr-2" style="width: 18rem;">
@@ -139,7 +139,6 @@
     fileIcon,
     viewIcon
   } from '@/utils/icons'
-  import viewMixin from '@/mixins/views'
 
   export default {
     props: ['page', 'pagesEnded', 'people'],
@@ -213,7 +212,7 @@
         this.activePerson = null;
         this.$emit('action', {
           action: action.value,
-          person: person.id,
+          person: person,
           index: index
         })
       },
@@ -240,7 +239,6 @@
         }
       }
     },
-    mixins: [viewMixin],
     watch: {
       selectedPeople(val) {
         this.$emit('selected', val)

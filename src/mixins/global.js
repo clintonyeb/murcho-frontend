@@ -179,6 +179,21 @@ export default {
     capitalizeAll (string) {
       if (!string) return ''
       return string.split(' ').map(str => `${str.charAt(0).toUpperCase()}${str.substring(1)}`).join(' ')
+    },
+    formatDate (dateString) {
+      const monthNames = [
+        'Jan', 'Feb', 'Mar',
+        'Apr', 'May', 'Jun', 'Jul',
+        'Aug', 'Sep', 'Oct',
+        'Nov', 'Dec'
+      ]
+
+      const date = new Date(dateString)
+      const day = date.getDate()
+      const monthIndex = date.getMonth()
+      const year = date.getFullYear()
+
+      return day + ' ' + monthNames[monthIndex] + ' ' + year
     }
   }
 }

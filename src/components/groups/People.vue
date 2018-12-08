@@ -91,7 +91,6 @@
     smsIcon,
     fileIcon,
   } from '@/utils/icons'
-  import viewMixin from '@/mixins/views'
 
   export default {
     props: ['page', 'pagesEnded', 'people'],
@@ -162,7 +161,6 @@
         }
       }
     },
-    mixins: [viewMixin]
   }
 
 </script>
