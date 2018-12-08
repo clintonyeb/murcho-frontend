@@ -29,7 +29,7 @@
       
     </div>
 
-    <div class="container mx-auto md:p-20 sm:p-12">
+    <div class="container mx-auto md:p-20 sm:p-12 bg-pattern">
 
       <div class="mb-4">
         <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="w-64">
@@ -138,7 +138,7 @@
         </p>
       </div>
 
-      <div class="mt-12 inline-flex w-full shadow-md">
+      <div class="mt-12 inline-flex w-full shadow-md" @click="$router.replace({name: 'signup'})">
         <button class="bg-blue-dark h-12 w-12 p-2">
 
           <svg class="h-6 w-6 fill-current text-white" viewBox="-7 0 429 429.5" xmlns="http://www.w3.org/2000/svg">
