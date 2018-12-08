@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     setPageTitle (title) {
-      document.title = `${title} | Murch`
+      document.title = `${title} | Murcho`
     },
     getPersonName (firstName, lastName) {
       return firstName + ' ' + lastName

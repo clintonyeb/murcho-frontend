@@ -3,7 +3,7 @@
     <div class="container mx-auto md:p-20 sm:p-12">
 
       <div class="mb-4">
-        <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murch.png" alt="Murch Logo" class="w-32">
+        <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="w-64">
       </div>
 
       <div class="mt-16 mb-2 text-grey-dark font-bold text-xl">

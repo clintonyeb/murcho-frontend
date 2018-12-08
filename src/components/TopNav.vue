@@ -1,7 +1,7 @@
 <template>
   <nav class="flex items-center justify-between flex-wrap p-4 shadow h-16 font-sans">
-    <div class="flex items-center flex-no-shrink mr-32 h-8">
-      <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murch.png" alt="Murch Logo" class="h-6">
+    <div class="flex items-center flex-no-shrink mr-24 h-8">
+      <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-8">
     </div>
     <div class="block lg:hidden">
       <button class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white">
