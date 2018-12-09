@@ -60,39 +60,39 @@
 </template>
 
 <script>
-  import {
-    trashIcon,
-    editIcon,
-    groupIcon,
-    removeGroupIcon,
-    mailIcon,
-    smsIcon,
-    fileIcon,
-  } from '@/utils/icons'
+import {
+  trashIcon,
+  editIcon,
+  groupIcon,
+  removeGroupIcon,
+  mailIcon,
+  smsIcon,
+  fileIcon
+} from '@/utils/icons'
 
-  const pluralize = require('pluralize')
+const pluralize = require('pluralize')
 
-  export default {
-    props: ['page', 'pagesEnded', 'groups'],
-    name: 'GridView',
-    data() {
-      return {
-        groupActions: [{
-            text: 'Edit Group',
-            value: 'edit',
-            icon: editIcon
-          },
-          {
-            id: 4,
-            text: 'Delete',
-            value: 'delete',
-            icon: trashIcon
-          }
-        ],
-        activeGroup: null,
-        pluralize: pluralize
+export default {
+  props: ['page', 'pagesEnded', 'groups'],
+  name: 'GridView',
+  data () {
+    return {
+      groupActions: [{
+        text: 'Edit Group',
+        value: 'edit',
+        icon: editIcon
+      },
+      {
+        id: 4,
+        text: 'Delete',
+        value: 'delete',
+        icon: trashIcon
       }
-    },
+      ],
+      activeGroup: null,
+      pluralize: pluralize
+    }
   }
+}
 
 </script>

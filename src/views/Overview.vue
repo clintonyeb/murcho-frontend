@@ -1,11 +1,11 @@
 <template>
-  
+
 </template>
 
 <script>
 export default {
-created(){
-  this.setPageTitle('Login')
-}
+  created () {
+    this.setPageTitle('Login')
+  }
 }
 </script>

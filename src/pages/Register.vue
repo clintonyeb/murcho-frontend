@@ -215,131 +215,126 @@
 </template>
 
 <script>
-  import {
-    MESSAGE_TYPES
-  } from '@/utils'
+import {
+  MESSAGE_TYPES
+} from '@/utils'
 
-  export default {
-    name: 'LoginPage',
-    data() {
+export default {
+  name: 'LoginPage',
+  data () {
+    return {
+      displayMessage: '',
+      displayMessageType: MESSAGE_TYPES.info,
+      shouldDisplayMessage: false,
+      MESSAGE_TYPES: MESSAGE_TYPES,
+      loadingForm: false,
+      church_name: '',
+      church_location: '',
+      church_motto: '',
+      church_photo: '',
+      email: '',
+      password: '',
+      confirm_password: ''
+    }
+  },
+  created () {
+    this.setPageTitle('Sign Up')
+  },
+  computed: {
+    loadingButtonClass () {
       return {
-        displayMessage: '',
-        displayMessageType: MESSAGE_TYPES.info,
-        shouldDisplayMessage: false,
-        MESSAGE_TYPES: MESSAGE_TYPES,
-        loadingForm: false,
-        church_name: '',
-        church_location: '',
-        church_motto: '',
-        church_photo: '',
-        email: '',
-        password: '',
-        confirm_password: ''
+        loading: this.loadingForm
       }
     },
-    created() {
-      this.setPageTitle('Sign Up')
-    },
-    computed: {
-      loadingButtonClass() {
-        return {
-          loading: this.loadingForm
-        }
-      },
-      alertClass() {
-        switch (this.displayMessageType) {
-          case MESSAGE_TYPES.warning:
-            return ['bg-yellow-dark']
-          case MESSAGE_TYPES.error:
-            return ['bg-red-light']
-          default:
-            return ['bg-blue-light']
-        }
-      }
-    },
-    methods: {
-      photoUploaded(event) {
-        const file = event.target.files && event.target.files[0]
-
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.church_photo = e.target.result
-          }
-
-          reader.readAsDataURL(file);
-
-        } else {
-          this.church_photo = null
-        }
-
-      },
-      getInputErrorMessage(name) {
-        return this.errors.first(name)
-      },
-      getInputColor(name) {
-        return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-      },
-      getInputState(name) {
-        return this.errors.has(name)
-      },
-      submit() {
-        if (this.loadingForm) return false
-        this.shouldDisplayMessage = false
-
-        this.validateForm(async state => {
-          if (!state) return false
-          this.loadingForm = true
-
-
-          try {
-            // create church
-
-            let path = 'churches'
-            let url = this.$http.url(path)
-
-            const church = await this.$http.post(url, {
-              name: this.church_name,
-              location: this.church_location,
-              photo: null, // TODO upload photo
-              motto: this.church_motto
-            })
-
-            // create user
-            path = 'users'
-            url = this.$http.url(path)
-
-            const user = await this.$http.post(url, {
-              church_id: church.id,
-              email: this.email,
-              password: this.password,
-              access_level: 'super_admin',
-            })
-
-            // return user to login
-
-            this.$store.commit('SET_LOGIN_DATA', {
-              message: 'Account successfully created.',
-              type: MESSAGE_TYPES.info,
-              route: null
-            })
-
-            return this.$router.replace({
-              name: 'login'
-            })
-
-          } catch (err) {
-            this.loadingForm = false
-            this.displayMessage = err.status === 401 ?
-              'Invalid email and password provided.' :
-              'There was an error processing your request.'
-            this.displayMessageType = MESSAGE_TYPES.error
-            this.shouldDisplayMessage = true
-          } finally {}
-
-        })
+    alertClass () {
+      switch (this.displayMessageType) {
+        case MESSAGE_TYPES.warning:
+          return ['bg-yellow-dark']
+        case MESSAGE_TYPES.error:
+          return ['bg-red-light']
+        default:
+          return ['bg-blue-light']
       }
     }
+  },
+  methods: {
+    photoUploaded (event) {
+      const file = event.target.files && event.target.files[0]
+
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.church_photo = e.target.result
+        }
+
+        reader.readAsDataURL(file)
+      } else {
+        this.church_photo = null
+      }
+    },
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
+    },
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
+    },
+    submit () {
+      if (this.loadingForm) return false
+      this.shouldDisplayMessage = false
+
+      this.validateForm(async state => {
+        if (!state) return false
+        this.loadingForm = true
+
+        try {
+          // create church
+
+          let path = 'churches'
+          let url = this.$http.url(path)
+
+          const church = await this.$http.post(url, {
+            name: this.church_name,
+            location: this.church_location,
+            photo: null, // TODO upload photo
+            motto: this.church_motto
+          })
+
+          // create user
+          path = 'users'
+          url = this.$http.url(path)
+
+          const user = await this.$http.post(url, {
+            church_id: church.id,
+            email: this.email,
+            password: this.password,
+            access_level: 'super_admin'
+          })
+
+          // return user to login
+
+          this.$store.commit('SET_LOGIN_DATA', {
+            message: 'Account successfully created.',
+            type: MESSAGE_TYPES.info,
+            route: null
+          })
+
+          return this.$router.replace({
+            name: 'login'
+          })
+        } catch (err) {
+          this.loadingForm = false
+          this.displayMessage = err.status === 401
+            ? 'Invalid email and password provided.'
+            : 'There was an error processing your request.'
+          this.displayMessageType = MESSAGE_TYPES.error
+          this.shouldDisplayMessage = true
+        } finally {}
+      })
+    }
   }
+}
 
 </script>

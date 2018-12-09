@@ -166,196 +166,194 @@
 </template>
 
 <script>
-  const dateFormat = "EEEE, do; h:m a"
-  // const pluralize = require('pluralize')
+// const pluralize = require('pluralize')
 
-  import {
-    tickIcon,
-    // eventIcon,
-    // closeIcon,
-  } from '@/utils/icons'
+import {
+  tickIcon
+  // eventIcon,
+  // closeIcon,
+} from '@/utils/icons'
 
-  import flatpickr from "flatpickr";
-  require("flatpickr/dist/flatpickr.min.css")
-  import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate.js"
+import flatpickr from 'flatpickr'
+import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
+const dateFormat = 'EEEE, do; h:m a'
+require('flatpickr/dist/flatpickr.min.css')
 
-  let dateJoinedComp = null;
+let dateJoinedComp = null
 
-  export default {
-    name: 'Create',
-    data() {
-      return {
-        loadingForm: false,
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone_number: '',
-        membership_status: 'member',
-        photo: '',
-        membershipStatuses: [{
-            text: 'Member',
-            value: 'member'
-          },
-          {
-            text: 'Guest',
-            value: 'guest'
-          },
-          {
-            text: 'Former Member',
-            value: 'former_member'
-          }
-        ],
+export default {
+  name: 'Create',
+  data () {
+    return {
+      loadingForm: false,
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone_number: '',
+      membership_status: 'member',
+      photo: '',
+      membershipStatuses: [{
+        text: 'Member',
+        value: 'member'
+      },
+      {
+        text: 'Guest',
+        value: 'guest'
+      },
+      {
+        text: 'Former Member',
+        value: 'former_member'
       }
-    },
-    mounted() {
-      this.initializeDatePickers()
-    },
-    beforeDestroy() {
-      if (dateJoinedComp !== null) dateJoinedComp.destroy()
-    },
-    methods: {
-      photoUploaded(event) {
-        const file = event.target.files && event.target.files[0]
+      ]
+    }
+  },
+  mounted () {
+    this.initializeDatePickers()
+  },
+  beforeDestroy () {
+    if (dateJoinedComp !== null) dateJoinedComp.destroy()
+  },
+  methods: {
+    photoUploaded (event) {
+      const file = event.target.files && event.target.files[0]
 
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.photo = e.target.result
-          }
-
-          reader.readAsDataURL(file);
-
-        } else {
-          this.photo = null
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.photo = e.target.result
         }
 
-      },
-      submit() {
-        if (this.loadingForm) return false
-        this.validateForm(state => {
-          if (!state) return false
+        reader.readAsDataURL(file)
+      } else {
+        this.photo = null
+      }
+    },
+    submit () {
+      if (this.loadingForm) return false
+      this.validateForm(state => {
+        if (!state) return false
 
-          this.loadingForm = true
+        this.loadingForm = true
 
-          this.uploadPhoto(async (err, fileURL) => {
-            if (err) {
-              return false
-            }
+        this.uploadPhoto(async (err, fileURL) => {
+          if (err) {
+            return false
+          }
 
-            const fields = {
-              first_name: this.first_name,
-              last_name: this.last_name,
-              email: this.email,
-              phone_number: this.phone_number,
-              date_joined: dateJoinedComp.selectedDates[0],
-              membership_status: this.membership_status,
-              photo: fileURL || null,
-              thumbnail: fileURL || null
-            }
+          const fields = {
+            first_name: this.first_name,
+            last_name: this.last_name,
+            email: this.email,
+            phone_number: this.phone_number,
+            date_joined: dateJoinedComp.selectedDates[0],
+            membership_status: this.membership_status,
+            photo: fileURL || null,
+            thumbnail: fileURL || null
+          }
 
-            const path = `people`
-            const url = this.$http.url(path)
-
-            try {
-              const response = await this.$http.post(url, fields, this.authToken)
-              this.$emit('created', response)
-            } catch (err) {
-              console.log(err);
-            } finally {
-              this.loadingForm = false
-            }
-          })
-        })
-      },
-      getSignedURL(fileName, contentType) {
-        return new Promise(async (resolve, reject) => {
-          const path = 'sign_url_for_upload'
+          const path = `people`
           const url = this.$http.url(path)
 
           try {
-            const response = await this.$http.post(
-              url, {
-                file_name: fileName,
-                content_type: contentType
-              },
-              this.authToken
-            )
-            resolve(response)
+            const response = await this.$http.post(url, fields, this.authToken)
+            this.$emit('created', response)
           } catch (err) {
-            reject(err)
-          } finally {}
-        })
-      },
-      getFileURL(name) {
-        return `https://s3.ap-south-1.amazonaws.com/murch-app/${name}`
-      },
-      uploadFile(file) {
-        return new Promise(async (resolve, reject) => {
-          try {
-            const data = await this.getSignedURL(file.name, file.type)
-
-            const request = new XMLHttpRequest()
-            request.open('PUT', data.signed_url, true)
-            request.setRequestHeader('Content-Type', file.type)
-            request.setRequestHeader('Access-Control-Allow-Origin', '*')
-            request.setRequestHeader('Accept', 'application/json')
-
-            request.onload = () => {
-              if (request.status >= 200 && request.status < 300) {
-                resolve(this.getFileURL(data.file_name))
-              } else {
-                reject("Error uploading file")
-              }
-            }
-
-            request.send(file)
-          } catch (error) {
-            reject(error)
+            console.log(err)
+          } finally {
+            this.loadingForm = false
           }
         })
-      },
-      async uploadPhoto(cb) {
-        const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
-
-        if (file) {
-          try {
-            const file_url = await this.uploadFile(file)
-            cb(null, file_url)
-          } catch (error) {
-            cb(error)
-          }
-        } else {
-          cb(null, false)
-        }
-      },
-      initializeDatePickers() {
-        const defaultDate = new Date()
-
-        dateJoinedComp = flatpickr(this.$refs['date_joined'], {
-          dateFormat: "J M, Y",
-          defaultDate: defaultDate,
-          plugins: [new confirmDatePlugin({
-            confirmIcon: tickIcon,
-            confirmText: "Done",
-            showAlways: true,
-          })]
-        });
-      },
-      getInputErrorMessage(name) {
-        return this.errors.first(name)
-      },
-      getInputColor(name) {
-        return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-      },
-      getInputState(name) {
-        return this.errors.has(name)
-      },
+      })
     },
-    watch: {
-      person(val) {
-        this.setup(val)
+    getSignedURL (fileName, contentType) {
+      return new Promise(async (resolve, reject) => {
+        const path = 'sign_url_for_upload'
+        const url = this.$http.url(path)
+
+        try {
+          const response = await this.$http.post(
+            url, {
+              file_name: fileName,
+              content_type: contentType
+            },
+            this.authToken
+          )
+          resolve(response)
+        } catch (err) {
+          reject(err)
+        } finally {}
+      })
+    },
+    getFileURL (name) {
+      return `https://s3.ap-south-1.amazonaws.com/murch-app/${name}`
+    },
+    uploadFile (file) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const data = await this.getSignedURL(file.name, file.type)
+
+          const request = new XMLHttpRequest()
+          request.open('PUT', data.signed_url, true)
+          request.setRequestHeader('Content-Type', file.type)
+          request.setRequestHeader('Access-Control-Allow-Origin', '*')
+          request.setRequestHeader('Accept', 'application/json')
+
+          request.onload = () => {
+            if (request.status >= 200 && request.status < 300) {
+              resolve(this.getFileURL(data.file_name))
+            } else {
+              reject('Error uploading file')
+            }
+          }
+
+          request.send(file)
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    async uploadPhoto (cb) {
+      const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
+
+      if (file) {
+        try {
+          const file_url = await this.uploadFile(file)
+          cb(null, file_url)
+        } catch (error) {
+          cb(error)
+        }
+      } else {
+        cb(null, false)
       }
+    },
+    initializeDatePickers () {
+      const defaultDate = new Date()
+
+      dateJoinedComp = flatpickr(this.$refs['date_joined'], {
+        dateFormat: 'J M, Y',
+        defaultDate: defaultDate,
+        plugins: [new confirmDatePlugin({
+          confirmIcon: tickIcon,
+          confirmText: 'Done',
+          showAlways: true
+        })]
+      })
+    },
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
+    },
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
+    }
+  },
+  watch: {
+    person (val) {
+      this.setup(val)
     }
   }
+}
 
 </script>

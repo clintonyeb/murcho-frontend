@@ -89,79 +89,78 @@
 </template>
 
 <script>
-  import {
-    debounce
-  } from 'debounce'
+import {
+  debounce
+} from 'debounce'
 
-  export default {
-    props: ['people'],
-    data() {
-      return {
-        searching: false,
-        searchedGroups: [],
-        search: '',
-        selectedGroups: [],
-        loadingForm: false
+export default {
+  props: ['people'],
+  data () {
+    return {
+      searching: false,
+      searchedGroups: [],
+      search: '',
+      selectedGroups: [],
+      loadingForm: false
+    }
+  },
+  methods: {
+    async saveChanges () {
+      if (!this.selectedGroups.length) return false
+      this.loadingForm = true
+
+      const path = 'add_people_to_groups'
+      const url = this.$http.url(path)
+      this.searching = true
+
+      try {
+        const response = await this.$http.post(url, {
+          people: this.people,
+          groups: this.selectedGroups.map(g => g.id)
+        }, this.authToken)
+        this.$emit('groups-added')
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loadingForm = false
       }
     },
-    methods: {
-      async saveChanges() {
-        if (!this.selectedGroups.length) return false
-        this.loadingForm = true
+    searchedItemClicked (group) {
+      this.searchedGroups = []
+      this.search = ''
+      this.searching = false
 
-        const path = 'add_people_to_groups'
-        const url = this.$http.url(path)
-        this.searching = true
-
-        try {
-          const response = await this.$http.post(url, {
-            people: this.people,
-            groups: this.selectedGroups.map(g => g.id)
-          }, this.authToken)
-          this.$emit('groups-added')
-        } catch (error) {
-          console.log(error)
-        } finally {
-          this.loadingForm = false
-        }
-
-      },
-      searchedItemClicked(group) {
-        this.searchedGroups = []
-        this.search = ''
+      this.selectedGroups.unshift(group)
+    },
+    handleSearchOutside () {
+      this.searchedGroups = []
+      this.search = ''
+      this.searching = false
+    },
+    searchGroups: debounce(function (e) {
+      this.doGroupsSearch(e.target.value)
+    }, 200),
+    async doGroupsSearch (name) {
+      if (!name) {
         this.searching = false
+        return
+      }
 
-        this.selectedGroups.unshift(group)
-      },
-      handleSearchOutside() {
-        this.searchedGroups = []
-        this.search = ''
-        this.searching = false
-      },
-      searchGroups: debounce(function (e) {
-        this.doGroupsSearch(e.target.value)
-      }, 200),
-      async doGroupsSearch(name) {
-        if (!name) {
-          this.searching = false
-          return
-        }
+      const search = name.toLowerCase()
+      const path = `search_groups/${search}`
+      const url = this.$http.url(path)
+      this.searching = true
 
-        const search = name.toLowerCase()
-        const path = `search_groups/${search}`
-        const url = this.$http.url(path)
-        this.searching = true
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-          this.searchedGroups = response
-        } catch (error) {
-          console.log(error)
-        } finally {
-          this.searchings = false
-        }
-      },
+      try {
+        const response = await this.$http.get(url, this.authToken)
+        this.searchedGroups = response
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.searchings = false
+      }
     }
   }
+}
 
 </script>

@@ -105,9 +105,7 @@
         </div>
       </div>
 
-      
     </div>
-    
 
     <div class="w-full mt-4 inline-flex items-center">
       <button class=" h-8 flex-grow bg-blue-light inline-flex items-center justify-center text-white rounded-bl" @click="createEvent">
@@ -126,181 +124,181 @@
 </template>
 
 <script>
-  import {
-    format,
-    subDays,
-  } from 'date-fns'
-  import {
-    COLORS
-  } from '@/utils'
+import {
+  format,
+  subDays
+} from 'date-fns'
+import {
+  COLORS
+} from '@/utils'
 
-  import {
-    tickIcon,
-    eventIcon,
-    closeIcon,
-  } from '@/utils/icons'
+import {
+  tickIcon,
+  eventIcon,
+  closeIcon
+} from '@/utils/icons'
 
-  const dateFormat = "EEEE, do; h:m a"
-  const pluralize = require('pluralize')
+import flatpickr from 'flatpickr'
+import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
 
-  import flatpickr from "flatpickr";
-  require("flatpickr/dist/flatpickr.min.css")
-  import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate.js"
+const dateFormat = 'EEEE, do; h:m a'
+const pluralize = require('pluralize')
+require('flatpickr/dist/flatpickr.min.css')
 
-  let startDateComp = null;
+let startDateComp = null
 
-  export default {
-    props: ['start_date', 'calendar_id'],
-    data() {
-      return {
-        colors: COLORS,
-        title: '',
-        description: '',
-        duration: '',
-        location: '',
-        duration_format: 'hrs',
-        color: 0,
-        icons: {
-          event: eventIcon,
-          cancel: closeIcon
-        },
-        creatingEvent: false,
-        durations: [{
+export default {
+  props: ['start_date', 'calendar_id'],
+  data () {
+    return {
+      colors: COLORS,
+      title: '',
+      description: '',
+      duration: '',
+      location: '',
+      duration_format: 'hrs',
+      color: 0,
+      icons: {
+        event: eventIcon,
+        cancel: closeIcon
+      },
+      creatingEvent: false,
+      durations: [{
+        id: 1,
+        text: 'Minutes',
+        value: 'mins'
+      },
+      {
+        id: 2,
+        text: 'Hours',
+        value: 'hrs'
+      },
+      {
+        id: 3,
+        text: 'Days',
+        value: 'days'
+      },
+      {
+        id: 4,
+        text: 'Weeks',
+        value: 'wks'
+      },
+      {
+        id: 5,
+        text: 'Months',
+        value: 'mnths'
+      }
+      ],
+      colors: [
+        {
           id: 1,
-            text: 'Minutes',
-            value: 'mins',
-          },
-          {
-            id: 2,
-            text: 'Hours',
-            value: 'hrs'
-          },
-          {
-            id: 3,
-            text: 'Days',
-            value: 'days'
-          },
-          {
-            id: 4,
-            text: 'Weeks',
-            value: 'wks'
-          },
-          {
-            id: 5,
-            text: 'Months',
-            value: 'mnths'
-          }
-        ],
-        colors: [
-          {
-            id: 1,
-            text: 'Blue',
-            value: 0
-          },
-          {
-            id: 2,
-            text: 'Green',
-            value: 1
-          },
-          {
-            id: 3,
-            text: 'Yellow',
-            value: 2
-          },
-          {
-            id: 4,
-            text: 'Purple',
-            value: 3
-          },
-          {
-            id: 5,
-            text: 'Red',
-            value: 4
-          }
-        ]
+          text: 'Blue',
+          value: 0
+        },
+        {
+          id: 2,
+          text: 'Green',
+          value: 1
+        },
+        {
+          id: 3,
+          text: 'Yellow',
+          value: 2
+        },
+        {
+          id: 4,
+          text: 'Purple',
+          value: 3
+        },
+        {
+          id: 5,
+          text: 'Red',
+          value: 4
+        }
+      ]
+    }
+  },
+  mounted () {
+    this.initializeDatePickers()
+  },
+  methods: {
+    createEvent () {
+      if (this.creatingEvent) return false
+
+      this.validateForm(async state => {
+        if (!state) return false
+        this.creatingEvent = true
+
+        const startDate = startDateComp.selectedDates[0]
+        const duration = this.getDurationInSeconds(this.duration_format, this.duration)
+
+        const path = 'event_schemas'
+        const url = this.$http.url(path)
+
+        try {
+          const response = await this.$http.post(url, {
+            title: this.title,
+            description: this.description,
+            calendar_id: this.calendar_id,
+            duration: duration,
+            start_date: startDate,
+            location: this.location,
+            color: this.color
+          }, this.authToken)
+
+          this.$emit('saved', response)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.creatingEvent = false
+        }
+      })
+    },
+    getDurationInSeconds (format, duration) {
+      // convert duration to seconds based on format chosen
+      duration = Number(duration)
+      switch (format) {
+        case 'mins':
+          return duration * 60
+        case 'hrs':
+          return duration * 3600
+        case 'days':
+          return duration * 86400
+        case 'wks':
+          return duration * 604800
+        case 'mnths':
+          return duration * 2.628e+6
+        default:
+          throw new Error('Invalid date format given')
       }
     },
-    mounted() {
-      this.initializeDatePickers()
+    initializeDatePickers () {
+      const startDate = this.start_date
+
+      startDateComp = flatpickr(this.$refs['start_date'], {
+        enableTime: true,
+        dateFormat: 'J M, Y; h i K',
+        defaultDate: startDate,
+        plugins: [new confirmDatePlugin({
+          confirmIcon: tickIcon,
+          confirmText: 'Done',
+          showAlways: true
+        })]
+      })
     },
-    methods: {
-      createEvent() {
-        if (this.creatingEvent) return false
-
-        this.validateForm(async state => {
-          if (!state) return false
-          this.creatingEvent = true
-
-          const startDate = startDateComp.selectedDates[0]
-          const duration = this.getDurationInSeconds(this.duration_format, this.duration)
-
-          const path = 'event_schemas'
-          const url = this.$http.url(path)
-
-          try {
-            const response = await this.$http.post(url, {
-              title: this.title,
-              description: this.description,
-              calendar_id: this.calendar_id,
-              duration: duration,
-              start_date: startDate,
-              location: this.location,
-              color: this.color
-            }, this.authToken)
-
-            this.$emit('saved', response)
-          } catch(err) {
-            console.log(err);
-          } finally {
-            this.creatingEvent = false
-          }
-        })
-      },
-      getDurationInSeconds(format, duration){
-        // convert duration to seconds based on format chosen
-        duration = Number(duration)
-        switch (format) {
-          case 'mins':
-            return  duration * 60;
-          case 'hrs':
-            return  duration * 3600;
-          case 'days':
-            return  duration * 86400;
-          case 'wks':
-            return  duration * 604800;
-          case 'mnths':
-            return  duration * 2.628e+6;
-          default:
-            throw new Error("Invalid date format given");
-        }
-      },
-      initializeDatePickers() {
-        const startDate = this.start_date
-
-        startDateComp = flatpickr(this.$refs['start_date'], {
-          enableTime: true,
-          dateFormat: "J M, Y; h i K",
-          defaultDate: startDate,
-          plugins: [new confirmDatePlugin({
-            confirmIcon: tickIcon,
-            confirmText: "Done",
-            showAlways: true,
-          })]
-        });
-      },
-      getInputErrorMessage(name) {
-        return this.errors.first(name)
-      },
-      getInputColor(name) {
-        return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-      },
-      getInputState(name) {
-        return this.errors.has(name)
-      },
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
     },
-    beforeDestroy() {
-      if (startDateComp !== null) startDateComp.destroy()
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
     }
+  },
+  beforeDestroy () {
+    if (startDateComp !== null) startDateComp.destroy()
   }
+}
 
 </script>

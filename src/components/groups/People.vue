@@ -82,85 +82,85 @@
 </template>
 
 <script>
-  import {
-    trashIcon,
-    editIcon,
-    groupIcon,
-    removeGroupIcon,
-    mailIcon,
-    smsIcon,
-    fileIcon,
-  } from '@/utils/icons'
+import {
+  trashIcon,
+  editIcon,
+  groupIcon,
+  removeGroupIcon,
+  mailIcon,
+  smsIcon,
+  fileIcon
+} from '@/utils/icons'
 
-  export default {
-    props: ['page', 'pagesEnded', 'people'],
-    name: 'GridView',
-    data() {
-      return {
-        selectedPeople: [],
-        personActions: [{
-            text: 'Edit Person',
-            value: 'edit',
-            icon: editIcon
-          },
-          {
-            id: 1,
-            text: 'Add Group',
-            value: 'add-group',
-            icon: groupIcon
-          },
-          {
-            id: 2,
-            text: 'Remove Groups',
-            value: 'remove-groups',
-            icon: removeGroupIcon
-          },
-          {
-            id: 3,
-            text: 'Send Email',
-            value: 'email',
-            icon: mailIcon
-          },
-          {
-            id: 5,
-            text: 'Send SMS',
-            value: 'sms',
-            icon: smsIcon
-          },
-          {
-            id: 6,
-            text: 'Export As CSV',
-            value: 'export',
-            icon: fileIcon
-          },
-          {
-            id: 4,
-            text: 'Delete',
-            value: 'delete',
-            icon: trashIcon
-          }
-        ],
-        activePerson: null
-      }
-    },
-    methods: {
-      selectAll() {
-        const el = this.$refs['select-all']
-        const state = el.checked
-
-        this.selectedPeople = []
-        if (state) this.selectedPeople = this.people.map(person => person.id)
+export default {
+  props: ['page', 'pagesEnded', 'people'],
+  name: 'GridView',
+  data () {
+    return {
+      selectedPeople: [],
+      personActions: [{
+        text: 'Edit Person',
+        value: 'edit',
+        icon: editIcon
       },
-      personRowClicked(personId) {
-        const index = this.selectedPeople.indexOf(personId)
-        const checked = index !== -1
-        if (checked) {
-          this.selectedPeople.splice(index, 1)
-        } else {
-          this.selectedPeople.push(personId)
-        }
+      {
+        id: 1,
+        text: 'Add Group',
+        value: 'add-group',
+        icon: groupIcon
+      },
+      {
+        id: 2,
+        text: 'Remove Groups',
+        value: 'remove-groups',
+        icon: removeGroupIcon
+      },
+      {
+        id: 3,
+        text: 'Send Email',
+        value: 'email',
+        icon: mailIcon
+      },
+      {
+        id: 5,
+        text: 'Send SMS',
+        value: 'sms',
+        icon: smsIcon
+      },
+      {
+        id: 6,
+        text: 'Export As CSV',
+        value: 'export',
+        icon: fileIcon
+      },
+      {
+        id: 4,
+        text: 'Delete',
+        value: 'delete',
+        icon: trashIcon
       }
+      ],
+      activePerson: null
+    }
+  },
+  methods: {
+    selectAll () {
+      const el = this.$refs['select-all']
+      const state = el.checked
+
+      this.selectedPeople = []
+      if (state) this.selectedPeople = this.people.map(person => person.id)
     },
+    personRowClicked (personId) {
+      const index = this.selectedPeople.indexOf(personId)
+      const checked = index !== -1
+      if (checked) {
+        this.selectedPeople.splice(index, 1)
+      } else {
+        this.selectedPeople.push(personId)
+      }
+    }
   }
+}
 
 </script>

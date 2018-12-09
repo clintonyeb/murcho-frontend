@@ -175,234 +175,233 @@
 </template>
 
 <script>
-  const dateFormat = "EEEE, do; h:m a"
-  // const pluralize = require('pluralize')
+// const pluralize = require('pluralize')
 
-  import {
-    tickIcon,
-    // eventIcon,
-    // closeIcon,
-  } from '@/utils/icons'
+import {
+  tickIcon
+  // eventIcon,
+  // closeIcon,
+} from '@/utils/icons'
 
-  import flatpickr from "flatpickr";
-  require("flatpickr/dist/flatpickr.min.css")
-  import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate.js"
+import flatpickr from 'flatpickr'
+import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
+const dateFormat = 'EEEE, do; h:m a'
+require('flatpickr/dist/flatpickr.min.css')
 
-  let dateJoinedComp = null;
+let dateJoinedComp = null
 
-  export default {
-    props: ['person'],
-    name: 'EditPerson',
-    data() {
-      return {
-        loadingForm: false,
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone_number: '',
-        membership_status: '',
-        photo: '',
-        membershipStatuses: [{
-            text: 'Member',
-            value: 'member'
-          },
-          {
-            text: 'Guest',
-            value: 'guest'
-          },
-          {
-            text: 'Former Member',
-            value: 'former_member'
-          }
-        ],
-      }
-    },
-    mounted() {
-      this.setup(this.person)
-    },
-    beforeDestroy() {
-      if (dateJoinedComp !== null) dateJoinedComp.destroy()
-    },
-    methods: {
-      setup(person) {
-        this.first_name = person.first_name
-        this.last_name = person.last_name
-        this.email = person.email
-        this.phone_number = person.phone_number
-        this.date_joined = person.date_joined
-        this.membership_status = person.membership_status
-        this.photo = person.photo
-
-        this.initializeDatePickers()
+export default {
+  props: ['person'],
+  name: 'EditPerson',
+  data () {
+    return {
+      loadingForm: false,
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone_number: '',
+      membership_status: '',
+      photo: '',
+      membershipStatuses: [{
+        text: 'Member',
+        value: 'member'
       },
-      photoUploaded(event) {
-        const file = event.target.files && event.target.files[0]
+      {
+        text: 'Guest',
+        value: 'guest'
+      },
+      {
+        text: 'Former Member',
+        value: 'former_member'
+      }
+      ]
+    }
+  },
+  mounted () {
+    this.setup(this.person)
+  },
+  beforeDestroy () {
+    if (dateJoinedComp !== null) dateJoinedComp.destroy()
+  },
+  methods: {
+    setup (person) {
+      this.first_name = person.first_name
+      this.last_name = person.last_name
+      this.email = person.email
+      this.phone_number = person.phone_number
+      this.date_joined = person.date_joined
+      this.membership_status = person.membership_status
+      this.photo = person.photo
 
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.photo = e.target.result
-          }
+      this.initializeDatePickers()
+    },
+    photoUploaded (event) {
+      const file = event.target.files && event.target.files[0]
 
-          reader.readAsDataURL(file);
-
-        } else {
-          this.photo = null
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.photo = e.target.result
         }
 
-      },
-      editPerson() {
-        if(this.loadingForm) return false
-        this.validateForm(state => {
-          if (!state) return false
+        reader.readAsDataURL(file)
+      } else {
+        this.photo = null
+      }
+    },
+    editPerson () {
+      if (this.loadingForm) return false
+      this.validateForm(state => {
+        if (!state) return false
 
-           this.loadingForm = true
+        this.loadingForm = true
 
-          const fields = {
-            first_name: this.first_name,
-            last_name: this.last_name,
-            email: this.email,
-            phone_number: this.phone_number,
-            date_joined: dateJoinedComp.selectedDates[0],
-            membership_status: this.membership_status,
-            photo: this.photo
+        const fields = {
+          first_name: this.first_name,
+          last_name: this.last_name,
+          email: this.email,
+          phone_number: this.phone_number,
+          date_joined: dateJoinedComp.selectedDates[0],
+          membership_status: this.membership_status,
+          photo: this.photo
+        }
+
+        this.getChangedFields(fields, this.person, async (err, changedFields) => {
+          if (err || !Object.keys(changedFields).length) {
+            this.loadingForm = false
+            return false
           }
 
-          this.getChangedFields(fields, this.person, async (err, changedFields) => {
-            if (err || !Object.keys(changedFields).length) {
-              this.loadingForm = false
-              return false
-            }
-
-            const path = `people/${this.person.id}`
-            const url = this.$http.url(path)
-
-            try {
-              const response = await this.$http.put(url, changedFields, this.authToken)
-              this.$emit('updated', response)
-            } catch (err) {
-              console.log(err);
-            } finally {
-              this.loadingForm = false
-            }
-          })
-        })
-      },
-      getSignedURL(fileName, contentType) {
-        return new Promise(async (resolve, reject) => {
-          const path = 'sign_url_for_upload'
+          const path = `people/${this.person.id}`
           const url = this.$http.url(path)
 
           try {
-            const response = await this.$http.post(
-              url, {
-                file_name: fileName,
-                content_type: contentType
-              },
-              this.authToken
-            )
-            resolve(response)
+            const response = await this.$http.put(url, changedFields, this.authToken)
+            this.$emit('updated', response)
           } catch (err) {
-            reject(err)
-          } finally {}
-        })
-      },
-      getFileURL(name) {
-        return `https://s3.ap-south-1.amazonaws.com/murch-app/${name}`
-      },
-      uploadFile(file) {
-        return new Promise(async (resolve, reject) => {
-          try {
-            const data = await this.getSignedURL(file.name, file.type)
-
-            const request = new XMLHttpRequest()
-            request.open('PUT', data.signed_url, true)
-            request.setRequestHeader('Content-Type', file.type)
-            request.setRequestHeader('Access-Control-Allow-Origin', '*')
-            request.setRequestHeader('Accept', 'application/json')
-
-            request.onload = () => {
-              if (request.status >= 200 && request.status < 300) {
-                resolve(this.getFileURL(data.file_name))
-              } else {
-                reject("Error uploading file")
-              }
-            }
-
-            request.send(file)
-          } catch (error) {
-            reject(error)
+            console.log(err)
+          } finally {
+            this.loadingForm = false
           }
         })
-      },
-      async getChangedFields(object, original, cb) {
-        original.date_joined = new Date(original.date_joined) // fix comparing string to date object
-        const fields = {}
+      })
+    },
+    getSignedURL (fileName, contentType) {
+      return new Promise(async (resolve, reject) => {
+        const path = 'sign_url_for_upload'
+        const url = this.$http.url(path)
 
-        for (const key in object) {
-          if (object.hasOwnProperty(key)) {
-            const ori = original[key];
-            const ob = object[key]
+        try {
+          const response = await this.$http.post(
+            url, {
+              file_name: fileName,
+              content_type: contentType
+            },
+            this.authToken
+          )
+          resolve(response)
+        } catch (err) {
+          reject(err)
+        } finally {}
+      })
+    },
+    getFileURL (name) {
+      return `https://s3.ap-south-1.amazonaws.com/murch-app/${name}`
+    },
+    uploadFile (file) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const data = await this.getSignedURL(file.name, file.type)
 
-            if (ori instanceof Date) {
-              if (ori.getTime() !== ob.getTime()) fields[key] = object[key]
+          const request = new XMLHttpRequest()
+          request.open('PUT', data.signed_url, true)
+          request.setRequestHeader('Content-Type', file.type)
+          request.setRequestHeader('Access-Control-Allow-Origin', '*')
+          request.setRequestHeader('Accept', 'application/json')
+
+          request.onload = () => {
+            if (request.status >= 200 && request.status < 300) {
+              resolve(this.getFileURL(data.file_name))
             } else {
-              if (ori !== ob) {
-                if (key === 'photo') {
-                  // upload photo and assign url here
-                  const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
-                  if (file) {
-                    try {
-                      const file_url = await this.uploadFile(file)
-                      console.log(file_url, 'file')
-                      fields[key] = file_url
-                      fields['thumbnail'] = file_url
-                    } catch (error) {
-                      fields[key] = null
-                      console.log(error)
-                      cb(error)
-                    }
-                  } else {
+              reject('Error uploading file')
+            }
+          }
+
+          request.send(file)
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    async getChangedFields (object, original, cb) {
+      original.date_joined = new Date(original.date_joined) // fix comparing string to date object
+      const fields = {}
+
+      for (const key in object) {
+        if (object.hasOwnProperty(key)) {
+          const ori = original[key]
+          const ob = object[key]
+
+          if (ori instanceof Date) {
+            if (ori.getTime() !== ob.getTime()) fields[key] = object[key]
+          } else {
+            if (ori !== ob) {
+              if (key === 'photo') {
+                // upload photo and assign url here
+                const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
+                if (file) {
+                  try {
+                    const file_url = await this.uploadFile(file)
+
+                    fields[key] = file_url
+                    fields['thumbnail'] = file_url
+                  } catch (error) {
                     fields[key] = null
+                    fields['thumbnail'] = null
+                    cb(error)
                   }
                 } else {
-                  fields[key] = object[key]
+                  fields[key] = null
+                  fields['thumbnail'] = null
                 }
+              } else {
+                fields[key] = object[key]
               }
             }
           }
         }
-
-        cb(null, fields);
-      },
-      initializeDatePickers() {
-        const defaultDate = new Date(this.person.date_joined)
-
-        dateJoinedComp = flatpickr(this.$refs['date_joined'], {
-          dateFormat: "J M, Y",
-          defaultDate: defaultDate,
-          plugins: [new confirmDatePlugin({
-            confirmIcon: tickIcon,
-            confirmText: "Done",
-            showAlways: true,
-          })]
-        });
-      },
-      getInputErrorMessage(name) {
-        return this.errors.first(name)
-      },
-      getInputColor(name) {
-        return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-      },
-      getInputState(name) {
-        return this.errors.has(name)
-      },
-    },
-    watch: {
-      person(val) {
-        this.setup(val)
       }
+
+      cb(null, fields)
+    },
+    initializeDatePickers () {
+      const defaultDate = new Date(this.person.date_joined)
+
+      dateJoinedComp = flatpickr(this.$refs['date_joined'], {
+        dateFormat: 'J M, Y',
+        defaultDate: defaultDate,
+        plugins: [new confirmDatePlugin({
+          confirmIcon: tickIcon,
+          confirmText: 'Done',
+          showAlways: true
+        })]
+      })
+    },
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
+    },
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
+    }
+  },
+  watch: {
+    person (val) {
+      this.setup(val)
     }
   }
+}
 
 </script>

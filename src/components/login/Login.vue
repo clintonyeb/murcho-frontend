@@ -26,7 +26,7 @@
           <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
         </svg>
       </span>
-      
+
     </div>
 
     <div class="container mx-auto md:p-20 sm:p-12 bg-pattern">
@@ -157,106 +157,106 @@
 </template>
 
 <script>
-  import {
-    MESSAGE_TYPES
-  } from '@/utils'
+import {
+  MESSAGE_TYPES
+} from '@/utils'
 
-  export default {
-    name: 'Login',
-    data() {
+export default {
+  name: 'Login',
+  data () {
+    return {
+      showPassword: false,
+      loadingForm: false,
+      email: 'clint@murch.com',
+      password: '12312312',
+      displayMessage: '',
+      displayMessageType: MESSAGE_TYPES.info,
+      shouldDisplayMessage: false,
+      reRoutePath: '',
+      MESSAGE_TYPES: MESSAGE_TYPES
+    }
+  },
+  computed: {
+    loadingButtonClass () {
       return {
-        showPassword: false,
-        loadingForm: false,
-        email: 'clint@murch.com',
-        password: '12312312',
-        displayMessage: '',
-        displayMessageType: MESSAGE_TYPES.info,
-        shouldDisplayMessage: false,
-        reRoutePath: '',
-        MESSAGE_TYPES: MESSAGE_TYPES
+        loading: this.loadingForm
       }
     },
-    computed: {
-      loadingButtonClass() {
-        return {
-          loading: this.loadingForm
-        }
-      },
-      alertClass() {
-        switch (this.displayMessageType) {
-          case MESSAGE_TYPES.warning:
-            return ['bg-yellow-dark']
-          case MESSAGE_TYPES.error:
-            return ['bg-red-light']
-          default:
-            return ['bg-blue-light']
-        }
-      }
-    },
-    created() {
-      this.checkLoginPayload()
-    },
-    methods: {
-      checkLoginPayload() {
-        const loginPayload = this.$store.state.layout.login
-        if (!loginPayload.state) return
-
-        this.displayMessage = loginPayload.message
-        this.displayMessageType = loginPayload.type
-        this.reRoutePath = loginPayload.route
-        this.shouldDisplayMessage = loginPayload.state
-
-        this.$store.commit('CLEAR_LOGIN_DATA')
-      },
-      getInputErrorMessage(name) {
-        return this.errors.first(name)
-      },
-      getInputColor(name) {
-        return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-      },
-      getInputState(name) {
-        return this.errors.has(name)
-      },
-      login() {
-        if (this.loadingForm) return false
-        this.shouldDisplayMessage = false
-
-        this.validateForm(async state => {
-          if (!state) return false
-          this.loadingForm = true
-
-          const email = this.email
-          const password = this.password
-
-          const path = 'authentication'
-          const url = this.$http.url(path)
-
-          try {
-            const response = await this.$http.login(url, {
-              email,
-              password
-            })
-
-            this.$store.commit('SET_TOKEN', response.auth_token)
-
-            sessionStorage.setItem('auth_token', response.auth_token)
-            sessionStorage.setItem('email', email)
-
-            const route = this.reRoutePath || 'overview'
-            this.$router.replace({
-              name: route
-            })
-          } catch (err) {
-            this.loadingForm = false
-            this.displayMessage = err.status === 401 ?
-              'Invalid email and password provided.' :
-              'There was an error processing your request.'
-            this.displayMessageType = MESSAGE_TYPES.error
-            this.shouldDisplayMessage = true
-          } finally {}
-        })
+    alertClass () {
+      switch (this.displayMessageType) {
+        case MESSAGE_TYPES.warning:
+          return ['bg-yellow-dark']
+        case MESSAGE_TYPES.error:
+          return ['bg-red-light']
+        default:
+          return ['bg-blue-light']
       }
     }
+  },
+  created () {
+    this.checkLoginPayload()
+  },
+  methods: {
+    checkLoginPayload () {
+      const loginPayload = this.$store.state.layout.login
+      if (!loginPayload.state) return
+
+      this.displayMessage = loginPayload.message
+      this.displayMessageType = loginPayload.type
+      this.reRoutePath = loginPayload.route
+      this.shouldDisplayMessage = loginPayload.state
+
+      this.$store.commit('CLEAR_LOGIN_DATA')
+    },
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
+    },
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
+    },
+    login () {
+      if (this.loadingForm) return false
+      this.shouldDisplayMessage = false
+
+      this.validateForm(async state => {
+        if (!state) return false
+        this.loadingForm = true
+
+        const email = this.email
+        const password = this.password
+
+        const path = 'authentication'
+        const url = this.$http.url(path)
+
+        try {
+          const response = await this.$http.login(url, {
+            email,
+            password
+          })
+
+          this.$store.commit('SET_TOKEN', response.auth_token)
+
+          sessionStorage.setItem('auth_token', response.auth_token)
+          sessionStorage.setItem('email', email)
+
+          const route = this.reRoutePath || 'overview'
+          this.$router.replace({
+            name: route
+          })
+        } catch (err) {
+          this.loadingForm = false
+          this.displayMessage = err.status === 401
+            ? 'Invalid email and password provided.'
+            : 'There was an error processing your request.'
+          this.displayMessageType = MESSAGE_TYPES.error
+          this.shouldDisplayMessage = true
+        } finally {}
+      })
+    }
   }
+}
 
 </script>

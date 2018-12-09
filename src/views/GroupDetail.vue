@@ -11,7 +11,6 @@
     <div class="w-1/3 h-screen pr-4">
       <div class="mx-auto w-full m-2">
 
-
         <on-click-outside :do="handleSearchOutside">
           <div class="relative mx-auto">
 
@@ -58,275 +57,275 @@
 </template>
 
 <script>
-  import Groups from '@/components/groups/ListView'
-  import People from '@/components/groups/People'
-  import Events from '@/components/groups/Events'
-  import {
-    filterIcon,
-    userPlusIcon
-  } from '@/utils/icons'
+import Groups from '@/components/groups/ListView'
+import People from '@/components/groups/People'
+import Events from '@/components/groups/Events'
+import {
+  filterIcon,
+  userPlusIcon
+} from '@/utils/icons'
 
-  import {
-    debounce
-  } from 'debounce'
+import {
+  debounce
+} from 'debounce'
 
-  export default {
-    name: 'GroupDetail',
-    props: ['id'],
-    data() {
-      return {
-        groups: [],
-        groupCount: null,
-        groupPage: 1,
-        groupEnded: false,
-        loadingGroups: false,
-        order: null,
-        groupOrders: [{
-            id: 1,
-            text: 'Date Updated',
-            value: 'updated_at'
-          },
-          {
-            id: 2,
-            text: 'Date Created',
-            value: 'created_at'
-          },
-          {
-            id: 3,
-            text: 'First Name',
-            value: 'first_name'
-          },
-          {
-            id: 4,
-            text: 'Last Name',
-            value: 'last_name'
-          },
-          {
-            id: 5,
-            text: 'Phone Number',
-            value: 'phone_number'
-          },
-          {
-            id: 6,
-            text: 'Email Address',
-            value: 'email'
-          },
-          {
-            id: 7,
-            text: 'Membership Status',
-            value: 'membership_status'
-          },
-          {
-            id: 8,
-            text: 'Date Joined',
-            value: 'date_joined'
-          }
-        ],
-        orderMenu: false,
-        sort: null,
-        sortMenu: false,
-        groupSorts: [{
-            id: 1,
-            text: 'Descending',
-            value: 'DESC'
-          },
-          {
-            id: 2,
-            text: 'Ascending',
-            value: 'ASC'
-          }
-        ],
-        icons: {
-          filter: filterIcon,
-          plus: userPlusIcon
-        },
-        groupPeople: [],
-        groupId: null,
-        searching: false,
-        searchedPeople: [],
-        search: '',
-        peopleEnded: false,
-        peoplePage: 1
+export default {
+  name: 'GroupDetail',
+  props: ['id'],
+  data () {
+    return {
+      groups: [],
+      groupCount: null,
+      groupPage: 1,
+      groupEnded: false,
+      loadingGroups: false,
+      order: null,
+      groupOrders: [{
+        id: 1,
+        text: 'Date Updated',
+        value: 'updated_at'
+      },
+      {
+        id: 2,
+        text: 'Date Created',
+        value: 'created_at'
+      },
+      {
+        id: 3,
+        text: 'First Name',
+        value: 'first_name'
+      },
+      {
+        id: 4,
+        text: 'Last Name',
+        value: 'last_name'
+      },
+      {
+        id: 5,
+        text: 'Phone Number',
+        value: 'phone_number'
+      },
+      {
+        id: 6,
+        text: 'Email Address',
+        value: 'email'
+      },
+      {
+        id: 7,
+        text: 'Membership Status',
+        value: 'membership_status'
+      },
+      {
+        id: 8,
+        text: 'Date Joined',
+        value: 'date_joined'
       }
-    },
-    created() {
-      const id = this.$route.params.id
-      this.groupId = this.decodeHash(id)
-
-      this.setUpGroupUI()
-      this.readyCallbacks([this.fetchGroups, this.refresh])
-      this.setPageTitle('Groups')
-    },
-    components: {
-      Groups,
-      People,
-      Events,
-    },
-    methods: {
-      groupItemClicked(groupId) {
-        this.$router.push({
-          name: 'group-items',
-          params: {
-            id: this.encodeId(groupId)
-          }
-        })
+      ],
+      orderMenu: false,
+      sort: null,
+      sortMenu: false,
+      groupSorts: [{
+        id: 1,
+        text: 'Descending',
+        value: 'DESC'
       },
-      async searchPersonClicked(personId) {
-        const path = `add_person_to_group`
-        const url = this.$http.url(path)
-
-        try {
-          const response = await this.$http.post(url, {
-            person_id: personId,
-            group_id: this.groupId
-          }, this.authToken)
-
-          this.groupPeople.unshift(response)
-          this.searchedPeople = []
-          this.searching = false
-        } catch (err) {
-
-        } finally {}
+      {
+        id: 2,
+        text: 'Ascending',
+        value: 'ASC'
+      }
+      ],
+      icons: {
+        filter: filterIcon,
+        plus: userPlusIcon
       },
-      handleSearchOutside() {
+      groupPeople: [],
+      groupId: null,
+      searching: false,
+      searchedPeople: [],
+      search: '',
+      peopleEnded: false,
+      peoplePage: 1
+    }
+  },
+  created () {
+    const id = this.$route.params.id
+    this.groupId = this.decodeHash(id)
+
+    this.setUpGroupUI()
+    this.readyCallbacks([this.fetchGroups, this.refresh])
+    this.setPageTitle('Groups')
+  },
+  components: {
+    Groups,
+    People,
+    Events
+  },
+  methods: {
+    groupItemClicked (groupId) {
+      this.$router.push({
+        name: 'group-items',
+        params: {
+          id: this.encodeId(groupId)
+        }
+      })
+    },
+    async searchPersonClicked (personId) {
+      const path = `add_person_to_group`
+      const url = this.$http.url(path)
+
+      try {
+        const response = await this.$http.post(url, {
+          person_id: personId,
+          group_id: this.groupId
+        }, this.authToken)
+
+        this.groupPeople.unshift(response)
         this.searchedPeople = []
-        this.search = ''
-      },
-      searchPeople: debounce(function (e) {
-        this.doPeopleSearch(e.target.value)
-      }, 200),
-      async doPeopleSearch(name) {
-        if (!name) {
-          this.searching = false
-          return
-        }
+        this.searching = false
+      } catch (err) {
 
-        const search = name.toLowerCase()
-        const path = `search_people/${search}`
-        const url = this.$http.url(path)
-        this.searching = true
+      } finally {}
+    },
+    handleSearchOutside () {
+      this.searchedPeople = []
+      this.search = ''
+    },
+    searchPeople: debounce(function (e) {
+      this.doPeopleSearch(e.target.value)
+    }, 200),
+    async doPeopleSearch (name) {
+      if (!name) {
+        this.searching = false
+        return
+      }
 
-        try {
-          const response = await this.$http.get(url, this.authToken)
-          this.searchedPeople = response
-        } catch (error) {
-          console.log(error)
-        } finally {
-          // this.loadingMore = false
-        }
-      },
-      fetchGroups() {
-        this.getPeopleForGroup(this.groupId)
-      },
-      refresh(isNew = true) {
-        this.getGroups()
-        if (isNew) this.getGroupsCount()
-      },
-      goToDetail(groupId) {
-        this.$router.push({
-          name: 'group-items',
-          params: {
-            id: this.encodeId(groupId)
-          }
-        })
-      },
-      goBack() {
-        if (this.page === 1) return false
-        const page = this.page - 1;
-        this.getPeople(page)
-      },
-      goForward() {
-        if (this.ended) return false
-        const page = this.page + 1;
-        this.getPeople(page)
-      },
-      handleGroupAction(data) {
-        switch (data.action) {
-          case 'delete':
-            this.deleteGroup(data.group, data.index)
-            break;
+      const search = name.toLowerCase()
+      const path = `search_people/${search}`
+      const url = this.$http.url(path)
+      this.searching = true
 
-          default:
-            break;
-        }
-      },
-      async deleteGroup(groupId, index) {
-        const path = `groups/${groupId}`
-        const url = this.$http.url(path)
-
-        try {
-          await this.$http.delete(url, this.authToken)
-          this.groups.splice(index, 1)
-          this.totalGroups--
-        } catch (err) {
-
-        } finally {}
-      },
-      setUpGroupUI() {
-        if (!this.order) {
-          const order = localStorage.getItem('group-order')
-          this.order = this.groupOrders.find(o => o.value === order) || this.groupOrders[0]
-        }
-
-        if (!this.sort) {
-          const sort = localStorage.getItem('group-sort')
-          this.sort = this.groupSorts.find(s => s.value === sort) || this.groupSorts[0]
-        }
-      },
-      async getGroups(page = 1, size = 100) {
-        const path = `groups?page=${page}&size=${size}`
-        const url = this.$http.url(path)
-        this.loadingGroups = true
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-
-          if (response.length) {
-            this.groups = response
-            this.page = page
-          }
-
-          if (response.length < size) this.ended = true
-          else this.ended = false
-        } catch (err) {
-
-        } finally {
-          this.loadingGroups = false
-        }
-      },
-      async getGroupsCount() {
-        const path = 'total_groups'
-        const url = this.$http.url(path)
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-          this.groupCount = response
-        } catch (error) {}
-      },
-      async getPeopleForGroup(groupId, page = 1, size = 100) {
-        const path = `get_people/${groupId}?page=${page}&size=${size}`
-        const url = this.$http.url(path)
-        this.loadingMore = true
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-
-          this.groupPeople = response
-        } catch (err) {
-
-        } finally {
-          this.loadingMore = false
-        }
+      try {
+        const response = await this.$http.get(url, this.authToken)
+        this.searchedPeople = response
+      } catch (error) {
+        console.log(error)
+      } finally {
+        // this.loadingMore = false
       }
     },
-    watch: {
-      '$route.params.id': function (id) {
-        if (!id) return false
+    fetchGroups () {
+      this.getPeopleForGroup(this.groupId)
+    },
+    refresh (isNew = true) {
+      this.getGroups()
+      if (isNew) this.getGroupsCount()
+    },
+    goToDetail (groupId) {
+      this.$router.push({
+        name: 'group-items',
+        params: {
+          id: this.encodeId(groupId)
+        }
+      })
+    },
+    goBack () {
+      if (this.page === 1) return false
+      const page = this.page - 1
+      this.getPeople(page)
+    },
+    goForward () {
+      if (this.ended) return false
+      const page = this.page + 1
+      this.getPeople(page)
+    },
+    handleGroupAction (data) {
+      switch (data.action) {
+        case 'delete':
+          this.deleteGroup(data.group, data.index)
+          break
 
-        this.groupId = this.decodeHash(id)
-        this.getPeopleForGroup(this.groupId)
+        default:
+          break
+      }
+    },
+    async deleteGroup (groupId, index) {
+      const path = `groups/${groupId}`
+      const url = this.$http.url(path)
+
+      try {
+        await this.$http.delete(url, this.authToken)
+        this.groups.splice(index, 1)
+        this.totalGroups--
+      } catch (err) {
+
+      } finally {}
+    },
+    setUpGroupUI () {
+      if (!this.order) {
+        const order = localStorage.getItem('group-order')
+        this.order = this.groupOrders.find(o => o.value === order) || this.groupOrders[0]
+      }
+
+      if (!this.sort) {
+        const sort = localStorage.getItem('group-sort')
+        this.sort = this.groupSorts.find(s => s.value === sort) || this.groupSorts[0]
+      }
+    },
+    async getGroups (page = 1, size = 100) {
+      const path = `groups?page=${page}&size=${size}`
+      const url = this.$http.url(path)
+      this.loadingGroups = true
+
+      try {
+        const response = await this.$http.get(url, this.authToken)
+
+        if (response.length) {
+          this.groups = response
+          this.page = page
+        }
+
+        if (response.length < size) this.ended = true
+        else this.ended = false
+      } catch (err) {
+
+      } finally {
+        this.loadingGroups = false
+      }
+    },
+    async getGroupsCount () {
+      const path = 'total_groups'
+      const url = this.$http.url(path)
+
+      try {
+        const response = await this.$http.get(url, this.authToken)
+        this.groupCount = response
+      } catch (error) {}
+    },
+    async getPeopleForGroup (groupId, page = 1, size = 100) {
+      const path = `get_people/${groupId}?page=${page}&size=${size}`
+      const url = this.$http.url(path)
+      this.loadingMore = true
+
+      try {
+        const response = await this.$http.get(url, this.authToken)
+
+        this.groupPeople = response
+      } catch (err) {
+
+      } finally {
+        this.loadingMore = false
       }
     }
+  },
+  watch: {
+    '$route.params.id': function (id) {
+      if (!id) return false
+
+      this.groupId = this.decodeHash(id)
+      this.getPeopleForGroup(this.groupId)
+    }
   }
+}
 
 </script>

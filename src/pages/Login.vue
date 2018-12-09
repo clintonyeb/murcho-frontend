@@ -50,76 +50,76 @@
 </template>
 
 <script>
-  import Login from '@/components/login/Login'
-  import Forgotten from '@/components/login/Forgotten'
+import Login from '@/components/login/Login'
+import Forgotten from '@/components/login/Forgotten'
 
-  export default {
-    name: 'LoginPage',
-    data() {
-      return {
-        coverImages: [{
-            index: 0,
-            title: 'Create & Manage People',
-            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
-            image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_people.jpeg'
-          },
-          {
-            index: 1,
-            title: 'Create & Manage Groups',
-            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
-            image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_groups.jpeg',
-          },
-          {
-            index: 2,
-            title: 'Schedule Events and notifications',
-            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
-            image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_events.jpeg'
-          }
-        ],
-        currentCoverIndex: 0,
-        loadingNextImage: false,
-        currentPage: 'login'
+export default {
+  name: 'LoginPage',
+  data () {
+    return {
+      coverImages: [{
+        index: 0,
+        title: 'Create & Manage People',
+        description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
+        image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_people.jpeg'
+      },
+      {
+        index: 1,
+        title: 'Create & Manage Groups',
+        description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
+        image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_groups.jpeg'
+      },
+      {
+        index: 2,
+        title: 'Schedule Events and notifications',
+        description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
+        image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_events.jpeg'
       }
+      ],
+      currentCoverIndex: 0,
+      loadingNextImage: false,
+      currentPage: 'login'
+    }
+  },
+  created () {
+    this.setPageTitle('Login')
+  },
+  computed: {
+    cover () {
+      return this.coverImages[this.currentCoverIndex]
     },
-    created(){
-      this.setPageTitle('Login')
-    },
-    computed: {
-      cover() {
-        return this.coverImages[this.currentCoverIndex]
-      },
-      style() {
-        return {
-          backgroundImage: `url(${this.cover.image})`
-        }
-      },
-    },
-    components: {
-      Login,
-      Forgotten
-    },
-    methods: {
-      nextCover() {
-        if (this.loadingNextImage) return false
-        const nextIndex = (this.currentCoverIndex + 1) >= (this.coverImages.length) ? 0 : (this.currentCoverIndex +
+    style () {
+      return {
+        backgroundImage: `url(${this.cover.image})`
+      }
+    }
+  },
+  components: {
+    Login,
+    Forgotten
+  },
+  methods: {
+    nextCover () {
+      if (this.loadingNextImage) return false
+      const nextIndex = (this.currentCoverIndex + 1) >= (this.coverImages.length) ? 0 : (this.currentCoverIndex +
           1)
 
-        this.loadingNextImage = true
+      this.loadingNextImage = true
 
-        this.downloadImage(this.coverImages[nextIndex].image, err => {
-          this.currentCoverIndex = nextIndex
-          this.loadingNextImage = false
-        })
-      },
-      downloadImage(src, cb) {
-        const image = new Image()
-        image.onload = function () {
-          cb(null)
-        };
+      this.downloadImage(this.coverImages[nextIndex].image, err => {
+        this.currentCoverIndex = nextIndex
+        this.loadingNextImage = false
+      })
+    },
+    downloadImage (src, cb) {
+      const image = new Image()
+      image.onload = function () {
+        cb(null)
+      }
 
-        image.src = src
-      },
+      image.src = src
     }
   }
+}
 
 </script>

@@ -15,7 +15,7 @@
               <p>
                 {{day.text}}
               </p>
-              <button v-show="hoveredDay === day.id" class="text-xs" 
+              <button v-show="hoveredDay === day.id" class="text-xs"
               :class="day.isToday ? 'text-blue-light hover:text-blue-dark' : 'text-grey hover:text-grey-dark'"
               @click.stop="addingEventDay = day.id">
                 Add Event
@@ -63,168 +63,168 @@
 </template>
 
 <script>
-  import {
-    format,
-    startOfWeek,
-    endOfWeek,
-    addDays,
-    startOfMonth,
-    endOfMonth,
-    isSameMonth,
-    isSameDay
-  } from 'date-fns'
+import {
+  format,
+  startOfWeek,
+  endOfWeek,
+  addDays,
+  startOfMonth,
+  endOfMonth,
+  isSameMonth,
+  isSameDay
+} from 'date-fns'
 
-  const daysInWeekFormat = "E";
-  const daysInMonthFormat = "d"
-  const nonDaysInMonthFormat = "LLL d"
-  const today = new Date()
+import Event from '@/components/events/Event'
+import CreateEvent from '@/components/events/CreateEvent'
 
-  const pluralize = require('pluralize')
+const daysInWeekFormat = 'E'
+const daysInMonthFormat = 'd'
+const nonDaysInMonthFormat = 'LLL d'
+const today = new Date()
 
-  import Event from '@/components/events/Event'
-  import CreateEvent from '@/components/events/CreateEvent'
+const pluralize = require('pluralize')
 
-  export default {
-    props: ['selectedMonth'],
-    data() {
-      return {
-        days: [],
-        selectedDay: null,
-        selectedEvent: null,
-        events: [],
-        pluralize: pluralize,
-        showingMoreDay: null,
-        hoveredDay: null,
-        addingEventDay: null,
-        calendar: {}
-      }
-    },
-    created() {
-      this.daysInAWeek()
-      this.readyCallbacks([() => this.getEventsForSelectedMonth(this.selectedMonth), this.getCalendar])
-    },
-    components: {
-      Event,
-      CreateEvent
-    },
-    computed: {
-      daysInSelectedMonth() {
-        const daysInMonth = []
+export default {
+  props: ['selectedMonth'],
+  data () {
+    return {
+      days: [],
+      selectedDay: null,
+      selectedEvent: null,
+      events: [],
+      pluralize: pluralize,
+      showingMoreDay: null,
+      hoveredDay: null,
+      addingEventDay: null,
+      calendar: {}
+    }
+  },
+  created () {
+    this.daysInAWeek()
+    this.readyCallbacks([() => this.getEventsForSelectedMonth(this.selectedMonth), this.getCalendar])
+  },
+  components: {
+    Event,
+    CreateEvent
+  },
+  computed: {
+    daysInSelectedMonth () {
+      const daysInMonth = []
 
-        const monthStartDate = startOfMonth(this.selectedMonth)
-        const monthEndDate = endOfMonth(this.selectedMonth)
-        const startDate = startOfWeek(monthStartDate)
-        const endDate = endOfWeek(monthEndDate)
+      const monthStartDate = startOfMonth(this.selectedMonth)
+      const monthEndDate = endOfMonth(this.selectedMonth)
+      const startDate = startOfWeek(monthStartDate)
+      const endDate = endOfWeek(monthEndDate)
 
-        let day = startDate;
-        let id = 0;
+      let day = startDate
+      let id = 0
 
-        while (day < endDate) {
-          const week = []
-          for (let i = 0; i < 7; i++) {
-            const date = addDays(day, i)
-            const inCurrentMonth = isSameMonth(date, monthStartDate)
-            const isSelected = isSameDay(date, this.selectedDay)
-            const isToday = isSameDay(date, today)
-            const events = this.eventsInDay(date)
-            const isFirstOrLast = isSameDay(date, startDate) || isSameDay(date, endDate)
+      while (day < endDate) {
+        const week = []
+        for (let i = 0; i < 7; i++) {
+          const date = addDays(day, i)
+          const inCurrentMonth = isSameMonth(date, monthStartDate)
+          const isSelected = isSameDay(date, this.selectedDay)
+          const isToday = isSameDay(date, today)
+          const events = this.eventsInDay(date)
+          const isFirstOrLast = isSameDay(date, startDate) || isSameDay(date, endDate)
 
-            let form = null;
+          let form = null
 
-            if (isFirstOrLast) {
-              form = nonDaysInMonthFormat
-            } else {
-              form = daysInMonthFormat
-            }
-
-            const formattedDay = format(date, form, {
-              awareOfUnicodeTokens: true
-            })
-
-            week.push({
-              id: ++id,
-              text: formattedDay,
-              value: date,
-              inCurrentMonth,
-              isSelected,
-              isToday,
-              events,
-            })
+          if (isFirstOrLast) {
+            form = nonDaysInMonthFormat
+          } else {
+            form = daysInMonthFormat
           }
 
-          day = addDays(day, 7)
-          daysInMonth.push(week)
-        }
-
-        return daysInMonth
-      }
-    },
-    methods: {
-      eventCreated(event){
-        this.events.unshift(event)
-        this.addingEventDay = null
-      },
-      async getCalendar(){
-        const path = `calendars`
-        const url = this.$http.url(path)
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-          this.calendar = response[0]
-        } catch (err) {
-
-        } finally {
-          // this.loadingMore = false
-        }
-      },
-      showMore(day, events) {
-        if (day.id === this.showingMoreDay) {
-          return events
-        } else {
-          return events.slice(0, 2)
-        }
-      },
-      eventsInDay(day) {
-        return this.events.filter(event => isSameDay(event.start_date, day))
-      },
-      daysInAWeek() {
-        let startDate = startOfWeek(this.selectedMonth);
-        for (let i = 0; i < 7; i++) {
-          let day = format(addDays(startDate, i), daysInWeekFormat, {
+          const formattedDay = format(date, form, {
             awareOfUnicodeTokens: true
           })
-          this.days.push(day)
+
+          week.push({
+            id: ++id,
+            text: formattedDay,
+            value: date,
+            inCurrentMonth,
+            isSelected,
+            isToday,
+            events
+          })
         }
-      },
-      async getEventsForSelectedMonth(month) {
-        this.events = []
 
-        const monthStartDate = startOfMonth(month)
-        const monthEndDate = endOfMonth(month)
-        const startDate = startOfWeek(monthStartDate)
-        const endDate = endOfWeek(monthEndDate)
+        day = addDays(day, 7)
+        daysInMonth.push(week)
+      }
 
-        const path = `event_schemas?start_date=${startDate}&end_date=${endDate}`
-        const url = this.$http.url(path)
-        // this.loadingMore = true
+      return daysInMonth
+    }
+  },
+  methods: {
+    eventCreated (event) {
+      this.events.unshift(event)
+      this.addingEventDay = null
+    },
+    async getCalendar () {
+      const path = `calendars`
+      const url = this.$http.url(path)
 
-        try {
-          const response = await this.$http.get(url, this.authToken)
-          this.events = response
-        } catch (err) {
+      try {
+        const response = await this.$http.get(url, this.authToken)
+        this.calendar = response[0]
+      } catch (err) {
 
-        } finally {
-          // this.loadingMore = false
-        }
+      } finally {
+        // this.loadingMore = false
       }
     },
-    watch: {
-      selectedMonth(month) {
-        if (month) {
-          this.getEventsForSelectedMonth(month)
-        }
+    showMore (day, events) {
+      if (day.id === this.showingMoreDay) {
+        return events
+      } else {
+        return events.slice(0, 2)
+      }
+    },
+    eventsInDay (day) {
+      return this.events.filter(event => isSameDay(event.start_date, day))
+    },
+    daysInAWeek () {
+      let startDate = startOfWeek(this.selectedMonth)
+      for (let i = 0; i < 7; i++) {
+        let day = format(addDays(startDate, i), daysInWeekFormat, {
+          awareOfUnicodeTokens: true
+        })
+        this.days.push(day)
+      }
+    },
+    async getEventsForSelectedMonth (month) {
+      this.events = []
+
+      const monthStartDate = startOfMonth(month)
+      const monthEndDate = endOfMonth(month)
+      const startDate = startOfWeek(monthStartDate)
+      const endDate = endOfWeek(monthEndDate)
+
+      const path = `event_schemas?start_date=${startDate}&end_date=${endDate}`
+      const url = this.$http.url(path)
+      // this.loadingMore = true
+
+      try {
+        const response = await this.$http.get(url, this.authToken)
+        this.events = response
+      } catch (err) {
+
+      } finally {
+        // this.loadingMore = false
+      }
+    }
+  },
+  watch: {
+    selectedMonth (month) {
+      if (month) {
+        this.getEventsForSelectedMonth(month)
       }
     }
   }
+}
 
 </script>

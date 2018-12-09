@@ -63,69 +63,69 @@
       </div>
     </div>
     <div class="w-1/5 h-screen max-w-xs">
-      
+
     </div>
   </div>
 </template>
 
 <script>
-  import Calendar from '@/components/events/Calendar'
+import Calendar from '@/components/events/Calendar'
 
-  import {
-    leftIcon,
-    rightIcon
-  } from '@/utils/icons'
-    import {
-    MESSAGE_TYPES
-  } from '@/utils'
-  import { 
-    format,
-    addMonths,
-    subMonths
-  } from 'date-fns'
+import {
+  leftIcon,
+  rightIcon
+} from '@/utils/icons'
+import {
+  MESSAGE_TYPES
+} from '@/utils'
+import {
+  format,
+  addMonths,
+  subMonths
+} from 'date-fns'
 
-  // const pluralize = require('pluralize')
-  const dateFormat = "MMMM YYYY";
+// const pluralize = require('pluralize')
+const dateFormat = 'MMMM YYYY'
 
-  export default {
-    name: 'People',
-    data() {
-      return {
-        currentMonth: new Date(),
-        selectedMonth: new Date(),
-        icons: {
-          back: leftIcon,
-          forward: rightIcon
-        }
+export default {
+  name: 'People',
+  data () {
+    return {
+      currentMonth: new Date(),
+      selectedMonth: new Date(),
+      icons: {
+        back: leftIcon,
+        forward: rightIcon
       }
+    }
+  },
+  components: {
+    Calendar
+  },
+  created () {
+    // this.setUpPeopleUI()
+    // this.readyCallbacks([this.refresh])
+    this.setPageTitle('Events')
+  },
+  computed: {
+    displayedMonth () {
+      return format(this.selectedMonth, dateFormat, {
+        awareOfUnicodeTokens: true
+      })
+    }
+  },
+  methods: {
+    previousMonth () {
+      this.selectedMonth = subMonths(this.selectedMonth, 1)
     },
-    components: {
-      Calendar
+    nextMonth () {
+      this.selectedMonth = addMonths(this.selectedMonth, 1)
     },
-    created() {
-      // this.setUpPeopleUI()
-      // this.readyCallbacks([this.refresh])
-      this.setPageTitle('Events')
+    actionHandler (value) {
+      this.activeAction = value
+      this.takingAction = true
     },
-    computed: {
-      displayedMonth(){
-        return format(this.selectedMonth, dateFormat, {
-          awareOfUnicodeTokens: true
-        })
-      },
-    },
-    methods: {
-      previousMonth(){
-        this.selectedMonth = subMonths(this.selectedMonth, 1)
-      },
-      nextMonth(){
-        this.selectedMonth = addMonths(this.selectedMonth, 1)
-      },
-      actionHandler(value) {
-        this.activeAction = value
-        this.takingAction = true;
-      },
-      setUpPeopleUI() {},
-    },
+    setUpPeopleUI () {}
   }
+}
 </script>

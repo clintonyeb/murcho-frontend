@@ -92,7 +92,7 @@
                 </svg>
               </div>
 
-              <div v-show="userMenu" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-r animated zoomIn flex flex-col overflow-hidden"
+              <div v-show="userMenu" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-r animated zoomIn flex flex-col overflow-hidden z-20"
                 style="min-width: 200px;">
                 <a v-for="menu in userMenuItems" :key="menu.id" class="cursor-pointer no-underline flex items-center justify-center px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                   @click="menu.handler">
@@ -111,57 +111,57 @@
 </template>
 
 <script>
-  import {
-    logoutIcon,
-    eventIcon,
-    groupIcon,
-    peopleIcon,
-    servicesIcon,
-    dashboardIcon
-  } from '@/utils/icons'
+import {
+  logoutIcon,
+  eventIcon,
+  groupIcon,
+  peopleIcon,
+  servicesIcon,
+  dashboardIcon
+} from '@/utils/icons'
 
-  export default {
-    name: 'TopBar',
-    data() {
-      return {
-        userMenu: false,
-        userMenuItems: [{
-          id: 1,
-          text: 'Logout',
-          icon: logoutIcon,
-          handler: this.logout
-        }, ],
-        icons: {
-          event: eventIcon,
-          group: groupIcon,
-          people: peopleIcon,
-          service: servicesIcon,
-          overview: dashboardIcon
-        }
-      }
-    },
-    methods: {
-      handleClickOutside() {
-        if (this.userMenu) {
-          this.userMenu = false;
-        }
-      },
-      logout() {
-        this.$store.commit('SET_TOKEN', '')
-
-        sessionStorage.removeItem('auth_token')
-        sessionStorage.removeItem('email')
-
-        this.$store.commit('SET_LOGIN_DATA', {
-          message: 'You have successfully logged out.',
-          type: 'info',
-        })
-
-        this.$router.replace({
-          name: 'login'
-        })
+export default {
+  name: 'TopBar',
+  data () {
+    return {
+      userMenu: false,
+      userMenuItems: [{
+        id: 1,
+        text: 'Logout',
+        icon: logoutIcon,
+        handler: this.logout
+      } ],
+      icons: {
+        event: eventIcon,
+        group: groupIcon,
+        people: peopleIcon,
+        service: servicesIcon,
+        overview: dashboardIcon
       }
     }
+  },
+  methods: {
+    handleClickOutside () {
+      if (this.userMenu) {
+        this.userMenu = false
+      }
+    },
+    logout () {
+      this.$store.commit('SET_TOKEN', '')
+
+      sessionStorage.removeItem('auth_token')
+      sessionStorage.removeItem('email')
+
+      this.$store.commit('SET_LOGIN_DATA', {
+        message: 'You have successfully logged out.',
+        type: 'info'
+      })
+
+      this.$router.replace({
+        name: 'login'
+      })
+    }
   }
+}
 
 </script>

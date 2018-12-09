@@ -74,68 +74,67 @@
 </template>
 
 <script>
-  export default {
-    props: ['people_ids'],
-    name: 'Email',
-    data() {
+export default {
+  props: ['people_ids'],
+  name: 'Email',
+  data () {
+    return {
+      loadingForm: false,
+      subject: '',
+      message: ''
+    }
+  },
+  computed: {
+    loadingButtonClass () {
       return {
-        loadingForm: false,
-        subject: '',
-        message: ''
+        loading: this.loadingForm
       }
-    },
-    computed: {
-      loadingButtonClass() {
-        return {
-          loading: this.loadingForm
+    }
+  },
+  created () {
+  },
+  methods: {
+    submit () {
+      if (this.loadingForm) return false
+      this.validateForm(async state => {
+        if (!state) return false
+
+        const path = 'send_mail'
+        const url = this.$http.url(path)
+        this.loadingForm = true
+
+        const message = this.message
+        const subject = this.subject
+
+        try {
+          const response = await this.$http.post(url, {
+            person_ids: this.people_ids,
+            subject: subject,
+            message: message
+          },
+          this.authToken
+          )
+
+          this.$emit('sent', response)
+
+          console.log(response)
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loadingForm = false
         }
-      }
+      })
     },
-    created() {
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
     },
-    methods: {
-      submit(){
-        if(this.loadingForm) return false
-        this.validateForm(async state => {
-          if (!state) return false
-
-          const path = 'send_mail'
-          const url = this.$http.url(path)
-          this.loadingForm = true
-
-          const message = this.message
-          const subject = this.subject
-
-          try {
-            const response = await this.$http.post(url, {
-                person_ids: this.people_ids,
-                subject: subject,
-                message: message
-              },
-              this.authToken
-            )
-
-            this.$emit('sent', response)
-
-            console.log(response)
-          } catch (error) {
-            console.log(error)
-          } finally {
-            this.loadingForm = false
-          }
-
-        })
-      },
-      getInputErrorMessage(name) {
-        return this.errors.first(name)
-      },
-      getInputColor(name) {
-        return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-      },
-      getInputState(name) {
-        return this.errors.has(name)
-      },
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
     }
   }
+}
 
 </script>

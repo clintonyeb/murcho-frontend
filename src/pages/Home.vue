@@ -34,39 +34,39 @@
 </template>
 
 <script>
-  import TopNav from '@/components/TopNav'
-  import {
-    MESSAGE_TYPES
-  } from '@/utils'
+import TopNav from '@/components/TopNav'
+import {
+  MESSAGE_TYPES
+} from '@/utils'
 
-  export default {
-    name: 'home',
-    data() {
-      return {
-        MESSAGE_TYPES: MESSAGE_TYPES
-      }
-    },
-    computed: {
-      alertClass() {
-        switch (this.alert.type) {
-          case MESSAGE_TYPES.warning:
-            return ['bg-yellow-dark']
-          case MESSAGE_TYPES.error:
-            return ['bg-red-light']
-          default:
-            return ['bg-blue-light']
-        }
-      },
-      alert() {
-        return this.$store.state.layout.alert
-      }
-    },
-    created() {
-      this.initializeApp(err => {})
-    },
-    components: {
-      TopNav
+export default {
+  name: 'home',
+  data () {
+    return {
+      MESSAGE_TYPES: MESSAGE_TYPES
     }
+  },
+  computed: {
+    alertClass () {
+      switch (this.alert.type) {
+        case MESSAGE_TYPES.warning:
+          return ['bg-yellow-dark']
+        case MESSAGE_TYPES.error:
+          return ['bg-red-light']
+        default:
+          return ['bg-blue-light']
+      }
+    },
+    alert () {
+      return this.$store.state.layout.alert
+    }
+  },
+  created () {
+    this.initializeApp(err => {})
+  },
+  components: {
+    TopNav
   }
+}
 
 </script>

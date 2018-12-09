@@ -71,73 +71,73 @@
 </template>
 
 <script>
-  export default {
-    name: 'Forgotten',
-    data() {
-      return {
-        loadingForm: false,
-        email: '',
-      }
+export default {
+  name: 'Forgotten',
+  data () {
+    return {
+      loadingForm: false,
+      email: ''
+    }
+  },
+  methods: {
+    checkLoginPayload () {
+      const loginPayload = this.$store.state.layout.login
+      if (!loginPayload.state) return
+
+      this.displayMessage = loginPayload.message
+      this.displayMessageType = loginPayload.type
+      this.reRoutePath = loginPayload.route
+      this.shouldDisplayMessage = loginPayload.state
+
+      this.$store.commit('CLEAR_LOGIN_DATA')
     },
-    methods: {
-      checkLoginPayload() {
-        const loginPayload = this.$store.state.layout.login
-        if (!loginPayload.state) return
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
+    },
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
+    },
+    login () {
+      if (this.loadingForm) return false
 
-        this.displayMessage = loginPayload.message
-        this.displayMessageType = loginPayload.type
-        this.reRoutePath = loginPayload.route
-        this.shouldDisplayMessage = loginPayload.state
+      this.validateForm(async state => {
+        if (!state) return false
+        this.loadingForm = true
 
-        this.$store.commit('CLEAR_LOGIN_DATA')
-      },
-      getInputErrorMessage(name) {
-        return this.errors.first(name)
-      },
-      getInputColor(name) {
-        return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-      },
-      getInputState(name) {
-        return this.errors.has(name)
-      },
-      login() {
-        if (this.loadingForm) return false
+        const email = this.email
+        const password = this.password
 
-        this.validateForm(async state => {
-          if (!state) return false
-          this.loadingForm = true
+        const path = 'authentication'
+        const url = this.$http.url(path)
 
-          const email = this.email
-          const password = this.password
+        try {
+          const response = await this.$http.login(url, {
+            email,
+            password
+          })
 
-          const path = 'authentication'
-          const url = this.$http.url(path)
+          this.$store.commit('SET_TOKEN', response.auth_token)
 
-          try {
-            const response = await this.$http.login(url, {
-              email,
-              password
-            })
+          sessionStorage.setItem('auth_token', response.auth_token)
+          sessionStorage.setItem('email', email)
 
-            this.$store.commit('SET_TOKEN', response.auth_token)
-
-            sessionStorage.setItem('auth_token', response.auth_token)
-            sessionStorage.setItem('email', email)
-
-            const route = this.reRoutePath || 'members'
-            this.$router.replace({
-              name: route
-            })
-          } catch (err) {
-            this.loadingForm = false
-            this.displayMessage = err.status === 401 ? 'Invalid email and password provided.' :
-              'There was an error processing your request.'
-            this.displayMessageType = MESSAGE_TYPES.error
-            this.shouldDisplayMessage = true
-          } finally {}
-        })
-      }
+          const route = this.reRoutePath || 'members'
+          this.$router.replace({
+            name: route
+          })
+        } catch (err) {
+          this.loadingForm = false
+          this.displayMessage = err.status === 401 ? 'Invalid email and password provided.'
+            : 'There was an error processing your request.'
+          this.displayMessageType = MESSAGE_TYPES.error
+          this.shouldDisplayMessage = true
+        } finally {}
+      })
     }
   }
+}
 
 </script>

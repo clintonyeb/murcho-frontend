@@ -60,61 +60,61 @@
 </template>
 
 <script>
-  export default {
-    props: ['people_ids'],
-    name: 'SMS',
-    data() {
+export default {
+  props: ['people_ids'],
+  name: 'SMS',
+  data () {
+    return {
+      loadingForm: false,
+      message: ''
+    }
+  },
+  computed: {
+    loadingButtonClass () {
       return {
-        loadingForm: false,
-        message: ''
+        loading: this.loadingForm
       }
-    },
-    computed: {
-      loadingButtonClass() {
-        return {
-          loading: this.loadingForm
+    }
+  },
+  created () {},
+  methods: {
+    submit () {
+      if (this.loadingForm) return false
+      this.validateForm(async state => {
+        if (!state) return false
+
+        const path = 'send_sms'
+        const url = this.$http.url(path)
+        this.loadingForm = true
+
+        const message = this.message
+
+        try {
+          const response = await this.$http.post(url, {
+            person_ids: this.people_ids,
+            message: message
+          },
+          this.authToken
+          )
+
+          this.$emit('sent', response)
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loadingForm = false
         }
-      }
+      })
     },
-    created() {},
-    methods: {
-      submit() {
-        if (this.loadingForm) return false
-        this.validateForm(async state => {
-          if (!state) return false
-
-          const path = 'send_sms'
-          const url = this.$http.url(path)
-          this.loadingForm = true
-
-          const message = this.message
-
-          try {
-            const response = await this.$http.post(url, {
-                person_ids: this.people_ids,
-                message: message
-              },
-              this.authToken
-            )
-
-             this.$emit('sent', response)
-          } catch (error) {
-            console.log(error)
-          } finally {
-            this.loadingForm = false
-          }
-        })
-      },
-      getInputErrorMessage(name) {
-        return this.errors.first(name)
-      },
-      getInputColor(name) {
-        return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-      },
-      getInputState(name) {
-        return this.errors.has(name)
-      },
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
+    },
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
     }
   }
+}
 
 </script>

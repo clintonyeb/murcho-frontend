@@ -109,25 +109,25 @@ import {
   backIcon
 } from '@/utils/icons'
 
-  export default {
-    props: ['person'],
-    name: 'ViewPerson',
-    data() {
-      return {
-        mode: 'text', // photo,
-        hoveredPhoto: false,
-        icons: {
-          back: backIcon
-        }
-      }
-    },
-    methods: {
-      avatarClicked() {
-        if (!this.person.photo) return false
-
-        this.mode = 'photo'
+export default {
+  props: ['person'],
+  name: 'ViewPerson',
+  data () {
+    return {
+      mode: 'text', // photo,
+      hoveredPhoto: false,
+      icons: {
+        back: backIcon
       }
     }
+  },
+  methods: {
+    avatarClicked () {
+      if (!this.person.photo) return false
+
+      this.mode = 'photo'
+    }
   }
+}
 
 </script>

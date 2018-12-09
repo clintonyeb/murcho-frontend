@@ -106,172 +106,172 @@
 
 <script>
 import GridView from '@/components/groups/GridView'
-  import {
-    filterIcon,
-    groupIcon
-  } from '@/utils/icons'
+import {
+  filterIcon,
+  groupIcon
+} from '@/utils/icons'
 
-  export default {
-    name: 'Groups',
-    data() {
-      return {
-        groups: [],
-        page: 1,
-        ended: false,
-        totalGroups: null,
-        loadingMore: false,
-        order: null,
-        groupOrders: [{
-            id: 1,
-            text: 'Date Updated',
-            value: 'updated_at'
-          },
-          {
-            id: 2,
-            text: 'Date Created',
-            value: 'created_at'
-          },
-          {
-            id: 3,
-            text: 'First Name',
-            value: 'first_name'
-          },
-          {
-            id: 4,
-            text: 'Last Name',
-            value: 'last_name'
-          },
-          {
-            id: 5,
-            text: 'Phone Number',
-            value: 'phone_number'
-          },
-          {
-            id: 6,
-            text: 'Email Address',
-            value: 'email'
-          },
-          {
-            id: 7,
-            text: 'Membership Status',
-            value: 'membership_status'
-          },
-          {
-            id: 8,
-            text: 'Date Joined',
-            value: 'date_joined'
-          }
-        ],
-        orderMenu: false,
-        sort: null,
-        sortMenu: false,
-        groupSorts: [{
-            id: 1,
-            text: 'Descending',
-            value: 'DESC'
-          },
-          {
-            id: 2,
-            text: 'Ascending',
-            value: 'ASC'
-          }
-        ],
-        icons: {
-          filter: filterIcon,
-          group: groupIcon
-        },
+export default {
+  name: 'Groups',
+  data () {
+    return {
+      groups: [],
+      page: 1,
+      ended: false,
+      totalGroups: null,
+      loadingMore: false,
+      order: null,
+      groupOrders: [{
+        id: 1,
+        text: 'Date Updated',
+        value: 'updated_at'
+      },
+      {
+        id: 2,
+        text: 'Date Created',
+        value: 'created_at'
+      },
+      {
+        id: 3,
+        text: 'First Name',
+        value: 'first_name'
+      },
+      {
+        id: 4,
+        text: 'Last Name',
+        value: 'last_name'
+      },
+      {
+        id: 5,
+        text: 'Phone Number',
+        value: 'phone_number'
+      },
+      {
+        id: 6,
+        text: 'Email Address',
+        value: 'email'
+      },
+      {
+        id: 7,
+        text: 'Membership Status',
+        value: 'membership_status'
+      },
+      {
+        id: 8,
+        text: 'Date Joined',
+        value: 'date_joined'
       }
-    },
-    created() {
-      this.setUpGroupUI()
-      this.readyCallbacks([this.refresh])
-      this.setPageTitle('Groups')
-    },
-    components: {
-      GridView
-    },
-    methods: {
-      goToDetail(groupId) {
-        this.$router.push({name: 'group-items', params: {id: this.encodeId(groupId)}})
+      ],
+      orderMenu: false,
+      sort: null,
+      sortMenu: false,
+      groupSorts: [{
+        id: 1,
+        text: 'Descending',
+        value: 'DESC'
       },
-      goBack() {
-        if (this.page === 1) return false
-        const page = this.page - 1;
-        this.getPeople(page)
-      },
-      goForward() {
-        if (this.ended) return false
-        const page = this.page + 1;
-        this.getPeople(page)
-      },
-      handleGroupAction(data) {
-        switch (data.action) {
-          case 'delete':
-            this.deleteGroup(data.group, data.index)
-            break;
-
-          default:
-            break;
-        }
-      },
-      async deleteGroup(groupId, index) {
-        const path = `groups/${groupId}`
-        const url = this.$http.url(path)
-
-        try {
-          await this.$http.delete(url, this.authToken)
-          this.groups.splice(index, 1)
-          this.totalGroups--
-        } catch (err) {
-
-        } finally {}
-      },
-      setUpGroupUI() {
-        if (!this.order) {
-          const order = localStorage.getItem('group-order')
-          this.order = this.groupOrders.find(o => o.value === order) || this.groupOrders[0]
-        }
-
-        if (!this.sort) {
-          const sort = localStorage.getItem('group-sort')
-          this.sort = this.groupSorts.find(s => s.value === sort) || this.groupSorts[0]
-        }
-      },
-      refresh(isNew = true) {
-        this.getGroups()
-        if (isNew) this.getGroupsCount()
-      },
-      async getGroups(page = 1, size = 100) {
-        const path = `groups?page=${page}&size=${size}`
-        const url = this.$http.url(path)
-        this.loadingMore = true
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-
-          if (response.length) {
-            this.groups = response
-            this.page = page
-          }
-
-          if (response.length < size) this.ended = true
-          else this.ended = false
-        } catch (err) {
-
-        } finally {
-          this.loadingMore = false
-        }
-      },
-      async getGroupsCount() {
-        const path = 'total_groups'
-        const url = this.$http.url(path)
-
-        try {
-          const response = await this.$http.get(url, this.authToken)
-          this.totalGroups = response
-        } catch (error) {}
+      {
+        id: 2,
+        text: 'Ascending',
+        value: 'ASC'
+      }
+      ],
+      icons: {
+        filter: filterIcon,
+        group: groupIcon
       }
     }
+  },
+  created () {
+    this.setUpGroupUI()
+    this.readyCallbacks([this.refresh])
+    this.setPageTitle('Groups')
+  },
+  components: {
+    GridView
+  },
+  methods: {
+    goToDetail (groupId) {
+      this.$router.push({ name: 'group-items', params: { id: this.encodeId(groupId) } })
+    },
+    goBack () {
+      if (this.page === 1) return false
+      const page = this.page - 1
+      this.getPeople(page)
+    },
+    goForward () {
+      if (this.ended) return false
+      const page = this.page + 1
+      this.getPeople(page)
+    },
+    handleGroupAction (data) {
+      switch (data.action) {
+        case 'delete':
+          this.deleteGroup(data.group, data.index)
+          break
+
+        default:
+          break
+      }
+    },
+    async deleteGroup (groupId, index) {
+      const path = `groups/${groupId}`
+      const url = this.$http.url(path)
+
+      try {
+        await this.$http.delete(url, this.authToken)
+        this.groups.splice(index, 1)
+        this.totalGroups--
+      } catch (err) {
+
+      } finally {}
+    },
+    setUpGroupUI () {
+      if (!this.order) {
+        const order = localStorage.getItem('group-order')
+        this.order = this.groupOrders.find(o => o.value === order) || this.groupOrders[0]
+      }
+
+      if (!this.sort) {
+        const sort = localStorage.getItem('group-sort')
+        this.sort = this.groupSorts.find(s => s.value === sort) || this.groupSorts[0]
+      }
+    },
+    refresh (isNew = true) {
+      this.getGroups()
+      if (isNew) this.getGroupsCount()
+    },
+    async getGroups (page = 1, size = 100) {
+      const path = `groups?page=${page}&size=${size}`
+      const url = this.$http.url(path)
+      this.loadingMore = true
+
+      try {
+        const response = await this.$http.get(url, this.authToken)
+
+        if (response.length) {
+          this.groups = response
+          this.page = page
+        }
+
+        if (response.length < size) this.ended = true
+        else this.ended = false
+      } catch (err) {
+
+      } finally {
+        this.loadingMore = false
+      }
+    },
+    async getGroupsCount () {
+      const path = 'total_groups'
+      const url = this.$http.url(path)
+
+      try {
+        const response = await this.$http.get(url, this.authToken)
+        this.totalGroups = response
+      } catch (error) {}
+    }
   }
+}
 
 </script>
