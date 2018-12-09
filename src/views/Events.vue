@@ -84,7 +84,6 @@ import {
   subMonths
 } from 'date-fns'
 
-// const pluralize = require('pluralize')
 const dateFormat = 'MMMM YYYY'
 
 export default {
@@ -103,8 +102,6 @@ export default {
     Calendar
   },
   created () {
-    // this.setUpPeopleUI()
-    // this.readyCallbacks([this.refresh])
     this.setPageTitle('Events')
   },
   computed: {

@@ -82,8 +82,6 @@ const daysInMonthFormat = 'd'
 const nonDaysInMonthFormat = 'LLL d'
 const today = new Date()
 
-const pluralize = require('pluralize')
-
 export default {
   props: ['selectedMonth'],
   data () {
@@ -92,7 +90,6 @@ export default {
       selectedDay: null,
       selectedEvent: null,
       events: [],
-      pluralize: pluralize,
       showingMoreDay: null,
       hoveredDay: null,
       addingEventDay: null,

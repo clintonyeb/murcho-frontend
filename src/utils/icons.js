@@ -78,7 +78,7 @@ export const fileIcon = `
 
 export const logoutIcon =
   `
-<svg class="h-4 w-4 fill-current text-red relative group-hover:text-white" version="1.1 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg class="h-3 w-3 fill-current relative group-hover:text-white" version="1.1 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 viewBox="0 0 511.989 511.989" style="enable-background:new 0 0 511.989 511.989; top: 3px" xml:space="preserve">
 <g>
   <path d="M110.933,221.782c-4.71,0-8.533,3.823-8.533,8.533v51.2c0,4.71,3.823,8.533,8.533,8.533s8.533-3.823,8.533-8.533v-51.2

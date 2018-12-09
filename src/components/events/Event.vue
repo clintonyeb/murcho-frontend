@@ -87,7 +87,6 @@ import {
 } from '@/utils/icons'
 
 const dateFormat = 'EEEE, do; h:m a'
-const pluralize = require('pluralize')
 
 export default {
   props: ['event'],

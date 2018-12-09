@@ -125,15 +125,6 @@ export default {
         }
       })
     },
-    getInputErrorMessage (name) {
-      return this.errors.first(name)
-    },
-    getInputColor (name) {
-      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-    },
-    getInputState (name) {
-      return this.errors.has(name)
-    }
   }
 }
 

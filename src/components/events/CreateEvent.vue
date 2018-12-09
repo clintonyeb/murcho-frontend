@@ -142,7 +142,6 @@ import flatpickr from 'flatpickr'
 import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
 
 const dateFormat = 'EEEE, do; h:m a'
-const pluralize = require('pluralize')
 require('flatpickr/dist/flatpickr.min.css')
 
 let startDateComp = null
@@ -285,15 +284,6 @@ export default {
           showAlways: true
         })]
       })
-    },
-    getInputErrorMessage (name) {
-      return this.errors.first(name)
-    },
-    getInputColor (name) {
-      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-    },
-    getInputState (name) {
-      return this.errors.has(name)
     }
   },
   beforeDestroy () {

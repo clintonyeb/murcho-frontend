@@ -40,7 +40,7 @@
 
       <tbody name="fade" is="transition-group" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutUp">
         <tr v-for="(person, index) in people" :key="person.id" class="text-grey-dark text-xs bg-white my-2 rounded shadow cursor-pointer person-item hover:text-grey-darkest hover:bg-blue-lightest select-none"
-          :class="{'bg-blue-lightest text-grey-darkest': (selectedPeople.indexOf(person.id) !== -1 || activePerson === person.id)}"
+          :class="{'bg-blue-lightest text-grey-darkest': (activePeople.indexOf(person.id) !== -1 || activePerson === person.id)}"
           @click="personRowClicked(person.id)">
           <td class="w-14 px-4 py-2">
             <label class="container checkbox">
@@ -63,7 +63,7 @@
                   <p>
                     {{group.name}}
                   </p>
-                  <span class="hover:bg-grey rounded" @click.stop="removeGroupFromPerson(group.id, person.id)">
+                  <span class="hover:bg-grey rounded" @click.stop="removeGroupFromPerson(group.id, person.id, index)">
                     <svg class="fill-current h-4 w-4 text-grey-dark" role="button" xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 20 20">
                       <title>Close</title>
@@ -141,7 +141,7 @@ import {
 } from '@/utils/icons'
 
 export default {
-  props: ['page', 'pagesEnded', 'people'],
+  props: ['page', 'pagesEnded', 'people', 'activePeople'],
   name: 'ListView',
   data () {
     return {
@@ -242,6 +242,9 @@ export default {
   watch: {
     selectedPeople (val) {
       this.$emit('selected', val)
+    },
+    activePeople(val) {
+      this.selectedPeople = val
     }
   }
 }

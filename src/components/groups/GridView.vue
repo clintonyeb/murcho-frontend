@@ -70,8 +70,6 @@ import {
   fileIcon
 } from '@/utils/icons'
 
-const pluralize = require('pluralize')
-
 export default {
   props: ['page', 'pagesEnded', 'groups'],
   name: 'GridView',
@@ -90,7 +88,6 @@ export default {
       }
       ],
       activeGroup: null,
-      pluralize: pluralize
     }
   }
 }

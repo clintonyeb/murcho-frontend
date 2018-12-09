@@ -92,9 +92,9 @@
                 </svg>
               </div>
 
-              <div v-show="userMenu" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-r animated zoomIn flex flex-col overflow-hidden z-20"
+              <div v-show="userMenu" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white absolute pin-r animated zoomIn flex flex-col overflow-hidden z-20"
                 style="min-width: 200px;">
-                <a v-for="menu in userMenuItems" :key="menu.id" class="cursor-pointer no-underline flex items-center justify-center px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
+                <a v-for="menu in userMenuItems" :key="menu.id" class="text-xs cursor-pointer no-underline flex items-center justify-start px-4 py-2 whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                   @click="menu.handler">
                   <span v-html="menu.icon" class="mr-2 group-hover:text-white"></span>
                   <span class="group-hover:text-white">{{menu.text}}</span>
@@ -125,7 +125,20 @@ export default {
   data () {
     return {
       userMenu: false,
-      userMenuItems: [{
+      userMenuItems: [
+        {
+        id: 2,
+        text: 'Settings',
+        icon: logoutIcon,
+        handler: () => {}
+      },
+              {
+        id: 2,
+        text: 'Help',
+        icon: logoutIcon,
+        handler: () => {}
+      },
+        {
         id: 1,
         text: 'Logout',
         icon: logoutIcon,

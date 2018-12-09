@@ -166,12 +166,8 @@
 </template>
 
 <script>
-// const pluralize = require('pluralize')
-
 import {
   tickIcon
-  // eventIcon,
-  // closeIcon,
 } from '@/utils/icons'
 
 import flatpickr from 'flatpickr'
@@ -339,15 +335,6 @@ export default {
         })]
       })
     },
-    getInputErrorMessage (name) {
-      return this.errors.first(name)
-    },
-    getInputColor (name) {
-      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-    },
-    getInputState (name) {
-      return this.errors.has(name)
-    }
   },
   watch: {
     person (val) {

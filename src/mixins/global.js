@@ -4,6 +4,7 @@ import OnClickOutside from '@/components/OnClickOutside'
 import Avatar from 'vue-avatar'
 
 let hash = null
+const pluralize = require('pluralize')
 
 export default {
   data () {
@@ -17,6 +18,16 @@ export default {
     Avatar
   },
   methods: {
+    getInputErrorMessage (name) {
+      return this.errors.first(name)
+    },
+    getInputColor (name) {
+      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
+    },
+    getInputState (name) {
+      return this.errors.has(name)
+    },
+    pluralize: pluralize,
     setPageTitle (title) {
       document.title = `${title} | Murcho`
     },

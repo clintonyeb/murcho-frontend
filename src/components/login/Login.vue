@@ -208,15 +208,6 @@ export default {
 
       this.$store.commit('CLEAR_LOGIN_DATA')
     },
-    getInputErrorMessage (name) {
-      return this.errors.first(name)
-    },
-    getInputColor (name) {
-      return this.getInputState(name) ? 'border-red-light' : 'border-grey-light'
-    },
-    getInputState (name) {
-      return this.errors.has(name)
-    },
     login () {
       if (this.loadingForm) return false
       this.shouldDisplayMessage = false
