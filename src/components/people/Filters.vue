@@ -23,7 +23,7 @@
               >
                 <g>
                   <path
-                    d="M51.6,96.7c11,0,21-3.9,28.8-10.5l35,35c0.8,0.8,1.8,1.2,2.9,1.2s2.1-0.4,2.9-1.2c1.6-1.6,1.6-4.2,0-5.8l-35-35   c6.5-7.8,10.5-17.9,10.5-28.8c0-24.9-20.2-45.1-45.1-45.1C26.8,6.5,6.5,26.8,6.5,51.6C6.5,76.5,26.8,96.7,51.6,96.7z M51.6,14.7   c20.4,0,36.9,16.6,36.9,36.9C88.5,72,72,88.5,51.6,88.5c-20.4,0-36.9-16.6-36.9-36.9C14.7,31.3,31.3,14.7,51.6,14.7z"
+                    d="M51.6,96.7c11,0,21-3.9,28.8-10.5l35,35c0.8,0.8,1.8,1.2,2.9,1.2s2.1-0.4,2.9-1.2c1.6-1.6,1.6-4.2,0-5.8l-35-35c6.5-7.8,10.5-17.9,10.5-28.8c0-24.9-20.2-45.1-45.1-45.1C26.8,6.5,6.5,26.8,6.5,51.6C6.5,76.5,26.8,96.7,51.6,96.7z M51.6,14.7c20.4,0,36.9,16.6,36.9,36.9C88.5,72,72,88.5,51.6,88.5c-20.4,0-36.9-16.6-36.9-36.9C14.7,31.3,31.3,14.7,51.6,14.7z"
                   ></path>
                 </g>
               </svg>
@@ -95,7 +95,7 @@
       <div class="w-full mt-6">
         <p class="text-grey text-xs">Groups:</p>
         <div class="mt-2 w-full">
-          <on-click-outside :do="handleGroupSearchOutside">
+          <on-click-outside :do="handleGroupSearchOutside" :active="groups.searched.length">
             <div class="mt-2 relative mx-auto">
               <div class="w-full inline-flex items-center justify-center relative">
                 <button class="h-6 w-6 absolute pin-l ml-2 mr-2">
@@ -112,7 +112,7 @@
                   >
                     <g>
                       <path
-                        d="M51.6,96.7c11,0,21-3.9,28.8-10.5l35,35c0.8,0.8,1.8,1.2,2.9,1.2s2.1-0.4,2.9-1.2c1.6-1.6,1.6-4.2,0-5.8l-35-35   c6.5-7.8,10.5-17.9,10.5-28.8c0-24.9-20.2-45.1-45.1-45.1C26.8,6.5,6.5,26.8,6.5,51.6C6.5,76.5,26.8,96.7,51.6,96.7z M51.6,14.7   c20.4,0,36.9,16.6,36.9,36.9C88.5,72,72,88.5,51.6,88.5c-20.4,0-36.9-16.6-36.9-36.9C14.7,31.3,31.3,14.7,51.6,14.7z"
+                        d="M51.6,96.7c11,0,21-3.9,28.8-10.5l35,35c0.8,0.8,1.8,1.2,2.9,1.2s2.1-0.4,2.9-1.2c1.6-1.6,1.6-4.2,0-5.8l-35-35c6.5-7.8,10.5-17.9,10.5-28.8c0-24.9-20.2-45.1-45.1-45.1C26.8,6.5,6.5,26.8,6.5,51.6C6.5,76.5,26.8,96.7,51.6,96.7z M51.6,14.7c20.4,0,36.9,16.6,36.9,36.9C88.5,72,72,88.5,51.6,88.5c-20.4,0-36.9-16.6-36.9-36.9C14.7,31.3,31.3,14.7,51.6,14.7z"
                       ></path>
                     </g>
                   </svg>
@@ -145,9 +145,9 @@
         </div>
 
         <div class="w-full mt-4">
-          <div class="mt-2 w-full" style="max-height: 200px; overflow-y: auto; overflow-x: hidden;">
-            <div class="mt-2 w-full inline-flex" v-for="group in groups.selected" :key="group.id">
-              <p class="flex-grow text-grey-dark">{{group.name}}</p>
+          <div class="mt-2 w-full">
+            <div class="mt-2 w-full inline-flex items-center justify-between" v-for="group in groups.selected" :key="group.id">
+              <p class="text-grey-dark">{{group.name}}</p>
               <label class="checkbox checkbox-container">
                 <input type="checkbox" v-model="groups.pickedFromSelected" :value="group.id">
                 <span class="checkmark"></span>
@@ -273,8 +273,10 @@ export default {
       // TODO: make sure groups are unique before adding - dont add duplicates
 
       this.clearGroupSearch();
-      this.groups.pickedFromSelected.push(group.id);
+      if(this.groups.selected.find(g => g.id === group.id)) return false
+      
       this.groups.selected.unshift(group);
+      this.groups.pickedFromSelected.push(group.id);
     },
     searchGroups: debounce(function(e) {
       this.doGroupsSearch(e.target.value);
@@ -300,6 +302,7 @@ export default {
       }
     },
     handleGroupSearchOutside() {
+      console.log('here')
       this.clearGroupSearch();
     },
     clearGroupSearch() {

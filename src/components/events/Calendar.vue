@@ -23,7 +23,7 @@
             </div>
 
             <div class="my-6 relative">
-              <on-click-outside :do="() => selectedEvent = null">
+              <on-click-outside :do="() => selectedEvent = null" :active="selectedEvent !== null">
                 <div>
                   <div v-for="event in showMore(day, day.events)" :key="event.id" class="relative shadow hover:shadow-md mx-1 my-3 p-2 border-l-4 rounded-r"
                     :class="`bg-${event.color}-lightest text-${event.color}-dark border-${event.color}-dark`"

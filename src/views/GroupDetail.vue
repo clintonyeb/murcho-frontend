@@ -11,7 +11,7 @@
     <div class="w-1/3 h-screen pr-4">
       <div class="mx-auto w-full m-2">
 
-        <on-click-outside :do="handleSearchOutside">
+        <on-click-outside :do="handleSearchOutside" :active="searchedPeople.length">
           <div class="relative mx-auto">
 
             <div class="w-full inline-flex items-center justify-center relative">

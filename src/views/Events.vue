@@ -38,7 +38,7 @@
                   <span class="mr-2">Create Event</span>
                 </button>
 
-                <on-click-outside :do="() => moreMenu = false">
+                <on-click-outside :do="() => moreMenu = false" :active="moreMenu">
                   <div class="inline-flex items-center justify-center cursor-pointer relative">
 
                     <button class="bg-blue-light text-white h-8 w-8 hover:bg-grey-light hover:text-white rounded-r"

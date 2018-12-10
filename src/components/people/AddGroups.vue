@@ -1,6 +1,6 @@
 <template>
   <div class="w-full container mx-auto md:p-10 sm:p-8">
-    <on-click-outside :do="handleSearchOutside">
+    <on-click-outside :do="handleSearchOutside" :active="searchGroups.length">
       <div class="relative mx-auto">
 
         <div class="w-full inline-flex items-center justify-center relative">

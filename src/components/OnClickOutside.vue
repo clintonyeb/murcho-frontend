@@ -1,19 +1,42 @@
 <script>
 export default {
-  props: ['do'],
-  mounted () {
-    const listener = e => {
-      if (e.target !== this.$el && !this.$el.contains(e.target)) {
-        this.do()
+  props: ["do", "active"],
+  mounted() {
+    if(this.active) this.addListener()
+    else this.removeListener()
+  },
+  render() {
+    return this.$slots.default[0];
+  },
+  methods: {
+    addListener() {
+      document.addEventListener("click", this.listener);
+    },
+    removeListener() {
+      document.removeEventListener("click", this.listener);
+    },
+    listener(e) {
+      if (
+        this.active &&
+        e.target !== this.$el &&
+        !this.$el.contains(e.target)
+      ) {
+        this.do();
       }
     }
-    document.addEventListener('click', listener)
-    this.$once('hook:destroyed', () => {
-      document.removeEventListener('click', listener)
-    })
   },
-  render () {
-    return this.$slots.default[0]
+  beforeDestroy() {
+    this.removeListener();
+  },
+  watch: {
+    active(val) {
+      console.log(val)
+      if (val) {
+        this.addListener();
+      } else {
+        this.removeListener();
+      }
+    }
   }
-}
+};
 </script>

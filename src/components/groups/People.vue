@@ -52,7 +52,7 @@
           <td class="px-1 py-2">{{person.phone_number || person.email}}</td>
           <td class="w-1 text-center" @click.stop="activePerson = person.id">
 
-            <on-click-outside :do="() => activePerson = null">
+            <on-click-outside :do="() => activePerson = null" :active="activePerson !== null">
               <div class="inline-flex items-center justify-center cursor-pointer relative">
 
                 <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-6 p-1 cursor-pointer hover:bg-grey-light rounded-full align-middle"

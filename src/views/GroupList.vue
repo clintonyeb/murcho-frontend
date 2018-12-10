@@ -13,7 +13,7 @@
                 {{totalGroups}} Total
               </p>
 
-              <on-click-outside :do="() => orderMenu = false">
+              <on-click-outside :do="() => orderMenu = false" :active="orderMenu">
                 <div class="inline-flex items-center justify-center cursor-pointer relative mr-4" @click="orderMenu = !orderMenu">
                   <div class="self-end">
                     <p class="text-grey-dark text-xs font-hairline">
@@ -44,7 +44,7 @@
                 </div>
               </on-click-outside>
 
-              <on-click-outside :do="() => sortMenu = false">
+              <on-click-outside :do="() => sortMenu = false" :active="sortMenu">
                 <div class="inline-flex items-center justify-center cursor-pointer relative" @click="sortMenu = !sortMenu">
                   <div class="self-end">
                     <p class="text-grey-dark text-xs font-hairline">

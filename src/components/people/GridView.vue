@@ -19,7 +19,7 @@
           </div>
 
           <div @click.stop="activePerson = person.id">
-            <on-click-outside :do="() => activePerson = null">
+            <on-click-outside :do="() => activePerson = null" :active="activePerson !== null">
               <div class="inline-flex items-center justify-center cursor-pointer relative">
 
                 <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-6 p-1 cursor-pointer  text-grey-dark hover:bg-grey-light rounded-full"
