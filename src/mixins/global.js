@@ -37,8 +37,7 @@ export default {
     async moveToTrash (model, id, cb) {
       try {
         const path = `${model}/${id}/move_to_trash`
-        const url = this.$http.url(path)
-        await this.$http.delete(url, this.authToken)
+        await this.$http.delete(path, this.authToken)
         cb(null, true)
       } catch (error) {
         console.log(error)
@@ -48,8 +47,7 @@ export default {
     async moveFromTrash (model, id, cb) {
       try {
         const path = `${model}/${id}/move_from_trash`
-        const url = this.$http.url(path)
-        await this.$http.put(url, this.authToken)
+        await this.$http.put(path, this.authToken)
         cb(null, true)
       } catch (error) {
         console.log(error)
@@ -133,9 +131,8 @@ export default {
     async getUserInfo (email, authToken, cb) {
       try {
         const path = 'get_user_info'
-        const url = this.$http.url(path)
 
-        const response = await this.$http.post(url, {
+        const response = await this.$http.post(path, {
           email: email
         }, authToken)
 

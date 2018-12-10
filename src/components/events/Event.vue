@@ -107,11 +107,10 @@ export default {
   methods: {
     async getEventDetails (id) {
       const path = `event_schemas/${id}`
-      const url = this.$http.url(path)
       this.loadingEvent = true
 
       try {
-        const response = await this.$http.get(url, this.authToken)
+        const response = await this.$http.get(path, this.authToken)
         this.eventDetail = response
       } catch (err) {
 

@@ -264,17 +264,18 @@ export default {
     if (endDateJoinedComp !== null) endDateJoinedComp.destroy();
   },
   methods: {
-    testChange(ev){
-      console.log(this.selectedFields, ev.target.value, 'checkbox')
-      // this.selectedFields.push(ev.target.value)
+    getActiveFilters(){
+
     },
-    filterPeople() {},
+    filterPeople() {
+      this.$emit('refresh')
+    },
     searchedGroupItemClicked(group) {
       // TODO: make sure groups are unique before adding - dont add duplicates
 
       this.clearGroupSearch();
       if(this.groups.selected.find(g => g.id === group.id)) return false
-      
+
       this.groups.selected.unshift(group);
       this.groups.pickedFromSelected.push(group.id);
     },
@@ -289,11 +290,10 @@ export default {
 
       const search = name.toLowerCase();
       const path = `search_groups/${search}`;
-      const url = this.$http.url(path);
       this.groups.searching = true;
 
       try {
-        const response = await this.$http.get(url, this.authToken);
+        const response = await this.$http.get(path, this.authToken);
         this.groups.searched = response;
       } catch (error) {
         console.log(error);
@@ -336,7 +336,7 @@ export default {
           })
         ]
       });
-    }
+    },
   }
 };
 </script>

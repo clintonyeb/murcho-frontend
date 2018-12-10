@@ -178,7 +178,7 @@
 
       <template v-else>
         <div class="mt-6">
-          <filters></filters>
+          <filters @refresh="refresh(false)" ref="filters"></filters>
         </div>
       </template>
 
@@ -540,10 +540,9 @@
         if (!this.modalData) return false
 
         const path = 'people_bulk_export'
-        const url = this.$http.url(path)
 
         try {
-          const response = await this.$http.post(url, {
+          const response = await this.$http.post(path, {
             people_ids: peopleIds,
             export_format: this.modalData
           }, this.authToken)
@@ -621,10 +620,9 @@
       },
       async deletePerson(personId, index) {
         const path = `people/${personId}`
-        const url = this.$http.url(path)
 
         try {
-          await this.$http.delete(url, this.authToken)
+          await this.$http.delete(path, this.authToken)
           this.people.splice(index, 1)
           this.total--
           this.closeModal()
@@ -634,10 +632,9 @@
       },
       async deletePeople(peopleIds) {
         const path = 'people_bulk_delete'
-        const url = this.$http.url(path)
 
         try {
-          await this.$http.post(url, {
+          await this.$http.post(path, {
             people_ids: peopleIds
           }, this.authToken)
 
@@ -704,20 +701,21 @@
       },
       async getPeopleCount() {
         const path = 'total_people'
-        const url = this.$http.url(path)
 
         try {
-          const response = await this.$http.get(url, this.authToken)
+          const response = await this.$http.get(path, this.authToken)
           this.total = response
         } catch (error) {}
       },
       async getPeople(page = 1, size = 25) {
         const path = `people?page=${page}&size=${size}&order=${this.order.value}&sort=${this.sort.value}`
-        const url = this.$http.url(path)
         this.loadingMore = true
 
+        const filtersComp = this.$refs['filers']
+        const filters = filtersComp.getActiveFilters()
+
         try {
-          const response = await this.$http.get(url, this.authToken)
+          const response = await this.$http.get(path, this.authToken)
 
           if (response.length) {
             this.people = response

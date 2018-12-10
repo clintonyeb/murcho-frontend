@@ -269,10 +269,9 @@ export default {
           }
 
           const path = `people/${this.person.id}`
-          const url = this.$http.url(path)
 
           try {
-            const response = await this.$http.put(url, changedFields, this.authToken)
+            const response = await this.$http.put(path, changedFields, this.authToken)
             this.$emit('updated', response)
           } catch (err) {
             console.log(err)
@@ -285,11 +284,10 @@ export default {
     getSignedURL (fileName, contentType) {
       return new Promise(async (resolve, reject) => {
         const path = 'sign_url_for_upload'
-        const url = this.$http.url(path)
 
         try {
           const response = await this.$http.post(
-            url, {
+            path, {
               file_name: fileName,
               content_type: contentType
             },

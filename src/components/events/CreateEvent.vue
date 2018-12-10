@@ -232,10 +232,9 @@ export default {
         const duration = this.getDurationInSeconds(this.duration_format, this.duration)
 
         const path = 'event_schemas'
-        const url = this.$http.url(path)
 
         try {
-          const response = await this.$http.post(url, {
+          const response = await this.$http.post(path, {
             title: this.title,
             description: this.description,
             calendar_id: this.calendar_id,

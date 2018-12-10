@@ -163,10 +163,9 @@ export default {
     },
     async getCalendar () {
       const path = `calendars`
-      const url = this.$http.url(path)
 
       try {
-        const response = await this.$http.get(url, this.authToken)
+        const response = await this.$http.get(path, this.authToken)
         this.calendar = response[0]
       } catch (err) {
 
@@ -202,11 +201,10 @@ export default {
       const endDate = endOfWeek(monthEndDate)
 
       const path = `event_schemas?start_date=${startDate}&end_date=${endDate}`
-      const url = this.$http.url(path)
       // this.loadingMore = true
 
       try {
-        const response = await this.$http.get(url, this.authToken)
+        const response = await this.$http.get(path, this.authToken)
         this.events = response
       } catch (err) {
 

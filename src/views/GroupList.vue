@@ -216,10 +216,9 @@ export default {
     },
     async deleteGroup (groupId, index) {
       const path = `groups/${groupId}`
-      const url = this.$http.url(path)
 
       try {
-        await this.$http.delete(url, this.authToken)
+        await this.$http.delete(path, this.authToken)
         this.groups.splice(index, 1)
         this.totalGroups--
       } catch (err) {
@@ -243,11 +242,10 @@ export default {
     },
     async getGroups (page = 1, size = 100) {
       const path = `groups?page=${page}&size=${size}`
-      const url = this.$http.url(path)
       this.loadingMore = true
 
       try {
-        const response = await this.$http.get(url, this.authToken)
+        const response = await this.$http.get(path, this.authToken)
 
         if (response.length) {
           this.groups = response
@@ -264,10 +262,9 @@ export default {
     },
     async getGroupsCount () {
       const path = 'total_groups'
-      const url = this.$http.url(path)
 
       try {
-        const response = await this.$http.get(url, this.authToken)
+        const response = await this.$http.get(path, this.authToken)
         this.totalGroups = response
       } catch (error) {}
     }

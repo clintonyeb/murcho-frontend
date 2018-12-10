@@ -100,14 +100,13 @@ export default {
         if (!state) return false
 
         const path = 'send_mail'
-        const url = this.$http.url(path)
         this.loadingForm = true
 
         const message = this.message
         const subject = this.subject
 
         try {
-          const response = await this.$http.post(url, {
+          const response = await this.$http.post(path, {
             person_ids: this.people_ids,
             subject: subject,
             message: message

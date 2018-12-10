@@ -5,15 +5,17 @@ import {
 } from '@/utils'
 
 class Http {
-  url (path) {
+
+  getURL (path) {
     return `${process.env.VUE_APP_RAILS_URL}/${process.env.VUE_APP_RAILS_VERSION}/${path}`
   }
 
   get (link, token) {
     const self = this
+    const url = this.getURL(link)
     return new Promise((resolve, reject) => {
       const http = new XMLHttpRequest()
-      http.open('GET', link, true)
+      http.open('GET', url, true)
       http.setRequestHeader('content-type', 'application/json')
       http.setRequestHeader('accept', 'application/json')
       http.setRequestHeader('Access-Control-Allow-Origin', '*')
@@ -25,9 +27,10 @@ class Http {
 
   put (link, data, token) {
     const self = this
+    const url = this.getURL(link)
     return new Promise((resolve, reject) => {
       const http = new XMLHttpRequest()
-      http.open('PUT', link, true)
+      http.open('PUT', url, true)
       http.setRequestHeader('content-type', 'application/json')
       http.setRequestHeader('accept', 'application/json')
       http.setRequestHeader('Access-Control-Allow-Origin', '*')
@@ -41,9 +44,10 @@ class Http {
 
   post (link, data, token) {
     const self = this
+    const url = this.getURL(link)
     return new Promise((resolve, reject) => {
       const http = new XMLHttpRequest()
-      http.open('POST', link, true)
+      http.open('POST', url, true)
       http.setRequestHeader('content-type', 'application/json')
       http.setRequestHeader('accept', 'application/json')
       http.setRequestHeader('Access-Control-Allow-Origin', '*')
@@ -55,9 +59,10 @@ class Http {
 
   create (link, data, token) {
     const self = this
+    const url = this.getURL(link)
     return new Promise((resolve, reject) => {
       const http = new XMLHttpRequest()
-      http.open('POST', link, true)
+      http.open('POST', url, true)
       http.setRequestHeader('content-type', 'application/json')
       http.setRequestHeader('accept', 'application/json')
       http.setRequestHeader('Access-Control-Allow-Origin', '*')
@@ -69,9 +74,10 @@ class Http {
 
   delete (link, token) {
     const self = this
+    const url = this.getURL(link)
     return new Promise((resolve, reject) => {
       const http = new XMLHttpRequest()
-      http.open('DELETE', link, true)
+      http.open('DELETE', url, true)
       http.setRequestHeader('content-type', 'application/json')
       http.setRequestHeader('accept', 'application/json')
       http.setRequestHeader('Authorization', token)
@@ -84,9 +90,10 @@ class Http {
 
   login (link, data) {
     // const self = this
+    const url = this.getURL(link)
     return new Promise((resolve, reject) => {
       const http = new XMLHttpRequest()
-      http.open('POST', link, true)
+      http.open('POST', url, true)
       http.setRequestHeader('content-type', 'application/json')
       http.setRequestHeader('accept', 'application/json')
       http.setRequestHeader('Access-Control-Allow-Origin', '*')

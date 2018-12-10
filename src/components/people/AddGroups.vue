@@ -110,11 +110,10 @@ export default {
       this.loadingForm = true
 
       const path = 'add_people_to_groups'
-      const url = this.$http.url(path)
       this.searching = true
 
       try {
-        const response = await this.$http.post(url, {
+        const response = await this.$http.post(path, {
           people: this.people,
           groups: this.selectedGroups.map(g => g.id)
         }, this.authToken)
@@ -148,11 +147,10 @@ export default {
 
       const search = name.toLowerCase()
       const path = `search_groups/${search}`
-      const url = this.$http.url(path)
       this.searching = true
 
       try {
-        const response = await this.$http.get(url, this.authToken)
+        const response = await this.$http.get(path, this.authToken)
         this.searchedGroups = response
       } catch (error) {
         console.log(error)

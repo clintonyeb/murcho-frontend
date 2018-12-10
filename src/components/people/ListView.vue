@@ -189,10 +189,9 @@ export default {
   methods: {
     async removeGroupFromPerson (groupId, personId, personIndex) {
       const path = 'remove_person_groups'
-      const url = this.$http.url(path)
 
       try {
-        const response = await this.$http.post(url, {
+        const response = await this.$http.post(path, {
           person_id: personId,
           group_id: groupId
         }, this.authToken)

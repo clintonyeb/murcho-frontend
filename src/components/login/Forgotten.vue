@@ -102,10 +102,9 @@ export default {
         const password = this.password
 
         const path = 'authentication'
-        const url = this.$http.url(path)
 
         try {
-          const response = await this.$http.login(url, {
+          const response = await this.$http.login(path, {
             email,
             password
           })

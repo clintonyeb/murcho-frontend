@@ -84,13 +84,12 @@ export default {
         if (!state) return false
 
         const path = 'send_sms'
-        const url = this.$http.url(path)
         this.loadingForm = true
 
         const message = this.message
 
         try {
-          const response = await this.$http.post(url, {
+          const response = await this.$http.post(path, {
             person_ids: this.people_ids,
             message: message
           },

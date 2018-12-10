@@ -284,9 +284,8 @@ export default {
           // create church
 
           let path = 'churches'
-          let url = this.$http.url(path)
 
-          const church = await this.$http.post(url, {
+          const church = await this.$http.post(path, {
             name: this.church_name,
             location: this.church_location,
             photo: null, // TODO upload photo
@@ -295,9 +294,8 @@ export default {
 
           // create user
           path = 'users'
-          url = this.$http.url(path)
 
-          const user = await this.$http.post(url, {
+          const user = await this.$http.post(path, {
             church_id: church.id,
             email: this.email,
             password: this.password,
