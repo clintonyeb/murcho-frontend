@@ -98,7 +98,7 @@
                   </div>
                 </on-click-outside>
 
-                <button class="bg-white text-grey-dark mr-4 h-8 rounded p-3 inline-flex items-center justify-between">
+                <button class="bg-white text-grey-dark mr-4 h-8 rounded p-3 inline-flex items-center justify-between" @click="sideView = sideViewOptions.filters">
                   <span class="mr-2">Filter</span>
                   <span v-html="icons.filter"></span>
                 </button>
@@ -124,7 +124,7 @@
                       style="min-width: 200px; right: 0; top: 100%;">
                       <a v-for="more in peopleMores" :key="more.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
                         @click="setPeopleMore(more)">
-                        <span v-html="view.icon" class="mr-2 group-hover:text-white"></span>
+                        <span v-html="more.icon" class="mr-2 group-hover:text-white"></span>
                         <span class="group-hover:text-white">{{more.text}}</span>
                       </a>
                     </div>
@@ -143,7 +143,7 @@
       </div>
     </div>
     <div class="w-1/5 h-screen max-w-xs">
-      <template v-if="selectedPeople.length">
+      <template v-if="sideView === sideViewOptions.actions && selectedPeople.length">
         <p class="mx-auto p-4 px-8 w-full relative inline-flex items-center justify-center">
           <span class="mt-2" @click="$store.commit('CLEAR_ALERT')">
             <svg class="fill-current h-4 w-4 text-grey-darker" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -175,6 +175,13 @@
           </div>
         </div>
       </template>
+
+      <template v-else>
+        <div class="mt-6">
+          <filters></filters>
+        </div>
+      </template>
+
     </div>
 
     <transition enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
@@ -265,8 +272,8 @@
         <confirm-delete v-if="activeAction === 'delete'" :action="modalAction" :people_ids="actionablePeople" :cancel="modalCancel"></confirm-delete>
         <export-people v-if="activeAction === 'export'" :action="modalAction" :people_ids="actionablePeople" :cancel="modalCancel"
           @change="modalData = $event" :loading="modalLoading"></export-people>
-        <download-export v-if="activeAction === 'download-export'" :action="modalAction" :export_file_url="export_file_url" :cancel="modalCancel"
-           :loading="modalLoading" />
+        <download-export v-if="activeAction === 'download-export'" :action="modalAction" :export_file_url="export_file_url"
+          :cancel="modalCancel" :loading="modalLoading" />
       </div>
     </transition>
   </div>
@@ -284,6 +291,7 @@
   import ConfirmDelete from '@/components/people/ConfirmDelete'
   import ExportPeople from '@/components/people/ExportPeople'
   import DownloadExport from '@/components/people/DownloadExport'
+   import Filters from '@/components/people/Filters'
 
   import {
     listViewIcon,
@@ -297,16 +305,24 @@
     removeGroupIcon,
     mailIcon,
     smsIcon,
-    fileIcon
+    fileIcon,
+    importIcon
   } from '@/utils/icons'
   import {
     MESSAGE_TYPES
   } from '@/utils'
 
+  const SIDE_VIEW_OPTIONS = Object.freeze({
+    actions: 0,
+    filters: 1,
+  })
+
   export default {
     name: 'People',
     data() {
       return {
+        sideViewOptions: SIDE_VIEW_OPTIONS,
+        sideView: SIDE_VIEW_OPTIONS.actions,
         modal: false,
         displayMessage: '',
         displayMessageType: MESSAGE_TYPES.info,
@@ -398,8 +414,9 @@
           edit: editIcon
         },
         peopleMores: [{
-          text: 'Import From Excel',
-          value: 'excel'
+          text: 'Import People',
+          value: 'import',
+          icon: importIcon
         }],
         moreMenu: false,
         bulkActions: [{
@@ -439,7 +456,7 @@
         modalCancel: null,
         modalData: null,
         modalLoading: false,
-        export_file_url: null
+        export_file_url: null,
       }
     },
     components: {
@@ -453,7 +470,8 @@
       ViewPerson,
       ConfirmDelete,
       ExportPeople,
-      DownloadExport
+      DownloadExport,
+      Filters
     },
     created() {
       this.setUpPeopleUI()
@@ -493,7 +511,7 @@
       groupsCreated() {
         this.hideActionDrawer()
         this.refresh()
-      }, // receive person and update accorsindly
+      },
       updatePerson(person) {
         if (person) {
           const index = this.people.findIndex(p => person.id === p.id)
@@ -532,8 +550,8 @@
           this.selectedPeople = []
           this.actionablePeople = []
           this.closeModal()
-          
-          this.export_file_url = response.file_url 
+
+          this.export_file_url = response.file_url
           this.activeAction = 'download-export'
           this.modalAction = () => {}
           this.modalCancel = () => this.closeModal()
@@ -713,6 +731,12 @@
         } finally {
           this.loadingMore = false
         }
+      }
+    },
+    watch: {
+      selectedPeople(val) {
+        // if(!val.length) return
+        if(this.sideView === this.sideViewOptions.filters) this.sideView = this.sideViewOptions.actions 
       }
     }
   }

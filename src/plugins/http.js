@@ -40,7 +40,6 @@ class Http {
   }
 
   post (link, data, token) {
-    console.log(link, data, token)
     const self = this
     return new Promise((resolve, reject) => {
       const http = new XMLHttpRequest()

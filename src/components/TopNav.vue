@@ -127,7 +127,7 @@ export default {
       userMenu: false,
       userMenuItems: [
         {
-        id: 2,
+        id: 3,
         text: 'Settings',
         icon: logoutIcon,
         handler: () => {}

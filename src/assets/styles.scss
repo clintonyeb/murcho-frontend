@@ -123,7 +123,7 @@ nav {
 
 .list-view {
   .checkbox {
-    &.container {
+    &.checkbox-container {
       position: relative;
       user-select: none;
       cursor: pointer;
@@ -176,7 +176,7 @@ nav {
 
 .grid-view {
   .checkbox {
-    &.container {
+    &.checkbox-container {
       position: relative;
       user-select: none;
       cursor: pointer;
@@ -266,4 +266,56 @@ input[type="file"].is-custom {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+#filters {
+  .checkbox {
+    &.checkbox-container {
+      position: relative;
+      user-select: none;
+      cursor: pointer;
+
+      input {
+        position: absolute;
+        opacity: 0;
+        height: 0;
+        width: 0;
+      }
+
+      input:checked~.checkmark {
+        background-color: #6CB2EB;
+        border: 2px solid #6CB2EB;
+      }
+
+      input:checked~.checkmark:after {
+        display: block;
+      }
+
+      .checkmark:after {
+        left: 5px;
+        top: 1px;
+        width: 5px;
+        height: 10px;
+        border: solid #fff;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+      }
+    }
+
+    .checkmark {
+      position: absolute;
+      right: 0;
+      height: 18px;
+      width: 18px;
+      border: 2px solid #b8c2cc;
+      border-radius: 5px;
+      transition: background-color 1s cubic-bezier(.165, .84, .44, 1);
+
+      &:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+    }
+  }
 }

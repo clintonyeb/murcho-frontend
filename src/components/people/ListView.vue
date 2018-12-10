@@ -4,7 +4,7 @@
       <thead>
         <tr class="text-grey text-xs text-left">
           <th class="pb-4 pl-4">
-            <label class="container checkbox">
+            <label class="checkbox-container checkbox">
               <input type="checkbox" @click="selectAll" ref="select-all">
               <span class="checkmark"></span>
             </label>
@@ -43,7 +43,7 @@
           :class="{'bg-blue-lightest text-grey-darkest': (activePeople.indexOf(person.id) !== -1 || activePerson === person.id)}"
           @click="personRowClicked(person.id)">
           <td class="w-14 px-4 py-2">
-            <label class="container checkbox">
+            <label class="checkbox-container checkbox">
               <input type="checkbox" v-model="selectedPeople" :value="person.id">
               <span class="checkmark"></span>
             </label>
