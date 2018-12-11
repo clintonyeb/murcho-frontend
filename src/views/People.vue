@@ -298,19 +298,7 @@
 </template>
 
 <script>
-  import ListView from "@/components/people/ListView";
-  import GridView from "@/components/people/GridView";
-  import Email from "@/components/people/Email";
-  import Sms from "@/components/people/SMS";
-  import EditPerson from "@/components/people/Edit";
-  import AddGroups from "@/components/people/AddGroups";
-  import Create from "@/components/people/Create";
-  import ViewPerson from "@/components/people/View";
-  import ConfirmDelete from "@/components/people/ConfirmDelete";
-  import ExportPeople from "@/components/people/ExportPeople";
-  import DownloadExport from "@/components/people/DownloadExport";
-  import Filters from "@/components/people/Filters";
-  import ImportPeople from "@/components/people/ImportPeople";
+  import Filters from '@/components/people/Filters'
 
   import {
     listViewIcon,
@@ -477,19 +465,19 @@
       };
     },
     components: {
-      ListView,
-      GridView,
-      Email,
-      Sms,
-      EditPerson,
-      AddGroups,
-      Create,
-      ViewPerson,
-      ConfirmDelete,
-      ExportPeople,
-      DownloadExport,
-      Filters,
-      ImportPeople
+      'list-view': () => import('@/components/people/ListView'),
+      'grid-view': () => import('@/components/people/GridView'),
+      'email': () => import('@/components/people/Email'),
+      'sms': () => import('@/components/people/SMS'),
+      'edit-person': () => import('@/components/people/Edit'),
+      'add-groups': () => import('@/components/people/AddGroups'),
+      'create': () => import('@/components/people/Create'),
+      'view-person': () => import('@/components/people/View'),
+      'confirm-delete': () => import('@/components/people/ConfirmDelete'),
+      'export-people': () => import('@/components/people/ExportPeople'),
+      'download-export': () => import('@/components/people/DownloadExport'),
+      'import-people': () => import('@/components/people/ImportPeople'),
+      Filters
     },
     created() {
       this.setUpPeopleUI();
