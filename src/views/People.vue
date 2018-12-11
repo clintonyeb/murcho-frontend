@@ -6,7 +6,7 @@
           <div class="flex items-center justify-between w-full">
             <div class="flex items-baseline justify-between">
               <h3 class="text-blue-light font-black text-2xl mr-4">People</h3>
-              <p class="text-grey font-bold text-xs mr-4">{{total}} {{pluralize('person', total)}} in total.</p>
+              <p class="text-grey font-bold text-xs mr-4">Displaying <span class="underline">{{people.length}} of {{total}}</span> {{pluralize('person', total)}}.</p>
 
               <on-click-outside :do="() => orderMenu = false" :active="orderMenu">
                 <div class="inline-flex items-center justify-center cursor-pointer relative mr-4" @click="orderMenu = !orderMenu">
@@ -121,7 +121,7 @@
           </div>
         </div>
 
-        <div class="w-full h-screen" v-if="!loadingMore && people.length < 1">
+        <div class="w-full h-screen" v-if="loaded && people.length < 1">
           <div class="container m-auto h-full relative">
             <div class="absolute" style="top: 20%; left: 50%; transform: translate(-50%, -50%);">
               <h4 class="text-grey font-bold text-3xl text-center">
@@ -454,7 +454,8 @@
         modalCancel: null,
         modalData: null,
         modalLoading: false,
-        export_file_url: null
+        export_file_url: null,
+        loaded: false
       };
     },
     components: {
@@ -768,6 +769,7 @@
 
           if (response.length < size) this.ended = true;
           else this.ended = false;
+          this.loaded = true
         } catch (err) {} finally {
           this.loadingMore = false;
         }

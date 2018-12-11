@@ -94,7 +94,7 @@
             <div class="mt-2 w-full inline-flex items-center justify-between" v-for="group in groups.selected" :key="group.id">
               <p class="text-grey-dark">{{group.name}}</p>
               <label class="checkbox checkbox-container">
-                <input type="checkbox" v-model="groups.pickedFromSelected" :value="group.id">
+                <input type="checkbox" v-model="groups.pickedFromSelected" :value="group">
                 <span class="checkmark"></span>
               </label>
             </div>
@@ -165,13 +165,6 @@
           loading: false,
           pickedFromSelected: []
         },
-        people: {
-          searching: false,
-          searched: [],
-          search: "",
-          selected: [],
-          loading: false
-        },
         requiredFields: [{
             id: 1,
             text: "Email Address",
@@ -236,6 +229,7 @@
         const endDate = savedFilters.date_joined.end_joined || null
         endDateJoinedComp.setDate(endDate)
 
+        this.groups.selected = savedFilters.groups
         this.groups.pickedFromSelected = savedFilters.groups
       },
       getDefaultFilters() {
@@ -285,7 +279,7 @@
         if (this.groups.selected.find(g => g.id === group.id)) return false;
 
         this.groups.selected.unshift(group);
-        this.groups.pickedFromSelected.push(group.id);
+        this.groups.pickedFromSelected.push(group);
       },
       searchGroups: debounce(function (e) {
         this.doGroupsSearch(e.target.value);
