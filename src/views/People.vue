@@ -6,7 +6,8 @@
           <div class="flex items-center justify-between w-full">
             <div class="flex items-baseline justify-between">
               <h3 class="text-blue-light font-black text-2xl mr-4">People</h3>
-              <p class="text-grey font-bold text-xs mr-4">Displaying <span class="underline">{{people.length}} of {{total}}</span> {{pluralize('person', total)}}.</p>
+              <p class="text-grey font-bold text-xs mr-4">Displaying <span class="underline">{{people.length}} of
+                  {{total}}</span> {{pluralize('person', total)}}.</p>
 
               <on-click-outside :do="() => orderMenu = false" :active="orderMenu">
                 <div class="inline-flex items-center justify-center cursor-pointer relative mr-4" @click="orderMenu = !orderMenu">
@@ -63,6 +64,21 @@
 
             <div class="flex items-baseline justify-between">
               <div class="inline-flex">
+                <svg class="spinner ml-2 h-6 w-6 text-grey-dark fill-current animated fadeIn mr-4" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
+                  xml:space="preserve" v-if="loadingMore">
+                  <g>
+                    <circle cx="13.792" cy="3.082" r="3.082" />
+                    <circle cx="13.792" cy="24.501" r="1.849" />
+                    <circle cx="6.219" cy="6.218" r="2.774" />
+                    <circle cx="21.365" cy="21.363" r="1.541" />
+                    <circle cx="3.082" cy="13.792" r="2.465" />
+                    <circle cx="24.501" cy="13.791" r="1.232" />
+                    <path d="M4.694,19.84c-0.843,0.843-0.843,2.207,0,3.05c0.842,0.843,2.208,0.843,3.05,0c0.843-0.843,0.843-2.207,0-3.05C6.902,18.996,5.537,18.988,4.694,19.84z" />
+                    <circle cx="21.364" cy="6.218" r="0.924" />
+                  </g>
+                </svg>
+
                 <!-- <on-click-outside :do="() => viewMenu = false" :active="viewMenu">
                   <div class="inline-flex items-center justify-center cursor-pointer relative">
                     <button
@@ -109,7 +125,7 @@
                     <div v-show="moreMenu" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
                       style="min-width: 200px; right: 0; top: 100%;">
                       <a v-for="more in peopleMores" :key="more.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                        @click="setPeopleMore(more)">
+                        @click="showImport">
                         <span v-html="more.icon" class="mr-2 group-hover:text-white"></span>
                         <span class="group-hover:text-white">{{more.text}}</span>
                       </a>
@@ -121,7 +137,7 @@
           </div>
         </div>
 
-        <div class="w-full h-screen" v-if="loaded && people.length < 1">
+        <div class="w-full h-screen" v-if="loaded && total < 1">
           <div class="container m-auto h-full relative">
             <div class="absolute" style="top: 20%; left: 50%; transform: translate(-50%, -50%);">
               <h4 class="text-grey font-bold text-3xl text-center">
@@ -146,7 +162,7 @@
     <div class="w-1/5 h-screen max-w-xs">
       <template v-if="selectedPeople.length === 0">
         <div class="mt-6">
-          <filters @filters="filters = $event" @search="searchPeople" ref="filters"></filters>
+          <filters @filters="filters = $event" ref="filters"></filters>
         </div>
       </template>
 
@@ -275,6 +291,7 @@
           @change="modalData = $event" :loading="modalLoading"></export-people>
         <download-export v-if="activeAction === 'download-export'" :action="modalAction" :export_file_url="export_file_url"
           :cancel="modalCancel" :loading="modalLoading" />
+        <import-people v-if="activeAction === 'import-people'" @close="closeModal" @imported="peopleImported" />
       </div>
     </transition>
   </div>
@@ -293,6 +310,7 @@
   import ExportPeople from "@/components/people/ExportPeople";
   import DownloadExport from "@/components/people/DownloadExport";
   import Filters from "@/components/people/Filters";
+  import ImportPeople from "@/components/people/ImportPeople";
 
   import {
     listViewIcon,
@@ -413,7 +431,7 @@
         },
         peopleMores: [{
           text: "Import People",
-          value: "import",
+          value: "import-people",
           icon: importIcon
         }],
         moreMenu: false,
@@ -470,7 +488,8 @@
       ConfirmDelete,
       ExportPeople,
       DownloadExport,
-      Filters
+      Filters,
+      ImportPeople
     },
     created() {
       this.setUpPeopleUI();
@@ -496,6 +515,16 @@
       }
     },
     methods: {
+      peopleImported() {
+        this.closeModal()
+        this.refresh()
+      },
+      showImport() {
+        this.activeAction = 'import-people';
+        this.modalAction = () => {}
+        this.modalCancel = () => this.closeModal();
+        this.modal = true;
+      },
       searchPeople: debounce(function (e) {
         this.doPeopleSearch(e);
       }, 200),
@@ -740,6 +769,7 @@
         try {
           const response = await this.$http.get(path, this.authToken);
           this.total = response;
+          this.loaded = true
         } catch (error) {}
       },
       async getPeople(page = 1, size = 25) {
@@ -769,7 +799,6 @@
 
           if (response.length < size) this.ended = true;
           else this.ended = false;
-          this.loaded = true
         } catch (err) {} finally {
           this.loadingMore = false;
         }

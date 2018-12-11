@@ -5,7 +5,6 @@ import {
 } from '@/utils'
 
 class Http {
-
   getURL (path) {
     return `${process.env.VUE_APP_RAILS_URL}/${process.env.VUE_APP_RAILS_VERSION}/${path}`
   }
@@ -112,6 +111,55 @@ class Http {
       }
       http.send(JSON.stringify(data))
     })
+  }
+
+  uploadFile (file) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const data = await this.getSignedURL(file.name, file.type)
+
+        const request = new XMLHttpRequest()
+        request.open('PUT', data.signed_url, true)
+        request.setRequestHeader('Content-Type', file.type)
+        request.setRequestHeader('Access-Control-Allow-Origin', '*')
+        request.setRequestHeader('Accept', 'application/json')
+
+        request.onload = () => {
+          if (request.status >= 200 && request.status < 300) {
+            resolve(this.getFileURL(data.file_name))
+          } else {
+            reject(new Error('Error uploading file'))
+          }
+        }
+
+        request.send(file)
+      } catch (error) {
+        reject(error)
+      }
+    })
+  }
+
+  getSignedURL (fileName, contentType) {
+    return new Promise(async (resolve, reject) => {
+      const path = 'sign_url_for_upload'
+
+      try {
+        const response = await this.post(
+          path, {
+            file_name: fileName,
+            content_type: contentType
+          },
+          store.state.user.authToken
+        )
+        resolve(response)
+      } catch (err) {
+        reject(err)
+      } finally {}
+    })
+  }
+
+  getFileURL (name) {
+    return `https://s3.ap-south-1.amazonaws.com/murch-app/${name}`
   }
 
   _handleResponse (http, resolve, reject) {

@@ -281,52 +281,6 @@ export default {
         })
       })
     },
-    getSignedURL (fileName, contentType) {
-      return new Promise(async (resolve, reject) => {
-        const path = 'sign_url_for_upload'
-
-        try {
-          const response = await this.$http.post(
-            path, {
-              file_name: fileName,
-              content_type: contentType
-            },
-            this.authToken
-          )
-          resolve(response)
-        } catch (err) {
-          reject(err)
-        } finally {}
-      })
-    },
-    getFileURL (name) {
-      return `https://s3.ap-south-1.amazonaws.com/murch-app/${name}`
-    },
-    uploadFile (file) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          const data = await this.getSignedURL(file.name, file.type)
-
-          const request = new XMLHttpRequest()
-          request.open('PUT', data.signed_url, true)
-          request.setRequestHeader('Content-Type', file.type)
-          request.setRequestHeader('Access-Control-Allow-Origin', '*')
-          request.setRequestHeader('Accept', 'application/json')
-
-          request.onload = () => {
-            if (request.status >= 200 && request.status < 300) {
-              resolve(this.getFileURL(data.file_name))
-            } else {
-              reject('Error uploading file')
-            }
-          }
-
-          request.send(file)
-        } catch (error) {
-          reject(error)
-        }
-      })
-    },
     async getChangedFields (object, original, cb) {
       original.date_joined = new Date(original.date_joined) // fix comparing string to date object
       const fields = {}
@@ -345,7 +299,7 @@ export default {
                 const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
                 if (file) {
                   try {
-                    const file_url = await this.uploadFile(file)
+                    const file_url = await this.$http.uploadFile(file)
 
                     fields[key] = file_url
                     fields['thumbnail'] = file_url

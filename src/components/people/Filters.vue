@@ -15,7 +15,7 @@
               </svg>
             </button>
             <input class="appearance-none w-full p-1 h-10 pl-8 text-grey bg-grey-lighter rounded border focus:bg-white border-transparent focus:border-blue-light border-animated"
-              type="text" v-model="search_input" placeholder="Enter Name Here To Search.." @keyup.enter="$emit('search', $event.target.value)">
+              type="text" v-model="search_input" placeholder="Enter Name Here To Search.." @keyup.enter="filterPeople">
           </div>
         </div>
       </div>
@@ -103,8 +103,9 @@
 
         <div class="mt-8 inline-flex justify-start w-full">
           <div class="w-full inline-flex justify-between items-center">
-            <button class="inline-flex flex-auto items-center justify-center h-10 bg-blue rounded-sm text-white shadow-md mr-2"
+            <button class="inline-flex flex-auto items-center justify-center h-10 bg-blue rounded-sm text-white mr-2"
               @click="filterPeople">
+              <span v-html="icons.filter" class="mr-1"></span>
               <span class="font-bold">SAVE FILTERS</span>
               <svg class="spinner ml-2 h-6 w-6 text-grey-light fill-current animated fadeIn" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
@@ -135,7 +136,8 @@
 
 <script>
   import {
-    tickIcon
+    tickIcon,
+    filterIcon
   } from "@/utils/icons";
 
   import {
@@ -180,7 +182,10 @@
             text: "Profile Photo",
             value: "photo"
           }
-        ]
+        ],
+        icons: {
+          filter: filterIcon
+        }
       };
     },
     mounted() {
