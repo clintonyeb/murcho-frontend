@@ -10,21 +10,22 @@ module.exports = {
     cssnano({
       preset: 'default'
     }),
-    // purgecss({
-    //   content: [
-    //     './src/**/*.vue'
-    //   ],
-    //   extractors: [
-    //     {
-    //       extractor: class TailwindExtractor {
-    //         static extract (content) {
-    //           return content.match(/[A-z0-9-:/]+/g) || []
-    //         }
-    //       },
-    //       extensions: ['vue']
-    //     }
-    //   ]
-    // }),
+    purgecss({
+      content: [
+        './src/**/*.vue',
+        './public/*.html'
+      ],
+      extractors: [
+        {
+          extractor: class TailwindExtractor {
+            static extract (content) {
+              return content.match(/[A-z0-9-:/]+/g) || []
+            }
+          },
+          extensions: ['vue', 'js', 'html']
+        }
+      ]
+    }),
     require('autoprefixer')
   ]
 }
