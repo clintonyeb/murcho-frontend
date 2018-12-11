@@ -176,6 +176,9 @@ export default {
     }
   },
   filters: {
+    arrayString (array) {
+      return array.join(', ')
+    },
     fromKebabToString (string) {
       if (!string) return ''
       return string.split('_').map(str => `${str.charAt(0).toUpperCase()}${str.substring(1)}`).join(' ')

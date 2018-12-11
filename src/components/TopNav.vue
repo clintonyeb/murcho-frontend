@@ -117,7 +117,9 @@ import {
   groupIcon,
   peopleIcon,
   servicesIcon,
-  dashboardIcon
+  dashboardIcon,
+  helpIcon,
+  settingsIcon,
 } from '@/utils/icons'
 
 export default {
@@ -129,13 +131,13 @@ export default {
         {
         id: 3,
         text: 'Settings',
-        icon: logoutIcon,
+        icon: settingsIcon,
         handler: () => {}
       },
               {
         id: 2,
         text: 'Help',
-        icon: logoutIcon,
+        icon: helpIcon,
         handler: () => {}
       },
         {

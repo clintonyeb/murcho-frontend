@@ -255,11 +255,11 @@ export default {
         const fields = {
           first_name: this.first_name,
           last_name: this.last_name,
-          email: this.email,
-          phone_number: this.phone_number,
+          email: this.email || null,
+          phone_number: this.phone_number || null,
           date_joined: dateJoinedComp.selectedDates[0],
           membership_status: this.membership_status,
-          photo: this.photo
+          photo: this.photo || null
         }
 
         this.getChangedFields(fields, this.person, async (err, changedFields) => {

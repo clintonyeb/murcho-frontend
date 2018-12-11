@@ -89,7 +89,7 @@
             Groups
           </p>
           <p class="text-grey-darker">
-            {{person.groups.join(', ')}}
+            {{person.groups.map(g => g.name).join(', ')}}
           </p>
         </div>
 

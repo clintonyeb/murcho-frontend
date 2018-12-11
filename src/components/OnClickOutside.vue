@@ -30,7 +30,6 @@ export default {
   },
   watch: {
     active(val) {
-      console.log(val)
       if (val) {
         this.addListener();
       } else {

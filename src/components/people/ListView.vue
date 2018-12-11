@@ -57,26 +57,29 @@
           <td class="px-1 py-2">{{person.phone_number || '-'}}</td>
           <td class="px-1 py-2">{{person.membership_status | fromKebabToString}}</td>
           <td class="px-1 py-2 w-64">
-            <div class="inline-flex">
-              <div class="truncate mr-2" style="width: 18rem;">
-                <span v-for="group in person.groups.slice(0, 3)" :key="group.id" class="inline-flex items-center justify-between bg-grey-lighter font-hairline text-grey-darker mr-1 p-1 rounded w-24 truncate">
-                  <p>
-                    {{group.name}}
-                  </p>
-                  <span class="hover:bg-grey rounded" @click.stop="removeGroupFromPerson(group.id, person.id, index)">
-                    <svg class="fill-current h-4 w-4 text-grey-dark" role="button" xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20">
-                      <title>Close</title>
-                      <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
-                    </svg>
+            <div class="inline-flex ">
+              <div class="truncate">
+                <div class="mr-2" style="width: 18rem;">
+                  <span v-for="group in person.groups.slice(0, 3)" :key="group.id" class="inline-flex items-center justify-between bg-grey-lighter font-hairline text-grey-darker mr-1 p-1 rounded w-24 truncate">
+                    <p class="truncate">
+                      {{group.name}}
+                    </p>
+                    <span class="hover:bg-grey rounded h-4 w-4" @click.stop="removeGroupFromPerson(group.id, person.id, index)">
+                      <svg class="fill-current h-4 w-4 text-grey-dark" role="button" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20">
+                        <title>Close</title>
+                        <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                      </svg>
+                    </span>
                   </span>
-                </span>
+                </div>
               </div>
 
-              <on-click-outside :do="() => activeHiddenGroup = null" v-if="(hidden = person.groups.slice(3)).length" :active="activeHiddenGroup !== null">
+              <on-click-outside :do="() => activeHiddenGroup = null" v-if="(hidden = person.groups.slice(3)).length"
+                :active="activeHiddenGroup !== null">
                 <div class="inline-flex items-center justify-center cursor-pointer relative">
 
-                  <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-4 p-1 cursor-pointer bg-grey-lighter font-hairline text-grey-darker rounded"
+                  <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-5 w-5 ml-1 p-1 cursor-pointer bg-grey-lighter font-hairline text-grey-darker rounded"
                     role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" @click.stop="activeHiddenGroup = activeHiddenGroup ? null : person.id">
                     <path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"
                       style="padding: .5rem;"></path>
@@ -84,9 +87,19 @@
 
                   <div v-show="activeHiddenGroup === person.id" class="inline-flex mt-px shadow-md rounded bg-white border absolute animated zoomIn flex flex-col z-10"
                     style="min-width: 250px; top: 100%; right: -70%;">
-                    <div class="inline-flex flex-wrap">
-                      <span v-for="group in hidden" :key="group.id" class="h-6 text-sm bg-grey-lighter font-hairline text-grey-darker m-2 p-1 rounded whitespace-no-wrap">
-                        {{group.name}}
+                    <div class="inline-flex flex-wrap p-2">
+
+                      <span v-for="group in hidden" :key="group.id" class="inline-flex items-center justify-between bg-grey-lighter font-hairline text-grey-darker mr-1 p-1 rounded w-24 truncate">
+                        <p class="truncate">
+                          {{group.name}}
+                        </p>
+                        <span class="hover:bg-grey rounded h-4 w-4" @click.stop="removeGroupFromPerson(group.id, person.id, index)">
+                          <svg class="fill-current h-4 w-4 text-grey-dark" role="button" xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20">
+                            <title>Close</title>
+                            <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+                          </svg>
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -129,123 +142,122 @@
 </template>
 
 <script>
-import {
-  trashIcon,
-  editIcon,
-  groupIcon,
-  removeGroupIcon,
-  mailIcon,
-  smsIcon,
-  fileIcon,
-  viewIcon
-} from '@/utils/icons'
+  import {
+    trashIcon,
+    editIcon,
+    groupIcon,
+    removeGroupIcon,
+    mailIcon,
+    smsIcon,
+    fileIcon,
+    viewIcon
+  } from '@/utils/icons'
 
-export default {
-  props: ['page', 'pagesEnded', 'people', 'activePeople'],
-  name: 'ListView',
-  data () {
-    return {
-      selectedPeople: [],
-      personActions: [
-        {
-          text: 'View Person',
-          value: 'view',
-          icon: viewIcon
-        },
-        {
-          text: 'Edit Person',
-          value: 'edit',
-          icon: editIcon
-        },
-        {
-          id: 1,
-          text: 'Add Groups',
-          value: 'add-groups',
-          icon: groupIcon
-        },
-        {
-          id: 2,
-          text: 'Send Email',
-          value: 'email',
-          icon: mailIcon
-        },
-        {
-          id: 3,
-          text: 'Send SMS',
-          value: 'sms',
-          icon: smsIcon
-        },
-        {
-          id: 4,
-          text: 'Delete',
-          value: 'delete',
-          icon: trashIcon
+  export default {
+    props: ['page', 'pagesEnded', 'people', 'activePeople'],
+    name: 'ListView',
+    data() {
+      return {
+        selectedPeople: [],
+        personActions: [{
+            text: 'View Person',
+            value: 'view',
+            icon: viewIcon
+          },
+          {
+            text: 'Edit Person',
+            value: 'edit',
+            icon: editIcon
+          },
+          {
+            id: 1,
+            text: 'Add Groups',
+            value: 'add-groups',
+            icon: groupIcon
+          },
+          {
+            id: 2,
+            text: 'Send Email',
+            value: 'email',
+            icon: mailIcon
+          },
+          {
+            id: 3,
+            text: 'Send SMS',
+            value: 'sms',
+            icon: smsIcon
+          },
+          {
+            id: 4,
+            text: 'Delete',
+            value: 'delete',
+            icon: trashIcon
+          }
+        ],
+        activePerson: null,
+        activeHiddenGroup: null
+      }
+    },
+    methods: {
+      async removeGroupFromPerson(groupId, personId, personIndex) {
+        const path = 'remove_person_groups'
+
+        try {
+          const response = await this.$http.post(path, {
+            person_id: personId,
+            group_id: groupId
+          }, this.authToken)
+
+          this.$emit('action', {
+            action: 'removed-group',
+            person: response,
+            personIndex: personIndex
+          })
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loadingForm = false
         }
-      ],
-      activePerson: null,
-      activeHiddenGroup: null
-    }
-  },
-  methods: {
-    async removeGroupFromPerson (groupId, personId, personIndex) {
-      const path = 'remove_person_groups'
-
-      try {
-        const response = await this.$http.post(path, {
-          person_id: personId,
-          group_id: groupId
-        }, this.authToken)
-
+      },
+      actionClicked(action, person, index) {
+        this.activePerson = null
         this.$emit('action', {
-          action: 'removed-group',
-          person: response,
-          personIndex: personIndex
+          action: action.value,
+          person: person,
+          index: index
         })
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.loadingForm = false
-      }
-    },
-    actionClicked (action, person, index) {
-      this.activePerson = null
-      this.$emit('action', {
-        action: action.value,
-        person: person,
-        index: index
-      })
-    },
-    fullyVisible (el) {
-      const container = el.parent.width
-      const rightPos = el.style.right
-      console.log(container, rightPos)
-      return true
-    },
-    selectAll () {
-      const el = this.$refs['select-all']
-      const state = el.checked
+      },
+      fullyVisible(el) {
+        const container = el.parent.width
+        const rightPos = el.style.right
+        console.log(container, rightPos)
+        return true
+      },
+      selectAll() {
+        const el = this.$refs['select-all']
+        const state = el.checked
 
-      this.selectedPeople = []
-      if (state) this.selectedPeople = this.people.map(person => person.id)
-    },
-    personRowClicked (personId) {
-      const index = this.selectedPeople.indexOf(personId)
-      const checked = index !== -1
-      if (checked) {
-        this.selectedPeople.splice(index, 1)
-      } else {
-        this.selectedPeople.push(personId)
+        this.selectedPeople = []
+        if (state) this.selectedPeople = this.people.map(person => person.id)
+      },
+      personRowClicked(personId) {
+        const index = this.selectedPeople.indexOf(personId)
+        const checked = index !== -1
+        if (checked) {
+          this.selectedPeople.splice(index, 1)
+        } else {
+          this.selectedPeople.push(personId)
+        }
       }
-    }
-  },
-  watch: {
-    selectedPeople (val) {
-      this.$emit('selected', val)
     },
-    activePeople(val) {
-      this.selectedPeople = val
+    watch: {
+      selectedPeople(val) {
+        this.$emit('selected', val)
+      },
+      activePeople(val) {
+        this.selectedPeople = val
+      }
     }
   }
-}
 
 </script>
