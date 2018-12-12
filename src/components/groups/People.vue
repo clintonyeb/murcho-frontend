@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full flex align-center justify-between list-view">
+  <div class="w-full flex align-center justify-between list-view" id="group-list-view">
     <table class="w-full border-separate table-auto relative" style="border-spacing: 0 .4rem;">
       <thead>
         <tr class="text-grey text-xs text-left">
-          <th class="pb-4">
-            <label class="container checkbox">
+          <th class="pb-4 pl-4">
+            <label class="checkbox-container checkbox">
               <input type="checkbox" @click="selectAll" ref="select-all">
               <span class="checkmark"></span>
             </label>
@@ -12,7 +12,9 @@
           <th class="pb-4"></th>
           <th class="pb-4">FIRST NAME</th>
           <th class="pb-4">SECOND NAME</th>
-          <th class="pb-4">CONTACT</th>
+          <th class="pb-4">EMAIL</th>
+          <th class="pb-4">PHONE</th>
+          <th class="pb-4">STATUS</th>
           <th class="pb-4">
             <div class="inline-flex">
               <button class="bg-white text-grey-dark mr-1 h-6 w-6 rounded" :class="page === 1 ? '' : 'hover:bg-grey-light hover:text-white'"
@@ -39,7 +41,7 @@
           :class="{'bg-blue-lightest text-grey-darkest': (selectedPeople.indexOf(person.id) !== -1 || activePerson === person.id)}"
           @click="personRowClicked(person.id)">
           <td class="w-14 px-4 py-2">
-            <label class="container checkbox">
+            <label class="checkbox-container checkbox">
               <input type="checkbox" v-model="selectedPeople" :value="person.id">
               <span class="checkmark"></span>
             </label>
@@ -49,30 +51,16 @@
           </td>
           <td class="px-1 py-2">{{person.first_name}}</td>
           <td class="px-1 py-2">{{person.last_name}}</td>
-          <td class="px-1 py-2">{{person.phone_number || person.email}}</td>
+          <td class="px-1 py-2">{{person.email}}</td>
+          <td class="px-1 py-2">{{person.phone_number}}</td>
+          <td class="px-1 py-2">{{person.membership_status | fromKebabToString}}</td>
           <td class="w-1 text-center" @click.stop="activePerson = person.id">
-
-            <on-click-outside :do="() => activePerson = null" :active="activePerson !== null">
-              <div class="inline-flex items-center justify-center cursor-pointer relative">
-
-                <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-6 p-1 cursor-pointer hover:bg-grey-light rounded-full align-middle"
-                  role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"
-                    style="padding: .5rem;"></path>
-                </svg>
-
-                <div v-show="activePerson === person.id" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden z-10"
-                  style="min-width: 200px; top: 100%; right: -70%;">
-                  <a v-for="action in personActions" :key="action.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
-                    @click="activePerson = null; $emit('action', {action: action.value, person: person.id, index: index})">
-                    <span v-html="action.icon" class="mr-2 group-hover:text-white"></span>
-                    <span class="group-hover:text-white">{{action.text}}</span>
-                  </a>
-                </div>
-
-              </div>
-            </on-click-outside>
-
+            <span class="hover:bg-grey-light rounded h-4 w-4" @click.stop="removePersonFromGroup(person.id, index)">
+              <svg class="fill-current h-4 w-4 text-grey-dark" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <title>Close</title>
+                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+              </svg>
+            </span>
           </td>
         </tr>
       </tbody>
@@ -82,85 +70,63 @@
 </template>
 
 <script>
-import {
-  trashIcon,
-  editIcon,
-  groupIcon,
-  removeGroupIcon,
-  mailIcon,
-  smsIcon,
-  fileIcon
-} from '@/utils/icons'
+  import {
+    trashIcon,
+    editIcon,
+    groupIcon,
+    removeGroupIcon,
+    mailIcon,
+    smsIcon,
+    fileIcon
+  } from '@/utils/icons'
 
-export default {
-  props: ['page', 'pagesEnded', 'people'],
-  name: 'GridView',
-  data () {
-    return {
-      selectedPeople: [],
-      personActions: [{
-        text: 'Edit Person',
-        value: 'edit',
-        icon: editIcon
-      },
-      {
-        id: 1,
-        text: 'Add Group',
-        value: 'add-group',
-        icon: groupIcon
-      },
-      {
-        id: 2,
-        text: 'Remove Groups',
-        value: 'remove-groups',
-        icon: removeGroupIcon
-      },
-      {
-        id: 3,
-        text: 'Send Email',
-        value: 'email',
-        icon: mailIcon
-      },
-      {
-        id: 5,
-        text: 'Send SMS',
-        value: 'sms',
-        icon: smsIcon
-      },
-      {
-        id: 6,
-        text: 'Export As CSV',
-        value: 'export',
-        icon: fileIcon
-      },
-      {
-        id: 4,
-        text: 'Delete',
-        value: 'delete',
-        icon: trashIcon
+  export default {
+    props: ['page', 'pagesEnded', 'people', 'group_id'],
+    name: 'GridView',
+    data() {
+      return {
+        selectedPeople: [],
+        activePerson: null
       }
-      ],
-      activePerson: null
-    }
-  },
-  methods: {
-    selectAll () {
-      const el = this.$refs['select-all']
-      const state = el.checked
-
-      this.selectedPeople = []
-      if (state) this.selectedPeople = this.people.map(person => person.id)
     },
-    personRowClicked (personId) {
-      const index = this.selectedPeople.indexOf(personId)
-      const checked = index !== -1
-      if (checked) {
-        this.selectedPeople.splice(index, 1)
-      } else {
-        this.selectedPeople.push(personId)
+    methods: {
+      async removePersonFromGroup (personId, personIndex) {
+      const path = 'remove_person_groups'
+
+      try {
+        const response = await this.$http.post(path, {
+          person_id: personId,
+          group_id: this.group_id
+        }, this.authToken)
+        
+        this.$emit('action', {
+          action: 'removed-group',
+          person: null,
+          index: personIndex
+        })
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loadingForm = false
+      }
+    },
+      selectAll() {
+        const el = this.$refs['select-all']
+        const state = el.checked
+
+        this.selectedPeople = []
+        if (state) this.selectedPeople = this.people.map(person => person.id)
+      },
+      personRowClicked(personId) {
+        const index = this.selectedPeople.indexOf(personId)
+        const checked = index !== -1
+        if (checked) {
+          this.selectedPeople.splice(index, 1)
+        } else {
+          this.selectedPeople.push(personId)
+        }
       }
     }
   }
-}
 
 </script>

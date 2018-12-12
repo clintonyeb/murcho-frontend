@@ -39,21 +39,10 @@ export default new Router({
           component: () => import(/* webpackChunkName: "members" */ './views/People.vue')
         },
         {
-          path: 'groups',
+          path: 'groups/:group_id?',
+          name: 'groups',
           component: () => import(/* webpackChunkName: "groups" */ './views/Groups.vue'),
-          children: [
-            {
-              path: '',
-              name: 'groups',
-              component: () => import(/* webpackChunkName: "group-list" */ './views/GroupList.vue')
-            },
-            {
-              path: ':id',
-              name: 'group-items',
-              props: true,
-              component: () => import(/* webpackChunkName: "group-items" */ './views/GroupDetail.vue')
-            }
-          ]
+          props: true
         },
         {
           path: 'events',

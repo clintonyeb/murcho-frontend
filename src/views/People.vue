@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen bg-blue-lightest-more font-serif" id="people">
     <div class="w-4/5 min-h-screen">
-      <div class="mx-auto p-4 px-8 w-full">
+      <div class="mx-auto py-4 px-8 w-full">
         <div class="w-full flex align-center justify-between">
           <div class="flex items-center justify-between w-full">
             <div class="flex items-baseline justify-between">

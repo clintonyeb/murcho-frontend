@@ -27,38 +27,8 @@ const getters = {}
 const actions = {}
 
 const mutations = {
-  SET_ERROR_STATE (state, payload) {
-    if (typeof (payload) === 'object') {
-      state.errorMessage = payload.message
-      state.errorState = payload.state
-    } else {
-      state.errorMessage = 'There was an error processing your request'
-      state.errorState = payload
-    }
-  },
   SET_APP_READY (state, payload) {
     state.appReady = payload
-  },
-  SHOW_MESSAGE (state, payload) {
-    state.barMessage = payload.message
-    state.barType = payload.type
-    state.snackBar = true
-  },
-  HIDE_BAR (state) {
-    state.snackBar = false
-  },
-  SET_ACTIVE_FOLDER (state, id) {
-    state.activeFolder = id
-  },
-  OPEN_FOLDER (state, id) {
-    state.openedFolders.push(id)
-  },
-  CLOSE_FOLDER (state, id) {
-    state.openedFolders = state.openedFolders.filter(f => f !== id)
-  },
-  SET_FOLDERS_FOR_FOLDER (state, payload) {
-    state.folders[payload.id] = payload.data.folders
-    state.tags[payload.id] = payload.data.tags
   },
   SET_LOGIN_DATA (state, data) {
     /**

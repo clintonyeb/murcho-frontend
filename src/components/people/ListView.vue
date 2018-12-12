@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex align-center justify-between mt-8 list-view">
+  <div class="w-full flex align-center justify-between mt-8 list-view" id="people-list-view">
     <table class="w-full border-separate table-auto relative" style="border-spacing: 0 .4rem;">
       <thead>
         <tr class="text-grey text-xs text-left">
@@ -55,7 +55,7 @@
           <td class="px-1 py-2">{{person.last_name}}</td>
           <td class="px-1 py-2">{{person.email || '-'}}</td>
           <td class="px-1 py-2">{{person.phone_number || '-'}}</td>
-          <td class="px-1 py-2">{{person.membership_status | fromKebabToString}}</td>
+          <td class="px-1 py-2">{{person.membership_status}}</td>
           <td class="px-1 py-2 w-64">
             <div class="inline-flex ">
               <div class="truncate">

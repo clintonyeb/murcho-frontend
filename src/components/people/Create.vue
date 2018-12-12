@@ -288,11 +288,6 @@ export default {
       })
     }
   },
-  watch: {
-    person (val) {
-      this.setup(val)
-    }
-  }
 }
 
 </script>

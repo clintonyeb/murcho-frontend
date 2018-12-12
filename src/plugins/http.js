@@ -178,6 +178,9 @@ class Http {
   }
 
   _handleHTTPError (http) {
+    // clear previous errors
+    if (store.state.layout.alert.state) store.commit('CLEAR_ALERT')
+
     if (http.status >= 200 && http.status <= 300) return true
     else if (http.status === 401) {
       store.commit('SET_LOGIN_DATA', {
@@ -185,7 +188,15 @@ class Http {
         type: MESSAGE_TYPES.error,
         route: router.currentRoute.name
       })
-      return router.replace({ name: 'login' })
+      return router.replace({
+        name: 'login'
+      })
+    } else if (http.status === 422) {
+      store.commit('CALL_ALERT', {
+        message: this.getErrorMessage(http.response) || 'There was an error processing your request..',
+        type: MESSAGE_TYPES.warning
+      })
+      return false
     } else {
       store.commit('CALL_ALERT', {
         message: 'There was an error processing your request..',
@@ -193,6 +204,18 @@ class Http {
       })
       return false
     }
+  }
+
+  getErrorMessage (res) {
+    if (!res) return ''
+    const response = JSON.parse(res)
+    const fieldName = Object.keys(response)[0]
+    if (!fieldName) return ''
+    const message = response[fieldName][0]
+    if (!message) return ''
+    const display = `${fieldName} ${message}`
+
+    return `${display.charAt(0).toUpperCase()}${display.substring(1)}`
   }
 }
 
