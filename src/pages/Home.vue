@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import TopNav from '@/components/TopNav'
+import TopNav from '@/components/globals/TopNav'
 import {
   MESSAGE_TYPES
 } from '@/utils'

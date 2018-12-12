@@ -1,7 +1,8 @@
 import store from '@/store'
 import Hashids from 'hashids'
-import OnClickOutside from '@/components/OnClickOutside'
+import OnClickOutside from '@/components/globals/OnClickOutside'
 import Avatar from 'vue-avatar'
+import Message from '@/components/globals/Message'
 
 let hash = null
 const pluralize = require('pluralize')
@@ -15,6 +16,7 @@ export default {
   },
   components: {
     OnClickOutside,
+    Message,
     Avatar
   },
   methods: {

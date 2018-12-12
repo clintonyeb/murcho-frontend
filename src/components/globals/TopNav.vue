@@ -81,7 +81,7 @@
           <on-click-outside :do="handleClickOutside" :active="userMenu">
             <div class="ml-4 relative mx-auto">
               <div class="inline-flex items-center justify-center cursor-pointer" @click="userMenu = !userMenu">
-                <img src="../assets/img/man.svg" class="rounded-full w-8 h-8 flex items-center justify-center border-2 border-blue-light p-1">
+                <img :src="adminIcon" class="rounded-full w-8 h-8 flex items-center justify-center border-2 border-blue-light p-1">
 
                 <svg class="h-2 w-2 fill-current text-grey-dark ml-2" version="1.1" xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
@@ -122,10 +122,13 @@ import {
   settingsIcon
 } from '@/utils/icons'
 
+import defaultAdminIcon from '@/assets/img/man.svg'
+
 export default {
   name: 'TopBar',
   data () {
     return {
+      adminIcon: defaultAdminIcon,
       userMenu: false,
       userMenuItems: [
         {

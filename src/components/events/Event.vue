@@ -36,7 +36,7 @@
       <div class="w-full mt-6">
         <p class="w-full inline-flex items-center justify-between mb-1">
           <span class="font-black mr-2" :class="`text-${event.color}-lighter`">Duration</span>
-          <span class="text-grey-dark">{{eventDetail.duration | formatDuration}}</span>
+          <span class="text-grey-dark">{{formatDuration(eventDetail.duration)}}</span>
           <span v-if="eventDetail.is_all_day" class="text-grey-dark">- All Day Event</span>
         </p>
       </div>
@@ -75,81 +75,81 @@
 </template>
 
 <script>
-import {
-  format
-} from 'date-fns'
-import {
-  COLORS
-} from '@/utils'
-import {
-  trashIcon,
-  editIcon
-} from '@/utils/icons'
+  import {
+    format
+  } from 'date-fns'
+  import {
+    COLORS
+  } from '@/utils'
+  import {
+    trashIcon,
+    editIcon
+  } from '@/utils/icons'
 
-const dateFormat = 'EEEE, do; h:m a'
+  const dateFormat = 'EEEE, do; h:m a'
 
-export default {
-  props: ['event'],
-  data () {
-    return {
-      loadingEvent: true,
-      eventDetail: {},
-      colors: COLORS,
-      icons: {
-        delete: trashIcon,
-        edit: editIcon
+  export default {
+    props: ['event'],
+    data() {
+      return {
+        loadingEvent: true,
+        eventDetail: {},
+        colors: COLORS,
+        icons: {
+          delete: trashIcon,
+          edit: editIcon
+        }
       }
-    }
-  },
-  created () {
-    this.getEventDetails(this.event.id)
-  },
-  methods: {
-    async getEventDetails (id) {
-      const path = `event_schemas/${id}`
-      this.loadingEvent = true
-
-      try {
-        const response = await this.$http.get(path, this.authToken)
-        this.eventDetail = response
-      } catch (err) {
-
-      } finally {
-        this.loadingEvent = false
-      }
-    }
-  },
-  filters: {
-    formatDuration (seconds) {
-      if (!seconds) return ''
-
-      seconds = Number(seconds)
-      let time
-
-      time = Math.floor(seconds / (60 * 60 * 24 * 7 * 4))
-      if (time >= 1) return `${time} ${pluralize('month', time)}`
-
-      time = Math.floor(seconds / (60 * 60 * 24 * 7))
-      if (time >= 1) return `${time} ${pluralize('week', time)}`
-
-      time = Math.floor(seconds / (60 * 60 * 24))
-      if (time >= 1) return `${time} ${pluralize('day', time)}`
-
-      time = Math.floor(seconds / (60 * 60))
-      if (time >= 1) return `${time} ${pluralize('hour', time)}`
-
-      time = Math.floor(seconds / (60))
-      if (time >= 1) return `${time} ${pluralize('minute', time)}`
-
-      return `${time} ${pluralize('second', time)}`
     },
-    formatDate (dateString) {
-      const date = new Date(dateString)
-      return format(date, dateFormat, {
-        awareOfUnicodeTokens: true
-      })
+    created() {
+      this.getEventDetails(this.event.id)
+    },
+    methods: {
+      async getEventDetails(id) {
+        const path = `event_schemas/${id}`
+        this.loadingEvent = true
+
+        try {
+          const response = await this.$http.get(path, this.authToken)
+          this.eventDetail = response
+        } catch (err) {
+
+        } finally {
+          this.loadingEvent = false
+        }
+      },
+      formatDuration(seconds) {
+        if (!seconds) return ''
+
+        seconds = Number(seconds)
+        let time
+
+        time = Math.floor(seconds / (60 * 60 * 24 * 7 * 4))
+        if (time >= 1) return `${time} ${this.pluralize('month', time)}`
+
+        time = Math.floor(seconds / (60 * 60 * 24 * 7))
+        if (time >= 1) return `${time} ${this.pluralize('week', time)}`
+
+        time = Math.floor(seconds / (60 * 60 * 24))
+        if (time >= 1) return `${time} ${this.pluralize('day', time)}`
+
+        time = Math.floor(seconds / (60 * 60))
+        if (time >= 1) return `${time} ${this.pluralize('hour', time)}`
+
+        time = Math.floor(seconds / (60))
+        if (time >= 1) return `${time} ${this.pluralize('minute', time)}`
+
+        return `${time} ${this.pluralize('second', time)}`
+      }
+    },
+    filters: {
+      formatDate(dateString) {
+        const date = new Date(dateString)
+        return format(date, dateFormat, {
+          awareOfUnicodeTokens: true
+        })
+      }
     }
   }
-}
 
 </script>

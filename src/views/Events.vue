@@ -5,59 +5,67 @@
 
         <div class="w-full flex align-center justify-between">
           <div class="flex items-center justify-between w-full">
-            <div class="flex items-baseline justify-between">
-              <h3 class="text-blue-light font-medium text-2xl mr-6">
-                Calendar &amp; Events
-              </h3>
-            </div>
-
-            <div class="flex items-baseline justify-between">
+            <div class="inline-flex items-center justify-between">
+              <h3 class="text-blue-light font-black text-2xl mr-4">Events</h3>
               <div class="inline-flex items-center">
-
-                <div class="mr-4 inline-flex items-center">
-                  <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-l" @click="previousMonth">
+                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-l"
+                  @click="previousMonth">
                   <span v-html="icons.back" class="text-grey"></span>
                 </button>
                 <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center justify-between border border-grey-light w-48">
                   <span class="mr-2">{{displayedMonth}}</span>
                   <svg class="h-2 w-2 fill-current text-grey ml-2" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
-                  viewBox="0 0 292.362 292.362" style="enable-background:new 0 0 292.362 292.362;" xml:space="preserve">
-                  <g>
+                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
+                    viewBox="0 0 292.362 292.362" style="enable-background:new 0 0 292.362 292.362;" xml:space="preserve">
                     <path d="M286.935,69.377c-3.614-3.617-7.898-5.424-12.848-5.424H18.274c-4.952,0-9.233,1.807-12.85,5.424C1.807,72.998,0,77.279,0,82.228c0,4.948,1.807,9.229,5.424,12.847l127.907,127.907c3.621,3.617,7.902,5.428,12.85,5.428s9.233-1.811,12.847-5.428L286.935,95.074c3.613-3.617,5.427-7.898,5.427-12.847C292.362,77.279,290.548,72.998,286.935,69.377z" />
-                  </g>
-                </svg>
+                  </svg>
                 </button>
-                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-r" @click="nextMonth">
+                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-r"
+                  @click="nextMonth">
                   <span v-html="icons.forward"></span>
                 </button>
-                </div>
+              </div>
+            </div>
 
-                <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded-l">
+            <div class="flex items-baseline justify-between">
+              <div class="inline-flex">
+
+                <on-click-outside :do="() => viewsActive = false" :active="viewsActive">
+                  <div class="inline-flex items-center justify-center cursor-pointer relative mr-4" @click="viewsActive = !viewsActive">
+                    <div class="inline-flex items-center border justify-center border-blue p-2 rounded bg-white-dark text-white w-24">
+                      <p class="text-xs ml-1 text-blue font-bold">{{viewMode.text}}</p>
+                      <svg class="h-2 w-2 fill-current text-blue ml-1 self-center" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
+                        viewBox="0 0 292.362 292.362" style="enable-background:new 0 0 292.362 292.362;" xml:space="preserve">
+                        <g>
+                          <path d="M286.935,69.377c-3.614-3.617-7.898-5.424-12.848-5.424H18.274c-4.952,0-9.233,1.807-12.85,5.424C1.807,72.998,0,77.279,0,82.228c0,4.948,1.807,9.229,5.424,12.847l127.907,127.907c3.621,3.617,7.902,5.428,12.85,5.428s9.233-1.811,12.847-5.428L286.935,95.074c3.613-3.617,5.427-7.898,5.427-12.847C292.362,77.279,290.548,72.998,286.935,69.377z"></path>
+                        </g>
+                      </svg>
+                    </div>
+
+                    <div v-show="viewsActive" class="z-10 mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col overflow-hidden"
+                      style="min-width: 200px; top: 100%;">
+                      <a v-for="view in viewModes" :key="view.id" class="cursor-pointer no-underline flex items-center justify-start px-4 py-3 whitespace-no-wrap group hover:text-white hover:bg-blue-light"
+                        @click="viewMode = view">
+                        <span class="group-hover:text-white">{{view.text}}</span>
+                      </a>
+                    </div>
+                  </div>
+                </on-click-outside>
+
+                <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded" @click="createEvent">
                   <span v-html="icons.plus" class="mr-2 text-white"></span>
                   <span class="mr-2">Create Event</span>
                 </button>
 
-                <on-click-outside :do="() => moreMenu = false" :active="moreMenu">
-                  <div class="inline-flex items-center justify-center cursor-pointer relative">
-
-                    <button class="bg-blue-light text-white h-8 w-8 hover:bg-grey-light hover:text-white rounded-r"
-                      @click="moreMenu = !moreMenu">
-                      <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-6 p-1 cursor-pointer hover:bg-grey-light rounded-full align-middle"
-                        role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"
-                          style="padding: .5rem;"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </on-click-outside>
               </div>
+
             </div>
           </div>
         </div>
 
-        <div class="w-full flex align-center justify-between mt-8">
-          <calendar :selectedMonth="selectedMonth"></calendar>
+        <div class="w-full mt-2">
+          <calendar :selectedMonth="selectedMonth" @calendar="activeCalendar = $event"></calendar>
         </div>
 
       </div>
@@ -65,64 +73,170 @@
     <div class="w-1/5 h-screen max-w-xs">
 
     </div>
+
+    <transition enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
+      <div class="bg-white p-6 fixed pin-t pin-r w-1/3 h-screen shadow-lg z-20" v-show="drawer.state" style="animation-duration: 500ms;">
+        <div class="w-full inline-flex items-center justify-between">
+          <p class="inline-flex text-grey" v-if="activeAction === 'email'">
+            <span>
+              <svg version="1.1" class="w-5 h5 fill-current mr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                <path d="M510.576,264.536l-58.431-157.94c-2.122-5.739-6.353-10.307-11.913-12.863c-5.559-2.556-11.78-2.796-17.519-0.672L137.796,198.467c-5.739,2.123-10.307,6.354-12.864,11.912c-2.556,5.559-2.795,11.781-0.672,17.519l58.431,157.94c2.122,5.739,6.353,10.307,11.913,12.864c3.05,1.403,6.299,2.107,9.559,2.107c2.682,0,5.37-0.476,7.961-1.435l284.918-105.406h0.001C508.886,289.585,514.958,276.382,510.576,264.536z M407.052,123.279l-88.377,126.344l-149.327-38.405L407.052,123.279zM200.044,366.731l-50.683-137l117.382,30.192L200.044,366.731z M224.863,370.237l65.152-104.33l30.642,7.882c0.951,0.241,1.913,0.367,2.852,0.367c3.688,0,7.216-1.787,9.392-4.891l18.133-25.944l117.369,36.818L224.863,370.237zM364.814,223.638l69.463-99.324l50.703,137.019L364.814,223.638z"></path>
+                <path d="M133.44,388.976c-2.194-5.933-8.786-8.961-14.715-6.768l-43.162,15.968c-5.933,2.196-8.962,8.784-6.768,14.716c1.71,4.623,6.086,7.482,10.743,7.482c1.319,0,2.663-0.23,3.973-0.715l43.16-15.968C132.606,401.498,135.635,394.909,133.44,388.976z"></path>
+                <path d="M75.023,282.646c-2.196-5.933-8.785-8.96-14.716-6.768l-26.643,9.857c-5.933,2.196-8.962,8.783-6.768,14.716c1.71,4.622,6.087,7.482,10.743,7.482c1.319,0,2.663-0.23,3.973-0.715l26.643-9.857C74.188,295.168,77.218,288.579,75.023,282.646z"></path>
+                <path d="M41.995,369.408c-2.196-5.933-8.785-8.962-14.716-6.768l-19.797,7.324c-5.933,2.196-8.962,8.784-6.768,14.716c1.71,4.622,6.086,7.482,10.743,7.482c1.319,0,2.663-0.23,3.973-0.715l19.797-7.324C41.161,381.929,44.19,375.341,41.995,369.408z"></path>
+              </svg>
+            </span>
+            <span>Sending Email..</span>
+          </p>
+
+          <p class="inline-flex text-grey" v-else-if="activeAction === 'sms'">
+            <span v-html="icons.sms" class="mr-2"></span>
+            <span>Sending SMS..</span>
+          </p>
+
+          <p class="inline-flex text-grey" v-else-if="activeAction === 'edit-person'">
+            <span v-html="icons.edit" class="mr-2"></span>
+            <span>Editing Group..</span>
+          </p>
+
+          <p class="inline-flex text-grey" v-else>
+            <span v-html="icons.edit" class="mr-2"></span>
+            <span>Editing Group..</span>
+          </p>
+
+         <p class="float-right text-right">
+            <svg class="cursor-pointer fill-current h-5 w-5 text-blue-light float-right mr-2" role="button" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20" @click="hideActionDrawer">
+            <title>Close</title>
+            <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
+          </svg>
+         </p>
+        </div>
+
+        <div class="mt-16 pa-4">
+          <message :info="info" />
+          <create v-if="activeAction === 'create'" :calendar_id="activeCalendar.id" @done="hideActionDrawer" />
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
 <script>
-import Calendar from '@/components/events/Calendar'
+  import Calendar from '@/components/events/Calendar'
+  import Create from '@/components/events/Create'
+  import {
+    leftIcon,
+    rightIcon,
+    editIcon
+  } from '@/utils/icons'
+  import {
+    MESSAGE_TYPES
+  } from '@/utils'
+  import {
+    format,
+    addMonths,
+    subMonths
+  } from 'date-fns'
 
-import {
-  leftIcon,
-  rightIcon
-} from '@/utils/icons'
-import {
-  MESSAGE_TYPES
-} from '@/utils'
-import {
-  format,
-  addMonths,
-  subMonths
-} from 'date-fns'
+  const dateFormat = 'MMMM YYYY'
 
-const dateFormat = 'MMMM YYYY'
-
-export default {
-  name: 'People',
-  data () {
-    return {
-      currentMonth: new Date(),
-      selectedMonth: new Date(),
-      icons: {
-        back: leftIcon,
-        forward: rightIcon
+  export default {
+    name: 'People',
+    data() {
+      return {
+        icons: {
+        edit: editIcon
+      },
+        activeCalendar: null,
+        activeAction: null,
+        modal: {
+          state: false,
+          action: null,
+          cancel: null,
+          data: null,
+          loading: false,
+        },
+        drawer: {
+          state: false,
+          action: null,
+          cancel: null,
+          data: null,
+          loading: false,
+          results: null
+        },
+        info: {
+          message: '',
+          type: MESSAGE_TYPES.info,
+          state: false,
+          data: null
+        },
+        currentMonth: new Date(),
+        selectedMonth: new Date(),
+        icons: {
+          back: leftIcon,
+          forward: rightIcon
+        },
+        viewsActive: false,
+        viewMode: null,
+        viewModes: [{
+            id: 1,
+            text: 'Monthly',
+            value: 'monthly'
+          },
+          {
+            id: 2,
+            text: 'Weekly',
+            value: 'weekly'
+          },
+          {
+            id: 3,
+            text: 'Daily',
+            value: 'daily'
+          }
+        ]
       }
+    },
+    components: {
+      Calendar,
+      Create
+
+    },
+    created() {
+      this.setPageTitle('Events')
+      this.viewMode = this.viewModes[0]
+    },
+    computed: {
+      displayedMonth() {
+        return format(this.selectedMonth, dateFormat, {
+          awareOfUnicodeTokens: true
+        })
+      }
+    },
+    methods: {
+      createEvent() {
+        this.activeAction = 'create'
+        this.drawer.state = true
+      },
+      hideActionDrawer() {
+        this.drawer.data = null
+        this.activeAction = null
+        this.drawer.state = false
+      },
+      previousMonth() {
+        this.selectedMonth = subMonths(this.selectedMonth, 1)
+      },
+      nextMonth() {
+        this.selectedMonth = addMonths(this.selectedMonth, 1)
+      },
+      actionHandler(value) {
+        this.activeAction = value
+        this.takingAction = true
+      },
+      setUpPeopleUI() {}
     }
-  },
-  components: {
-    Calendar
-  },
-  created () {
-    this.setPageTitle('Events')
-  },
-  computed: {
-    displayedMonth () {
-      return format(this.selectedMonth, dateFormat, {
-        awareOfUnicodeTokens: true
-      })
-    }
-  },
-  methods: {
-    previousMonth () {
-      this.selectedMonth = subMonths(this.selectedMonth, 1)
-    },
-    nextMonth () {
-      this.selectedMonth = addMonths(this.selectedMonth, 1)
-    },
-    actionHandler (value) {
-      this.activeAction = value
-      this.takingAction = true
-    },
-    setUpPeopleUI () {}
   }
-}
+
 </script>
