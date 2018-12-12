@@ -142,122 +142,122 @@
 </template>
 
 <script>
-  import {
-    trashIcon,
-    editIcon,
-    groupIcon,
-    removeGroupIcon,
-    mailIcon,
-    smsIcon,
-    fileIcon,
-    viewIcon
-  } from '@/utils/icons'
+import {
+  trashIcon,
+  editIcon,
+  groupIcon,
+  removeGroupIcon,
+  mailIcon,
+  smsIcon,
+  fileIcon,
+  viewIcon
+} from '@/utils/icons'
 
-  export default {
-    props: ['page', 'pagesEnded', 'people', 'activePeople'],
-    name: 'ListView',
-    data() {
-      return {
-        selectedPeople: [],
-        personActions: [{
-            text: 'View Person',
-            value: 'view',
-            icon: viewIcon
-          },
-          {
-            text: 'Edit Person',
-            value: 'edit',
-            icon: editIcon
-          },
-          {
-            id: 1,
-            text: 'Add Groups',
-            value: 'add-groups',
-            icon: groupIcon
-          },
-          {
-            id: 2,
-            text: 'Send Email',
-            value: 'email',
-            icon: mailIcon
-          },
-          {
-            id: 3,
-            text: 'Send SMS',
-            value: 'sms',
-            icon: smsIcon
-          },
-          {
-            id: 4,
-            text: 'Delete',
-            value: 'delete',
-            icon: trashIcon
-          }
-        ],
-        activePerson: null,
-        activeHiddenGroup: null
-      }
-    },
-    methods: {
-      async removeGroupFromPerson(groupId, personId, personIndex) {
-        const path = 'remove_person_groups'
-
-        try {
-          const response = await this.$http.post(path, {
-            person_id: personId,
-            group_id: groupId
-          }, this.authToken)
-
-          this.$emit('action', {
-            action: 'removed-group',
-            person: response,
-            personIndex: personIndex
-          })
-        } catch (error) {
-          console.log(error)
-        } finally {
-          this.loadingForm = false
-        }
+export default {
+  props: ['page', 'pagesEnded', 'people', 'activePeople'],
+  name: 'ListView',
+  data () {
+    return {
+      selectedPeople: [],
+      personActions: [{
+        text: 'View Person',
+        value: 'view',
+        icon: viewIcon
       },
-      actionClicked(action, person, index) {
-        this.activePerson = null
+      {
+        text: 'Edit Person',
+        value: 'edit',
+        icon: editIcon
+      },
+      {
+        id: 1,
+        text: 'Add Groups',
+        value: 'add-groups',
+        icon: groupIcon
+      },
+      {
+        id: 2,
+        text: 'Send Email',
+        value: 'email',
+        icon: mailIcon
+      },
+      {
+        id: 3,
+        text: 'Send SMS',
+        value: 'sms',
+        icon: smsIcon
+      },
+      {
+        id: 4,
+        text: 'Delete',
+        value: 'delete',
+        icon: trashIcon
+      }
+      ],
+      activePerson: null,
+      activeHiddenGroup: null
+    }
+  },
+  methods: {
+    async removeGroupFromPerson (groupId, personId, personIndex) {
+      const path = 'remove_person_groups'
+
+      try {
+        const response = await this.$http.post(path, {
+          person_id: personId,
+          group_id: groupId
+        }, this.authToken)
+
         this.$emit('action', {
-          action: action.value,
-          person: person,
-          index: index
+          action: 'removed-group',
+          person: response,
+          personIndex: personIndex
         })
-      },
-      fullyVisible(el) {
-        const container = el.parent.width
-        const rightPos = el.style.right
-        console.log(container, rightPos)
-        return true
-      },
-      selectAll() {
-        const el = this.$refs['select-all']
-        const state = el.checked
-
-        this.selectedPeople = []
-        if (state) this.selectedPeople = this.people.map(person => person.id)
-      },
-      personRowClicked(personId) {
-        const index = this.selectedPeople.indexOf(personId)
-        const checked = index !== -1
-        if (checked) {
-          this.selectedPeople.splice(index, 1)
-        } else {
-          this.selectedPeople.push(personId)
-        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loadingForm = false
       }
     },
-    watch: {
-      selectedPeople(val) {
-        this.$emit('selected', val)
-      },
-      activePeople(val) {
-        this.selectedPeople = val
+    actionClicked (action, person, index) {
+      this.activePerson = null
+      this.$emit('action', {
+        action: action.value,
+        person: person,
+        index: index
+      })
+    },
+    fullyVisible (el) {
+      const container = el.parent.width
+      const rightPos = el.style.right
+      console.log(container, rightPos)
+      return true
+    },
+    selectAll () {
+      const el = this.$refs['select-all']
+      const state = el.checked
+
+      this.selectedPeople = []
+      if (state) this.selectedPeople = this.people.map(person => person.id)
+    },
+    personRowClicked (personId) {
+      const index = this.selectedPeople.indexOf(personId)
+      const checked = index !== -1
+      if (checked) {
+        this.selectedPeople.splice(index, 1)
+      } else {
+        this.selectedPeople.push(personId)
       }
     }
+  },
+  watch: {
+    selectedPeople (val) {
+      this.$emit('selected', val)
+    },
+    activePeople (val) {
+      this.selectedPeople = val
+    }
   }
+}
 
 </script>

@@ -123,7 +123,7 @@ export default {
           this.loadingForm = false
         }
       })
-    },
+    }
   }
 }
 

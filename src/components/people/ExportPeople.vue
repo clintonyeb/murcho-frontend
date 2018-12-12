@@ -14,7 +14,7 @@
           </p>
         </div>
       </div>
-    
+
     <div class="mt-8  inline-flex justify-start w-full">
       <div class="w-full inline-flex justify-between items-center">
         <button class="inline-flex flex-auto items-center justify-center h-10 bg-red-light rounded-sm text-white shadow-md mr-2 p-6"
@@ -46,7 +46,7 @@
 <script>
 export default {
   props: ['people_ids', 'action', 'cancel', 'loading'],
-  data(){
+  data () {
     return {
       format: 'csv',
       formats: [
@@ -58,11 +58,11 @@ export default {
       ]
     }
   },
-  created(){
+  created () {
     this.$emit('change', this.format)
   },
   watch: {
-    format(val) {
+    format (val) {
       this.$emit('change', val)
     }
   }

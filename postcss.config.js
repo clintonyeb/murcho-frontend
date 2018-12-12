@@ -13,10 +13,9 @@ module.exports = {
     purgecss({
       content: [
         './src/**/*.vue',
-        './src/*.vue',
+        // './src/*.vue',
         './src/**/*.js',
-        './src/*.js',
-        './src/**/*.html',
+        // './src/*.js',
         './public/*.html'
       ],
       extractors: [

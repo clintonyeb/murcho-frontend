@@ -1,41 +1,41 @@
 <script>
 export default {
-  props: ["do", "active"],
-  mounted() {
-    if(this.active) this.addListener()
+  props: ['do', 'active'],
+  mounted () {
+    if (this.active) this.addListener()
     else this.removeListener()
   },
-  render() {
-    return this.$slots.default[0];
+  render () {
+    return this.$slots.default[0]
   },
   methods: {
-    addListener() {
-      document.addEventListener("click", this.listener);
+    addListener () {
+      document.addEventListener('click', this.listener)
     },
-    removeListener() {
-      document.removeEventListener("click", this.listener);
+    removeListener () {
+      document.removeEventListener('click', this.listener)
     },
-    listener(e) {
+    listener (e) {
       if (
         this.active &&
         e.target !== this.$el &&
         !this.$el.contains(e.target)
       ) {
-        this.do();
+        this.do()
       }
     }
   },
-  beforeDestroy() {
-    this.removeListener();
+  beforeDestroy () {
+    this.removeListener()
   },
   watch: {
-    active(val) {
+    active (val) {
       if (val) {
-        this.addListener();
+        this.addListener()
       } else {
-        this.removeListener();
+        this.removeListener()
       }
     }
   }
-};
+}
 </script>

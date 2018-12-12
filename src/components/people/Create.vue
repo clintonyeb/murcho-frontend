@@ -286,7 +286,7 @@ export default {
           showAlways: true
         })]
       })
-    },
+    }
   },
   watch: {
     person (val) {

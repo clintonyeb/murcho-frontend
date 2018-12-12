@@ -135,216 +135,216 @@
 </template>
 
 <script>
-  import {
-    tickIcon,
-    filterIcon
-  } from "@/utils/icons";
+import {
+  tickIcon,
+  filterIcon
+} from '@/utils/icons'
 
-  import {
-    debounce
-  } from "debounce";
+import {
+  debounce
+} from 'debounce'
 
-  import flatpickr from "flatpickr";
-  import confirmDatePlugin from "flatpickr/dist/plugins/confirmDate/confirmDate.js";
-  const dateFormat = "EEEE, do; h:m a";
-  require("flatpickr/dist/flatpickr.min.css");
+import flatpickr from 'flatpickr'
+import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
+const dateFormat = 'EEEE, do; h:m a'
+require('flatpickr/dist/flatpickr.min.css')
 
-  let startDateJoinedComp = null;
-  let endDateJoinedComp = null;
+let startDateJoinedComp = null
+let endDateJoinedComp = null
 
-  export default {
-    name: "Filters",
-    data() {
-      return {
-        search_input: '',
-        selectedFields: [],
-        loadingForm: false,
-        groups: {
-          searching: false,
-          searched: [],
-          search: "",
-          selected: [],
-          loading: false,
-          pickedFromSelected: []
-        },
-        requiredFields: [{
-            id: 1,
-            text: "Email Address",
-            value: "email"
-          },
-          {
-            id: 2,
-            text: "Phone Number",
-            value: "phone_number"
-          },
-          {
-            id: 3,
-            text: "Profile Photo",
-            value: "photo"
-          }
-        ],
-        icons: {
-          filter: filterIcon
-        }
-      };
-    },
-    mounted() {
-      this.initializeDatePickers();
-      this.getSavedFilters()
-    },
-    beforeDestroy() {
-      if (startDateJoinedComp !== null) startDateJoinedComp.destroy();
-      if (endDateJoinedComp !== null) endDateJoinedComp.destroy();
-    },
-    methods: {
-      clearFilters(){
-        this.search_input = ''
-        this.selectedFields = []
-        startDateJoinedComp.setDate(null)
-        endDateJoinedComp.setDate(null)
-        this.groups.pickedFromSelected = []
-
-        const filters = this.getDefaultFilters()
-        sessionStorage.setItem('people-filters', JSON.stringify(filters))
-        this.$emit('filters', filters)
+export default {
+  name: 'Filters',
+  data () {
+    return {
+      search_input: '',
+      selectedFields: [],
+      loadingForm: false,
+      groups: {
+        searching: false,
+        searched: [],
+        search: '',
+        selected: [],
+        loading: false,
+        pickedFromSelected: []
       },
-      getSavedFilters() {
-        const savedFilters = sessionStorage.getItem('people-filters')
-        let filters = null
-        if (savedFilters) {
-          filters = JSON.parse(savedFilters)
-        } else {
-          filters = this.getDefaultFilters()
-        }
-
-        sessionStorage.setItem('people-filters', JSON.stringify(filters))
-        // this.$emit('filters', filters)
-        this.setUpUI(filters)
+      requiredFields: [{
+        id: 1,
+        text: 'Email Address',
+        value: 'email'
       },
-      setUpUI(savedFilters) {
-        this.search_input = savedFilters.name
-
-        savedFilters.fields.forEach(field => {
-          this.selectedFields.push(field)
-        });
-
-        // add date_joined
-        const startDate = savedFilters.date_joined.start_joined || null
-        startDateJoinedComp.setDate(startDate)
-        const endDate = savedFilters.date_joined.end_joined || null
-        endDateJoinedComp.setDate(endDate)
-
-        this.groups.selected = savedFilters.groups
-        this.groups.pickedFromSelected = savedFilters.groups
+      {
+        id: 2,
+        text: 'Phone Number',
+        value: 'phone_number'
       },
-      getDefaultFilters() {
-        const filters = {}
-
-        // get required fields
-        filters.fields = []
-
-        // get joined interval
-        filters.date_joined = {
-          start_joined: null,
-          end_joined: null,
-        }
-
-        // get groups
-        filters.groups = []
-
-        return filters
-      },
-      getActiveFilters() {
-        const filters = {}
-
-        // name filter search input
-        filters.name = this.search_input
-
-        // get required fields
-        filters.fields = this.selectedFields
-
-        // get joined interval
-        filters.date_joined = {
-          start_joined: startDateJoinedComp.selectedDates[0],
-          end_joined: endDateJoinedComp.selectedDates[0]
-        }
-
-        // get groups
-        filters.groups = this.groups.pickedFromSelected
-
-        return filters
-      },
-      filterPeople() {
-        const filters = this.getActiveFilters()
-        sessionStorage.setItem('people-filters', JSON.stringify(filters))
-        this.$emit('filters', filters)
-      },
-      searchedGroupItemClicked(group) {
-        this.clearGroupSearch();
-        if (this.groups.selected.find(g => g.id === group.id)) return false;
-
-        this.groups.selected.unshift(group);
-        this.groups.pickedFromSelected.push(group);
-      },
-      searchGroups: debounce(function (e) {
-        this.doGroupsSearch(e.target.value);
-      }, 200),
-      async doGroupsSearch(name) {
-        if (!name) {
-          this.groups.searching = false;
-          return;
-        }
-
-        const search = name.toLowerCase();
-        const path = `search_groups/${search}`;
-        this.groups.searching = true;
-
-        try {
-          const response = await this.$http.get(path, this.authToken);
-          this.groups.searched = response;
-        } catch (error) {
-          console.log(error);
-        } finally {
-          this.groups.searchings = false;
-        }
-      },
-      handleGroupSearchOutside() {
-        console.log("here");
-        this.clearGroupSearch();
-      },
-      clearGroupSearch() {
-        this.groups.searched = [];
-        this.groups.search = "";
-        this.groups.searching = false;
-      },
-      initializeDatePickers() {
-        // const defaultDate = new Date()
-
-        startDateJoinedComp = flatpickr(this.$refs["start_date_joined"], {
-          dateFormat: "J M, Y",
-          // defaultDate: defaultDate,
-          plugins: [
-            new confirmDatePlugin({
-              confirmIcon: tickIcon,
-              confirmText: "Done",
-              showAlways: true
-            })
-          ]
-        });
-
-        endDateJoinedComp = flatpickr(this.$refs["end_date_joined"], {
-          dateFormat: "J M, Y",
-          // defaultDate: defaultDate,
-          plugins: [
-            new confirmDatePlugin({
-              confirmIcon: tickIcon,
-              confirmText: "Done",
-              showAlways: true
-            })
-          ]
-        });
+      {
+        id: 3,
+        text: 'Profile Photo',
+        value: 'photo'
+      }
+      ],
+      icons: {
+        filter: filterIcon
       }
     }
-  };
+  },
+  mounted () {
+    this.initializeDatePickers()
+    this.getSavedFilters()
+  },
+  beforeDestroy () {
+    if (startDateJoinedComp !== null) startDateJoinedComp.destroy()
+    if (endDateJoinedComp !== null) endDateJoinedComp.destroy()
+  },
+  methods: {
+    clearFilters () {
+      this.search_input = ''
+      this.selectedFields = []
+      startDateJoinedComp.setDate(null)
+      endDateJoinedComp.setDate(null)
+      this.groups.pickedFromSelected = []
+
+      const filters = this.getDefaultFilters()
+      sessionStorage.setItem('people-filters', JSON.stringify(filters))
+      this.$emit('filters', filters)
+    },
+    getSavedFilters () {
+      const savedFilters = sessionStorage.getItem('people-filters')
+      let filters = null
+      if (savedFilters) {
+        filters = JSON.parse(savedFilters)
+      } else {
+        filters = this.getDefaultFilters()
+      }
+
+      sessionStorage.setItem('people-filters', JSON.stringify(filters))
+      // this.$emit('filters', filters)
+      this.setUpUI(filters)
+    },
+    setUpUI (savedFilters) {
+      this.search_input = savedFilters.name
+
+      savedFilters.fields.forEach(field => {
+        this.selectedFields.push(field)
+      })
+
+      // add date_joined
+      const startDate = savedFilters.date_joined.start_joined || null
+      startDateJoinedComp.setDate(startDate)
+      const endDate = savedFilters.date_joined.end_joined || null
+      endDateJoinedComp.setDate(endDate)
+
+      this.groups.selected = savedFilters.groups
+      this.groups.pickedFromSelected = savedFilters.groups
+    },
+    getDefaultFilters () {
+      const filters = {}
+
+      // get required fields
+      filters.fields = []
+
+      // get joined interval
+      filters.date_joined = {
+        start_joined: null,
+        end_joined: null
+      }
+
+      // get groups
+      filters.groups = []
+
+      return filters
+    },
+    getActiveFilters () {
+      const filters = {}
+
+      // name filter search input
+      filters.name = this.search_input
+
+      // get required fields
+      filters.fields = this.selectedFields
+
+      // get joined interval
+      filters.date_joined = {
+        start_joined: startDateJoinedComp.selectedDates[0],
+        end_joined: endDateJoinedComp.selectedDates[0]
+      }
+
+      // get groups
+      filters.groups = this.groups.pickedFromSelected
+
+      return filters
+    },
+    filterPeople () {
+      const filters = this.getActiveFilters()
+      sessionStorage.setItem('people-filters', JSON.stringify(filters))
+      this.$emit('filters', filters)
+    },
+    searchedGroupItemClicked (group) {
+      this.clearGroupSearch()
+      if (this.groups.selected.find(g => g.id === group.id)) return false
+
+      this.groups.selected.unshift(group)
+      this.groups.pickedFromSelected.push(group)
+    },
+    searchGroups: debounce(function (e) {
+      this.doGroupsSearch(e.target.value)
+    }, 200),
+    async doGroupsSearch (name) {
+      if (!name) {
+        this.groups.searching = false
+        return
+      }
+
+      const search = name.toLowerCase()
+      const path = `search_groups/${search}`
+      this.groups.searching = true
+
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.groups.searched = response
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.groups.searchings = false
+      }
+    },
+    handleGroupSearchOutside () {
+      console.log('here')
+      this.clearGroupSearch()
+    },
+    clearGroupSearch () {
+      this.groups.searched = []
+      this.groups.search = ''
+      this.groups.searching = false
+    },
+    initializeDatePickers () {
+      // const defaultDate = new Date()
+
+      startDateJoinedComp = flatpickr(this.$refs['start_date_joined'], {
+        dateFormat: 'J M, Y',
+        // defaultDate: defaultDate,
+        plugins: [
+          new confirmDatePlugin({
+            confirmIcon: tickIcon,
+            confirmText: 'Done',
+            showAlways: true
+          })
+        ]
+      })
+
+      endDateJoinedComp = flatpickr(this.$refs['end_date_joined'], {
+        dateFormat: 'J M, Y',
+        // defaultDate: defaultDate,
+        plugins: [
+          new confirmDatePlugin({
+            confirmIcon: tickIcon,
+            confirmText: 'Done',
+            showAlways: true
+          })
+        ]
+      })
+    }
+  }
+}
 
 </script>

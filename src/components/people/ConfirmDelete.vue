@@ -3,7 +3,7 @@
     <div>
       Are you sure you want to delete {{people_ids.length}} {{pluralize('person', people_ids.length)}}
     </div>
-    
+
     <div class="mt-8  inline-flex justify-start w-full">
       <div class="w-full inline-flex justify-between items-center">
         <button class="inline-flex flex-auto items-center justify-center h-10 bg-red-light rounded-sm text-white shadow-md mr-2"
@@ -34,6 +34,6 @@
 
 <script>
 export default {
-  props: ['people_ids', 'action', 'cancel'],
+  props: ['people_ids', 'action', 'cancel']
 }
 </script>

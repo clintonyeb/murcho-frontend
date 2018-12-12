@@ -79,49 +79,48 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        accepted: ['csv', 'xls', 'xlsx'],
-        file: null,
-        loading: false
-      }
+export default {
+  data () {
+    return {
+      accepted: ['csv', 'xls', 'xlsx'],
+      file: null,
+      loading: false
+    }
+  },
+  methods: {
+    fileUploaded (event) {
+      this.validateForm(state => {
+        if (!state) {
+          this.file = null
+          return
+        }
+        this.file = event.target.files && event.target.files[0]
+      })
     },
-    methods: {
-      fileUploaded(event) {
-        this.validateForm(state => {
-          if (!state) {
-            this.file = null
-            return
-          }
-          this.file = event.target.files && event.target.files[0]
-        })
-      },
-      importPeople() {
+    importPeople () {
+      console.log(this.$http)
+      this.validateForm(async state => {
+        if (!state) return false
+        this.loading = true
         console.log(this.$http)
-        this.validateForm(async state => {
-          if (!state) return false
-          this.loading = true
+
+        const file = this.file
+
+        try {
           console.log(this.$http)
+          const fileURL = await this.$http.uploadFile(file)
 
-          const file = this.file
-
-          try {
-            console.log(this.$http)
-            const fileURL = await this.$http.uploadFile(file)
-
-            const path = 'people_bulk_import'
-            const response = await this.$http.post(path, {file_url: fileURL}, this.authToken)
-            this.$emit('imported')
-          } catch (error) {
-            console.log(error)
-          } finally {
-            this.loading = false
-          }
-
-        })
-      }
+          const path = 'people_bulk_import'
+          const response = await this.$http.post(path, { file_url: fileURL }, this.authToken)
+          this.$emit('imported')
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loading = false
+        }
+      })
     }
   }
+}
 
 </script>

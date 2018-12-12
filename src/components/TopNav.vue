@@ -11,7 +11,7 @@
         </svg>
       </button>
     </div>
-    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto h-8">
+    <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto h-8 router-link-active">
       <div class="text-sm lg:flex-grow nav-items">
         <router-link :to="{name: 'overview'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
           <span v-html="icons.overview" class="mr-1"></span>
@@ -119,7 +119,7 @@ import {
   servicesIcon,
   dashboardIcon,
   helpIcon,
-  settingsIcon,
+  settingsIcon
 } from '@/utils/icons'
 
 export default {
@@ -129,23 +129,23 @@ export default {
       userMenu: false,
       userMenuItems: [
         {
-        id: 3,
-        text: 'Settings',
-        icon: settingsIcon,
-        handler: () => {}
-      },
-              {
-        id: 2,
-        text: 'Help',
-        icon: helpIcon,
-        handler: () => {}
-      },
+          id: 3,
+          text: 'Settings',
+          icon: settingsIcon,
+          handler: () => {}
+        },
         {
-        id: 1,
-        text: 'Logout',
-        icon: logoutIcon,
-        handler: this.logout
-      } ],
+          id: 2,
+          text: 'Help',
+          icon: helpIcon,
+          handler: () => {}
+        },
+        {
+          id: 1,
+          text: 'Logout',
+          icon: logoutIcon,
+          handler: this.logout
+        } ],
       icons: {
         event: eventIcon,
         group: groupIcon,

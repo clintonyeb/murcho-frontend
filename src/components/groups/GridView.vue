@@ -87,7 +87,7 @@ export default {
         icon: trashIcon
       }
       ],
-      activeGroup: null,
+      activeGroup: null
     }
   }
 }
