@@ -38,6 +38,7 @@ import TopNav from '@/components/globals/TopNav'
 import {
   MESSAGE_TYPES
 } from '@/utils'
+require('flatpickr/dist/flatpickr.min.css')
 
 export default {
   name: 'home',

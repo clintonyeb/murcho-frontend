@@ -65,7 +65,8 @@
         </div>
 
         <div class="w-full mt-2">
-          <calendar :selectedMonth="selectedMonth" @calendar="activeCalendar = $event"></calendar>
+          <calendar :selectedMonth="selectedMonth" @calendar="activeCalendar = $event" ref="calendar" @edit-event="showEditEvent"
+            @reschedule="rescheduleEvent"></calendar>
         </div>
 
       </div>
@@ -75,7 +76,8 @@
     </div>
 
     <transition enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
-      <div class="bg-white p-6 fixed pin-t pin-r w-1/3 h-screen shadow-lg z-20" v-show="drawer.state" style="animation-duration: 500ms;">
+      <div class="bg-white p-6 fixed pin-t pin-r w-1/3 h-screen shadow-lg z-20 overflow-y-auto" v-show="drawer.state"
+        style="animation-duration: 500ms;">
         <div class="w-full inline-flex items-center justify-between">
           <p class="inline-flex text-grey" v-if="activeAction === 'email'">
             <span>
@@ -105,21 +107,42 @@
             <span>Editing Group..</span>
           </p>
 
-         <p class="float-right text-right">
-            <svg class="cursor-pointer fill-current h-5 w-5 text-blue-light float-right mr-2" role="button" xmlns="http://www.w3.org/2000/svg"
+          <svg class="cursor-pointer fill-current h-5 w-5 text-blue-light float-right mr-2" role="button" xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20" @click="hideActionDrawer">
             <title>Close</title>
             <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
           </svg>
-         </p>
+
         </div>
 
-        <div class="mt-16 pa-4">
+        <div class="mt-8">
           <message :info="info" />
-          <create v-if="activeAction === 'create'" :calendar_id="activeCalendar.id" @done="hideActionDrawer" />
+          <create v-if="activeAction === 'create'" :calendar_id="activeCalendar.id" @done="eventsCreated" :startDate="startDate"
+            :endDate="endDate" @cancel="hideActionDrawer" />
+          <edit-event v-if="activeAction === 'edit-event'" :calendar_id="activeCalendar.id" @edit="editEvent"
+            :startDate="startDate" :endDate="endDate" :data="drawer.data" @cancel="hideActionDrawer" @delete="deleteEvent" />
         </div>
       </div>
     </transition>
+
+    <!-- <transition enter-active-class="animated zoomIn" leave-active-class="animated zoomOut"> -->
+    <div class="" v-if="modal.state" style="animation-duration: 500ms;">
+      <div class="bg-black fixed h-full w-full pin-t pin-l opacity-25"></div>
+      <div class="bg-white p-6 fixed shadow-lg z-20" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"
+        @keyup.esc.stop="closeModal">
+        <!-- <div class="background-tint fixed w-full h-full bg-black"></div> -->
+        <svg class="cursor-pointer fill-current h-5 w-5 text-blue-light float-right mr-2" role="button" xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20" @click="closeModal">
+          <title>Close</title>
+          <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
+        </svg>
+
+        <confirm-delete v-if="activeAction === 'delete'" :event="modal.data" @cancel="closeModal" @delete="doEventDelete"
+          :loading="modal.loading" />
+
+      </div>
+    </div>
+    <!-- </transition> -->
 
   </div>
 </template>
@@ -127,6 +150,9 @@
 <script>
   import Calendar from '@/components/events/Calendar'
   import Create from '@/components/events/Create'
+  import EditEvent from '@/components/events/Edit'
+  import ConfirmDelete from '@/components/events/ConfirmDelete'
+
   import {
     leftIcon,
     rightIcon,
@@ -138,7 +164,10 @@
   import {
     format,
     addMonths,
-    subMonths
+    subMonths,
+    subMinutes,
+    differenceInSeconds,
+    addSeconds
   } from 'date-fns'
 
   const dateFormat = 'MMMM YYYY'
@@ -148,8 +177,8 @@
     data() {
       return {
         icons: {
-        edit: editIcon
-      },
+          edit: editIcon
+        },
         activeCalendar: null,
         activeAction: null,
         modal: {
@@ -196,13 +225,16 @@
             text: 'Daily',
             value: 'daily'
           }
-        ]
+        ],
+        startDate: null,
+        endDate: null
       }
     },
     components: {
       Calendar,
-      Create
-
+      Create,
+      ConfirmDelete,
+      EditEvent,
     },
     created() {
       this.setPageTitle('Events')
@@ -216,9 +248,190 @@
       }
     },
     methods: {
+      async rescheduleEvent(payload) {
+        const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
+        this.startDate = calendarSettings.startDate
+        this.endDate = calendarSettings.endDate
+
+        const event = payload.event
+        const startDate = payload.startDate
+
+        let endDate = null
+
+        if (!event.is_recurring) {
+          endDate = addSeconds(startDate, event.duration)
+        } else {
+          const diff = differenceInSeconds(event.start_date, startDate)
+          endDate = addSeconds(event.end_date, diff)
+        }
+
+        if (!event.is_recurring) {
+          try {
+            const path = `event_schemas/${event.id}`
+            await this.$http.put(path, {
+              start_date: startDate,
+              end_date: endDate,
+              startDate: this.startDate,
+              endDate: this.endDate
+            }, this.authToken)
+            this.$refs['calendar'].refresh()
+          } catch (err) {
+            console.log(err)
+          } finally {
+            // this.creatingEvent = false
+          }
+        } else {
+          const path = 'event_exceptions'
+
+          try {
+            const response = await this.$http.post(path, {
+              event_schema_id: event.id,
+              exception_date: event.start_date,
+              start_date: startDate,
+              end_date: endDate,
+               startDate: this.startDate,
+              endDate: this.endDate,
+              status: 'rescheduled'
+            }, this.authToken)
+
+            this.$refs['calendar'].refresh()
+          } catch (err) {
+            console.log(err)
+          } finally {
+            this.creatingEvent = false
+          }
+        }
+      },
+      showEditEvent(event) {
+        const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
+        this.startDate = calendarSettings.startDate
+        this.endDate = calendarSettings.endDate
+
+        let daysWithEvent = []
+        if (event.is_recurring) {
+          daysWithEvent = this.$refs['calendar'].getDaysMatchingEvent(event)
+        }
+
+        this.drawer.data = {
+          event: event,
+          disabledDates: daysWithEvent
+        }
+        this.activeAction = 'edit-event'
+        this.drawer.state = true
+      },
+      async doEventDelete(payload) {
+        const event = payload.event
+        const type = payload.type
+
+        if (!event.is_recurring) {
+          const path = `event_schemas/${event.id}`
+
+          try {
+            const response = await this.$http.delete(path, this.authToken)
+            this.closeModal()
+            this.$refs['calendar'].refresh()
+          } catch (err) {
+            console.log(err)
+          } finally {
+            this.creatingEvent = false
+          }
+        } else if (type === 'all') { // remove this event from the schema
+          const path = `event_schemas/${event.id}`
+
+          try {
+            const response = await this.$http.put(path, {
+              end_date: subMinutes(new Date(), 1) // DEC: Whether from today or from event onwards
+            }, this.authToken)
+            this.closeModal()
+            this.$refs['calendar'].refresh()
+          } catch (err) {
+            console.log(err)
+          } finally {
+            this.creatingEvent = false
+          }
+        } else { // cancel this event only
+          const path = 'event_exceptions'
+
+          try {
+            const response = await this.$http.post(path, {
+              event_schema_id: event.id,
+              exception_date: event.start_date,
+              start_date: event.start_date,
+              end_date: event.end_date,
+              status: 'cancelled'
+            }, this.authToken)
+
+            this.closeModal()
+            this.$refs['calendar'].refresh()
+          } catch (err) {
+            console.log(err)
+          } finally {
+            this.creatingEvent = false
+          }
+        }
+      },
+      async editEvent(payload) {
+        const event = payload.event
+        const data = payload.data
+
+        if (!event.is_recurring) {
+          try {
+            const path = `event_schemas/${event.id}`
+            await this.$http.put(path, data, this.authToken)
+            this.hideActionDrawer()
+            this.$refs['calendar'].refresh()
+          } catch (err) {
+            console.log(err)
+          } finally {
+            // this.creatingEvent = false
+          }
+        } else {
+          const path = 'event_exceptions'
+
+          try {
+            const response = await this.$http.post(path, {
+              event_schema_id: event.id,
+              exception_date: event.start_date,
+              start_date: data.start_date,
+              end_date: data.end_date,
+              startDate: data.startDate,
+              endDate: data.endDate,
+              status: 'rescheduled'
+            }, this.authToken)
+
+            this.hideActionDrawer()
+            this.$refs['calendar'].refresh()
+          } catch (err) {
+            console.log(err)
+          } finally {
+            this.creatingEvent = false
+          }
+        }
+      },
+      deleteEvent(event) {
+        this.hideActionDrawer()
+        this.activeAction = 'delete'
+        this.modal.data = event
+        this.modal.state = true
+      },
+      eventsUpdated(events) {
+        this.$refs['calendar'].updateEvents(events)
+        this.hideActionDrawer()
+      },
+      eventsCreated(events) {
+        this.$refs['calendar'].addEvents(events)
+        this.hideActionDrawer()
+      },
       createEvent() {
         this.activeAction = 'create'
         this.drawer.state = true
+        const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
+        this.startDate = calendarSettings.startDate
+        this.endDate = calendarSettings.endDate
+      },
+      closeModal() {
+        this.modal.state = false
+        this.activeAction = null
       },
       hideActionDrawer() {
         this.drawer.data = null

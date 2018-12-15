@@ -1,6 +1,6 @@
 <template>
   <div class="w-full container mx-auto md:p-10 sm:p-8" style="min-width: 500px">
-    <div class="w-full control mr-1">
+    <div class="w-full control">
       <div>
         <label class="block text-grey text-sm font-bold mb-2" for="Group Name">
           Group Name

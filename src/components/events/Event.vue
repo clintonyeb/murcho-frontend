@@ -1,19 +1,18 @@
 <template>
-  <div>
+  <div class="cursor-auto">
     <div class="w-full p-6">
       <div class="w-full inline-flex items-center justify-between">
         <p class="font-bold text-base flex-grow" :class="`text-${event.color}-dark`">
           {{event.title}}
         </p>
-        <!-- <p v-for="(key, color) in colors" :key="key" class="cursor-pointer inline-block mr-1 rounded-full relative" style="height: 20px; width: 20px; padding: 1px;"
-      :class="color === event.color ? `border border-${color}` : ''">
-        <span class="inline-block rounded-full absolute" :class="`bg-${color}`" style="width: 15px; height: 15px; right: 50%; left: 11.3%; bottom: 50%; top: 11.25%;"></span>
-      </p> -->
-        <!-- <p class="inline-flex items-center">
-          <button class="text-xs" :class="`text-${event.color}-light hover:text-${event.color}-dark`">
-            Edit
-          </button>
-        </p> -->
+
+        <p class="inline-flex items-center">
+          <span v-html="icons.edit" v-if="!day.isPast" class="cursor-pointer text-grey mr-2 hover:text-grey-dark hover:bg-grey-lighter rounded-full" @click="$emit('edit-event')"></span>
+          <svg class="fill-current h-6 w-6 text-grey hover:text-grey-dark hover:bg-grey-lighter rounded-full" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <title>Close</title>
+            <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
+          </svg>
+        </p>
       </div>
 
       <div class="w-full mt-2">
@@ -33,7 +32,7 @@
         </p>
       </div>
 
-      <div class="w-full mt-6">
+      <div class="w-full">
         <p class="w-full inline-flex items-center justify-between mb-1">
           <span class="font-black mr-2" :class="`text-${event.color}-lighter`">Duration</span>
           <span class="text-grey-dark">{{formatDuration(eventDetail.duration)}}</span>
@@ -41,14 +40,14 @@
         </p>
       </div>
 
-      <div class="w-full mt-6" v-if="eventDetail.location">
+      <div class="w-full" v-if="eventDetail.location">
         <p class="w-full inline-flex items-center justify-between mb-1">
           <span class="font-black mr-2" :class="`text-${event.color}-lighter`">Location</span>
           <span class="text-grey-dark">{{eventDetail.location}}</span>
         </p>
       </div>
 
-      <div class="w-full mt-4" v-if="eventDetail.hosts">
+      <div class="w-full" v-if="eventDetail.hosts">
         <p class="uppercase">
           Performing
         </p>
@@ -56,20 +55,6 @@
           {{eventDetail.hosts}}
         </p>
       </div>
-
-    </div>
-
-    <div class="w-full mt-4 inline-flex items-center">
-      <button class=" h-8 flex-grow bg-blue-light inline-flex items-center justify-center text-white">
-        <span v-html="icons.edit" class="mr-2"></span>
-        <span>EDIT</span>
-      </button>
-      <button class="h-8 flex-grow bg-red inline-flex items-center justify-center text-white">
-        <span v-html="icons.delete" class="mr-2"></span>
-        <span>
-          REMOVE
-        </span>
-      </button>
     </div>
   </div>
 </template>
@@ -86,10 +71,10 @@
     editIcon
   } from '@/utils/icons'
 
-  const dateFormat = 'EEEE, do; h:m a'
+  const dateFormat = 'h:m a'
 
   export default {
-    props: ['event'],
+    props: ['day', 'event'],
     data() {
       return {
         loadingEvent: true,

@@ -173,7 +173,6 @@ import {
 import flatpickr from 'flatpickr'
 import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
 const dateFormat = 'EEEE, do; h:m a'
-require('flatpickr/dist/flatpickr.min.css')
 
 let dateJoinedComp = null
 

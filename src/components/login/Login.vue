@@ -31,8 +31,8 @@
 
     <div class="container mx-auto md:p-20 sm:p-12 bg-pattern">
 
-      <div class="mb-4">
-        <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="w-64">
+      <div class="mb-4 h-10">
+        <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-10">
       </div>
 
       <div class="my-8 text-grey-dark w-64 font-medium text-lg">

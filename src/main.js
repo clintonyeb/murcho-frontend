@@ -18,6 +18,21 @@ Vue.use(VeeValidate, {
 })
 Vue.directive('autofocus', autofocus)
 
+// Custom Vee-Validate Rules
+const required = VeeValidate.Validator.rules.required.validate
+
+const ifDependentPresent = (value, args) => {
+  if (!args.length) return true
+  const allPresent = true
+
+  args.forEach(arg => allPresent && arg)
+
+  if (allPresent) return required(value)
+  return true
+}
+
+VeeValidate.Validator.extend('isDependent', ifDependentPresent)
+
 new Vue({
   router,
   store,

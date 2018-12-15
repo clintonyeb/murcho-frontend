@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex align-center justify-between mt-8 list-view bg-white shadow rounded-lg p-2">
+  <div class="w-full flex align-center justify-between mt-8 list-view bg-white shadow rounded p-2">
     <table class="w-full border-collapse table-fixed relative">
       <thead>
         <tr class="text-grey-dark text-xs text-center uppercase">
@@ -10,54 +10,57 @@
       <tbody>
         <tr v-for="(week, i) in daysInSelectedMonth" :key="i" class="h-48">
           <td v-for="day in week" :key="day.id" class="border h-48 align-top w-16 select-none relative" @mouseover="hoveredDay = day.id"
-            @mouseleave="hoveredDay = null">
+            @mouseleave="hoveredDay = null" @dragover="allowEventDrop($event, day)" @drop="dropEvent($event, day)"
+            :class="{'border-4 border-grey shadow-inner' : draggingOverId === day.id}">
             <div class="w-full inline-flex items-center justify-between h-6 p-4 text-xs" :class="day.isToday ? 'text-blue-light' : 'text-grey'">
               <p :class="{'underline': day.isToday}">
                 {{day.text}}
               </p>
-              <button v-show="hoveredDay === day.id" class="text-xs" :class="day.isToday ? 'text-blue-light hover:text-blue-dark' : 'text-grey hover:text-grey-dark'"
+              <!-- <button v-show="hoveredDay === day.id" class="text-xs animated fadeIn" :class="day.isToday ? 'text-blue-light hover:text-blue-dark' : 'text-grey hover:text-grey-dark'"
                 @click.stop="addingEventDay = day.id">
                 Add Event
-              </button>
+              </button> -->
             </div>
 
             <div class="my-6 relative">
               <on-click-outside :do="() => selectedEvent = null" :active="selectedEvent !== null">
                 <div>
-                  <div v-if="eventsLoaded && !day.events.length">
-                    <p class="text-grey-light text-center italic text-xs">
+                  <div v-if="eventsLoaded && !day.events.length" v-show="hoveredDay === day.id">
+                    <p class="text-grey-light text-center italic text-xs animated fadeIn">
                       No Events.
                     </p>
                   </div>
-                  <div v-for="event in showMore(day, day.events)" :key="event.id" class="relative shadow hover:shadow-md mx-1 my-3 p-2 border-l-4 rounded-r"
-                    :class="`bg-${event.color}-lightest text-${event.color}-dark border-${event.color}-dark`"
-                    @click.stop="selectedEvent = selectedEvent ? null : event.id" v-else>
-                    <p class="truncate cursor-pointer">
+                  <div v-for="event in showMore(day, day.events)" :key="event.id" class="relative  mx-1 my-2 p-2 rounded-r"
+                    :class="[`bg-${event.color}-lightest text-${event.color}-dark`, {'opacity-0' : draggingEventId === event.id}, 
+                    {'shadow cursor-move hover:shadow-md': !day.isPast}, !day.isPast ? `border-l-4 border-${event.color}-dark` : '' ]"
+                    @click.stop="selectedEvent = selectedEvent ? null : `${event.id}${day.id}`" :draggable="!day.isPast"
+                    @dragstart="dragEvent($event, event, day)" v-else>
+                    <p class="truncate">
                       {{event.title}}
                     </p>
 
-                    <div v-if="selectedEvent === event.id" class="event-detail mt-px text-sm shadow-lg text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col z-20 flex flex-col"
+                    <div v-if="selectedEvent === `${event.id}${day.id}`" class="event-detail mt-px text-sm shadow-lg text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col z-20 flex flex-col"
                       style="top: 0; left: 105%; width: 20rem;">
-                      <event :event="event"></event>
+                      <event :event="event" :day="day" @edit-event="$emit('edit-event', event)"></event>
                     </div>
 
                   </div>
-                  <p v-if="(len = day.events.length) > 2 && showingMoreDay !== day.id" class="cursor-pointer text-grey hover:text-grey-darker text-xs inline-flex items-center justify-center w-full"
-                    @click="showingMoreDay = day.id">
-                    &#43; {{len - 2}} more {{pluralize('event', len - 2)}}
-                  </p>
-                  <p v-if="(len = day.events.length) > 2 && showingMoreDay === day.id" class="cursor-pointer text-grey hover:text-grey-darker text-xs inline-flex items-center justify-center w-full"
-                    @click="showingMoreDay = null">
-                    &#8722; Hide extra events
-                  </p>
+                  <div class="mt-2 cursor-pointer text-grey hover:text-grey-darker text-xs inline-flex items-center justify-center w-full">
+                    <p v-if="(len = day.events.length) > 2 && showingMoreDay !== day.id" class="" @click="showingMoreDay = day.id">
+                      &#43; {{len - 2}} more {{pluralize('event', len - 2)}}
+                    </p>
+                    <p v-if="(len = day.events.length) > 2 && showingMoreDay === day.id" @click="showingMoreDay = null">
+                      &#8722; Hide extra events
+                    </p>
+                  </div>
                 </div>
               </on-click-outside>
             </div>
 
-            <div v-if="addingEventDay === day.id" class="event-detail mt-px text-sm shadow-lg text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col z-20 flex flex-col"
+            <!-- <div v-if="addingEventDay === day.id" class="event-detail mt-px text-sm shadow-lg text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col z-20 flex flex-col"
               style="top: 0; left: 105%; width: 20rem;">
               <create-event :start_date="day.value" @close="addingEventDay = null" :calendar_id="calendar.id" @saved="eventCreated"></create-event>
-            </div>
+            </div> -->
 
           </td>
         </tr>
@@ -75,11 +78,12 @@
     startOfMonth,
     endOfMonth,
     isSameMonth,
-    isSameDay
+    isSameDay,
+    isBefore
   } from 'date-fns'
 
   import Event from '@/components/events/Event'
-   import CreateEvent from '@/components/events/CreateEvent'
+  // import CreateEvent from '@/components/events/CreateEvent'
 
   const daysInWeekFormat = 'E'
   const daysInMonthFormat = 'd'
@@ -100,15 +104,17 @@
         calendar: {},
         eventsLoaded: false,
         activeAction: null,
+        draggingOverId: null,
+        draggingEventId: null
       }
     },
     created() {
       this.daysInAWeek()
-      this.readyCallbacks([() => this.getEventsForSelectedMonth(this.selectedMonth), this.getCalendar])
+      this.readyCallbacks([this.refresh])
     },
     components: {
       Event,
-      CreateEvent,
+      // CreateEvent,
     },
     computed: {
       daysInSelectedMonth() {
@@ -130,6 +136,7 @@
             const isSelected = isSameDay(date, this.selectedDay)
             const isToday = isSameDay(date, today)
             const events = this.eventsInDay(date)
+            const isPast = isBefore(date, today)
             const isFirstOrLast = isSameDay(date, startDate) || isSameDay(date, endDate)
 
             let form = null
@@ -151,6 +158,7 @@
               inCurrentMonth,
               isSelected,
               isToday,
+              isPast,
               events
             })
           }
@@ -163,6 +171,51 @@
       }
     },
     methods: {
+      allowEventDrop($event, day) {
+        $event.preventDefault()
+        if (!day.isPast) {
+          this.draggingOverId = day.id
+        }
+      },
+      dropEvent($event, day) {
+        console.log('here')
+        this.draggingOverId = null
+
+        const event = JSON.parse($event.dataTransfer.getData("event"));
+        const eventDayId = Number($event.dataTransfer.getData("day"));
+
+        if (day.isPast || eventDayId === day.id) {
+          this.draggingEventId = null
+          return
+        }
+
+        $event.preventDefault()
+
+        this.$emit('reschedule', {
+          event: event,
+          startDate: day.value
+        })
+
+      },
+      dragEvent($event, event, day) {
+        this.draggingEventId = event.id
+        $event.dataTransfer.setData("event", JSON.stringify(event));
+        $event.dataTransfer.setData("day", day.id);
+      },
+      getDaysMatchingEvent(event) {
+        return this.events.filter(e => e.id === event.id).map(e => e.start_date)
+      },
+      refresh(isNew = true) {
+        this.draggingEventId = null
+        isNew && this.getCalendar()
+        this.getEventsForSelectedMonth(this.selectedMonth)
+      },
+      addEvents(events) {
+        this.events = events.concat(this.events)
+      },
+      updateEvents(events) {
+        this.refresh(false)
+      },
       eventCreated(event) {
         this.events.unshift(event)
         this.addingEventDay = null
@@ -198,15 +251,24 @@
           this.days.push(day)
         }
       },
-      async getEventsForSelectedMonth(month) {
-        this.events = []
-
+      getDateSettings(month = this.month) {
         const monthStartDate = startOfMonth(month)
         const monthEndDate = endOfMonth(month)
         const startDate = startOfWeek(monthStartDate)
         const endDate = endOfWeek(monthEndDate)
 
-        const path = `event_schemas?start_date=${startDate}&end_date=${endDate}`
+        return {
+          monthStartDate,
+          monthEndDate,
+          startDate,
+          endDate
+        }
+      },
+      async getEventsForSelectedMonth(month) {
+        this.events = []
+        const settings = this.getDateSettings(month)
+
+        const path = `event_schemas?start_date=${settings.startDate}&end_date=${settings.endDate}`
         // this.loadingMore = true
 
         try {
@@ -227,7 +289,7 @@
         }
       },
       calendar(val) {
-        if(val) this.$emit('calendar', val)
+        if (val) this.$emit('calendar', val)
       }
     }
   }
