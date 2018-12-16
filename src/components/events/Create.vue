@@ -255,7 +255,7 @@
       <div class="w-full control mt-4" v-if="repeat">
         <div class="h-8 inline-flex border w-full rounded-sm relative" v-show="repeat === 'count'">
           <input type="number" placeholder="Number of Occurrences" class="pl-2 w-full" name="Repeat Count" v-model="repeat_value"
-            id="Repeat Count" tabindex="17">
+            id="Repeat Count" tabindex="17" min="1">
         </div>
 
         <div class="h-8 inline-flex border w-full rounded-sm relative" v-show="repeat === 'until'">

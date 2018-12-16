@@ -265,44 +265,50 @@
           endDate = addSeconds(event.end_date, diff)
         }
 
-        if (!event.is_recurring) {
+        if (event.is_recurring) {
           try {
-            const path = `event_schemas/${event.id}`
-            await this.$http.put(path, {
-              start_date: startDate,
-              end_date: endDate,
-              startDate: this.startDate,
-              endDate: this.endDate
-            }, this.authToken)
-            this.$refs['calendar'].refresh()
-          } catch (err) {
-            console.log(err)
-          } finally {
-            // this.creatingEvent = false
-          }
-        } else {
-          const path = 'event_exceptions'
-
-          try {
+            const path = 'event_exceptions'
             const response = await this.$http.post(path, {
               event_schema_id: event.id,
-              exception_date: event.start_date,
+              exception_date: event.is_exception ? event.start_date : null,
               start_date: startDate,
               end_date: endDate,
-               startDate: this.startDate,
-              endDate: this.endDate,
+              is_exception: event.is_exception,
               status: 'rescheduled'
             }, this.authToken)
 
-            this.$refs['calendar'].refresh()
+            event.start_date = response.start_date
+            event.end_date = response.end_date
+            event.is_exception = true
+            
+            this.$refs['calendar'].updateRecurring(event)
           } catch (err) {
             console.log(err)
           } finally {
             this.creatingEvent = false
           }
+        } else {
+          try {
+            const path = `event_schemas/${event.id}`
+            await this.$http.put(path, {
+              start_date: startDate,
+              end_date: endDate,
+            }, this.authToken)
+            event.start_date = startDate
+            event.end_date = endDate
+
+            this.$refs['calendar'].update(event)
+          } catch (err) {
+            console.log(err)
+          } finally {
+            // this.creatingEvent = false
+          }
         }
       },
-      showEditEvent(event) {
+      showEditEvent(data) {
+        const event = data.event
+        const day = data.day
+
         const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
         this.startDate = calendarSettings.startDate
         this.endDate = calendarSettings.endDate
@@ -314,6 +320,7 @@
 
         this.drawer.data = {
           event: event,
+          day,
           disabledDates: daysWithEvent
         }
         this.activeAction = 'edit-event'
@@ -329,7 +336,7 @@
           try {
             const response = await this.$http.delete(path, this.authToken)
             this.closeModal()
-            this.$refs['calendar'].refresh()
+            this.$refs['calendar'].removeEvent(event)
           } catch (err) {
             console.log(err)
           } finally {
@@ -338,12 +345,13 @@
         } else if (type === 'all') { // remove this event from the schema
           const path = `event_schemas/${event.id}`
 
+          const end_date = subMinutes(new Date(), 1)
           try {
             const response = await this.$http.put(path, {
-              end_date: subMinutes(new Date(), 1) // DEC: Whether from today or from event onwards
+              end_date: end_date // DEC: Whether from today or from event onwards
             }, this.authToken)
             this.closeModal()
-            this.$refs['calendar'].refresh()
+            this.$refs['calendar'].removeEventsAfterDate(event, end_date)
           } catch (err) {
             console.log(err)
           } finally {
@@ -362,7 +370,7 @@
             }, this.authToken)
 
             this.closeModal()
-            this.$refs['calendar'].refresh()
+            this.$refs['calendar'].removeEventWithStartDate(event)
           } catch (err) {
             console.log(err)
           } finally {
@@ -374,37 +382,41 @@
         const event = payload.event
         const data = payload.data
 
-        if (!event.is_recurring) {
+        if (event.is_recurring) {
           try {
-            const path = `event_schemas/${event.id}`
-            await this.$http.put(path, data, this.authToken)
-            this.hideActionDrawer()
-            this.$refs['calendar'].refresh()
-          } catch (err) {
-            console.log(err)
-          } finally {
-            // this.creatingEvent = false
-          }
-        } else {
-          const path = 'event_exceptions'
-
-          try {
+            const path = 'event_exceptions'
             const response = await this.$http.post(path, {
               event_schema_id: event.id,
               exception_date: event.start_date,
               start_date: data.start_date,
               end_date: data.end_date,
-              startDate: data.startDate,
-              endDate: data.endDate,
-              status: 'rescheduled'
+              status: 'rescheduled',
+              is_exception: event.is_exception,
             }, this.authToken)
 
             this.hideActionDrawer()
-            this.$refs['calendar'].refresh()
+            event.start_date = data.start_date
+            event.end_date = data.end_date
+            event.is_exception = true
+            this.$refs['calendar'].updateRecurring(event)
           } catch (err) {
             console.log(err)
           } finally {
             this.creatingEvent = false
+          }
+        } else {
+           try {
+            const path = `event_schemas/${event.id}`
+            await this.$http.put(path, data, this.authToken)
+            this.hideActionDrawer()
+
+            event.start_date = data.start_date
+            event.end_date = data.end_date
+            this.$refs['calendar'].update(event)
+          } catch (err) {
+            console.log(err)
+          } finally {
+            // this.creatingEvent = false
           }
         }
       },

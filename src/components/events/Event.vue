@@ -1,5 +1,5 @@
 <template>
-  <div class="cursor-auto">
+  <div class="cursor-auto" @click.stop>
     <div class="w-full p-6">
       <div class="w-full inline-flex items-center justify-between">
         <p class="font-bold text-base flex-grow" :class="`text-${event.color}-dark`">
@@ -8,7 +8,7 @@
 
         <p class="inline-flex items-center">
           <span v-html="icons.edit" v-if="!day.isPast" class="cursor-pointer text-grey mr-2 hover:text-grey-dark hover:bg-grey-lighter rounded-full" @click="$emit('edit-event')"></span>
-          <svg class="fill-current h-6 w-6 text-grey hover:text-grey-dark hover:bg-grey-lighter rounded-full" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <svg class="fill-current h-6 w-6 text-grey hover:text-grey-dark hover:bg-grey-lighter rounded-full" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click.stop="$emit('close')">
             <title>Close</title>
             <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
           </svg>
@@ -17,25 +17,26 @@
 
       <div class="w-full mt-2">
         <p class="text-grey">
-          {{eventDetail.description}}
+          <span v-if="event.description">{{event.description}}</span>
+          <span v-else class="italic">No description given.</span>
         </p>
       </div>
 
       <div class="w-full mt-6">
         <p class="w-full inline-flex items-center justify-between mb-1">
           <span class="font-black mr-2" :class="`text-${event.color}-lighter`">FROM</span>
-          <span class="text-grey-dark">{{eventDetail.start_date | formatDate}}</span>
+          <span class="text-grey-dark">{{event.start_date | formatDate}}</span>
         </p>
         <p class="w-full inline-flex items-center justify-between mb-1">
           <span class="font-black mr-2" :class="`text-${event.color}-lighter`">TO</span>
-          <span class="text-grey-dark">{{eventDetail.end_date | formatDate}}</span>
+          <span class="text-grey-dark">{{event.end_date | formatDate}}</span>
         </p>
       </div>
 
       <div class="w-full">
         <p class="w-full inline-flex items-center justify-between mb-1">
           <span class="font-black mr-2" :class="`text-${event.color}-lighter`">Duration</span>
-          <span class="text-grey-dark">{{formatDuration(eventDetail.duration)}}</span>
+          <span class="text-grey-dark">{{formatDuration(event.duration)}}</span>
           <span v-if="eventDetail.is_all_day" class="text-grey-dark">- All Day Event</span>
         </p>
       </div>
@@ -71,7 +72,7 @@
     editIcon
   } from '@/utils/icons'
 
-  const dateFormat = 'h:m a'
+  const dateFormat = 'hh:mm a'
 
   export default {
     props: ['day', 'event'],

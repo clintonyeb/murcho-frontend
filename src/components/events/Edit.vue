@@ -79,7 +79,8 @@
 
   import {
     differenceInSeconds,
-    addSeconds
+    addSeconds,
+    isSameDay
   } from 'date-fns'
   import {
     RRule
@@ -123,6 +124,7 @@
     mounted() {
       this.initializeDatePickers()
       this.setUpPreviousData()
+      console.log(this.event.start_date, 'created')
     },
     methods: {
       getChangedFields(object, original) {
@@ -161,7 +163,7 @@
           const startDate = startDateComp.selectedDates[0]
 
           const fields = {
-            start_date: startDate,
+            start_date: startDate.toISOString(),
           }
 
           const data = this.getChangedFields(fields, this.event)
@@ -181,15 +183,17 @@
           if (!this.event.is_recurring) {
             endDate = addSeconds(startDate, this.event.duration)
           } else {
-            const diff = differenceInSeconds(this.event.start_date, startDate)
+            const diff = differenceInSeconds(startDate, this.event.start_date)
             endDate = addSeconds(this.event.end_date, diff)
           }
 
           data['end_date'] = endDate
 
-
+          const event = this.event
+          event._start_date = this.data.day.value
+          
           this.$emit('edit', {
-            event: this.event,
+            event,
             data: data
           })
         })
@@ -201,7 +205,7 @@
           enableTime: true,
           dateFormat: 'J M, Y; h i K',
           minDate: new Date(),
-          defaultDate: startDate,
+          // defaultDate: startDate,
           disable: this.data.disabledDates,
           plugins: [new confirmDatePlugin({
             confirmIcon: tickIcon,

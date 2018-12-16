@@ -16,6 +16,7 @@
               <p :class="{'underline': day.isToday}">
                 {{day.text}}
               </p>
+
               <!-- <button v-show="hoveredDay === day.id" class="text-xs animated fadeIn" :class="day.isToday ? 'text-blue-light hover:text-blue-dark' : 'text-grey hover:text-grey-dark'"
                 @click.stop="addingEventDay = day.id">
                 Add Event
@@ -31,17 +32,21 @@
                     </p>
                   </div>
                   <div v-for="event in showMore(day, day.events)" :key="event.id" class="relative  mx-1 my-2 p-2 rounded-r"
-                    :class="[`bg-${event.color}-lightest text-${event.color}-dark`, {'opacity-0' : draggingEventId === event.id}, 
-                    {'shadow cursor-move hover:shadow-md': !day.isPast}, !day.isPast ? `border-l-4 border-${event.color}-dark` : '' ]"
+                    :class="[`bg-${event.color}-lightest text-${event.color}-dark`, {'opacity-0' : draggingEventId === event.id && draggingEventDayId === day.id}, 
+                    {'shadow cursor-move hover:shadow-md': !day.isPast}, !day.isPast ? `border-l-4 border-${event.color}-dark` : 'rounded-l' ]"
                     @click.stop="selectedEvent = selectedEvent ? null : `${event.id}${day.id}`" :draggable="!day.isPast"
                     @dragstart="dragEvent($event, event, day)" v-else>
-                    <p class="truncate">
+                    <p class="truncate font-bold">
                       {{event.title}}
+                    </p>
+                    <p class="text-xs font-thin">
+                      {{event.start_date | formatDate}}
                     </p>
 
                     <div v-if="selectedEvent === `${event.id}${day.id}`" class="event-detail mt-px text-sm shadow-lg text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col z-20 flex flex-col"
                       style="top: 0; left: 105%; width: 20rem;">
-                      <event :event="event" :day="day" @edit-event="$emit('edit-event', event)"></event>
+                      <event :event="event" :day="day" @edit-event="selectedEvent = null, $emit('edit-event', {event, day})"
+                        @close="selectedEvent = null"></event>
                     </div>
 
                   </div>
@@ -79,7 +84,9 @@
     endOfMonth,
     isSameMonth,
     isSameDay,
-    isBefore
+    differenceInDays,
+    setHours,
+    setMinutes
   } from 'date-fns'
 
   import Event from '@/components/events/Event'
@@ -88,6 +95,7 @@
   const daysInWeekFormat = 'E'
   const daysInMonthFormat = 'd'
   const nonDaysInMonthFormat = 'LLL d'
+  const dateFormat = 'hh:mm a'
   const today = new Date()
 
   export default {
@@ -105,7 +113,8 @@
         eventsLoaded: false,
         activeAction: null,
         draggingOverId: null,
-        draggingEventId: null
+        draggingEventId: null,
+        draggingEventDayId: null
       }
     },
     created() {
@@ -136,7 +145,7 @@
             const isSelected = isSameDay(date, this.selectedDay)
             const isToday = isSameDay(date, today)
             const events = this.eventsInDay(date)
-            const isPast = isBefore(date, today)
+            const isPast = differenceInDays(date, today) < 0
             const isFirstOrLast = isSameDay(date, startDate) || isSameDay(date, endDate)
 
             let form = null
@@ -178,40 +187,81 @@
         }
       },
       dropEvent($event, day) {
-        console.log('here')
         this.draggingOverId = null
 
         const event = JSON.parse($event.dataTransfer.getData("event"));
         const eventDayId = Number($event.dataTransfer.getData("day"));
+        const previousDayDate = $event.dataTransfer.getData("day_date");
 
         if (day.isPast || eventDayId === day.id) {
           this.draggingEventId = null
           return
         }
 
+        // check if day doesn't already contain similar events
+        if (event.is_recurring) {
+          const similar = day.events.find(ev => ev.id === event.id)
+          if (similar) {
+            this.draggingEventId = null
+            return
+          }
+        }
+
+        let startDate = day.value
+        startDate = setHours(startDate, new Date(event.start_date).getHours())
+        startDate = setMinutes(startDate, new Date(event.start_date).getMinutes())
+
         $event.preventDefault()
 
+        // for UI update
+        event._start_date = previousDayDate
+
         this.$emit('reschedule', {
-          event: event,
-          startDate: day.value
+          event,
+          startDate
         })
 
       },
       dragEvent($event, event, day) {
         this.draggingEventId = event.id
+        this.draggingEventDayId = day.id
         $event.dataTransfer.setData("event", JSON.stringify(event));
         $event.dataTransfer.setData("day", day.id);
+        $event.dataTransfer.setData("day_date", day.value.toISOString());
       },
       getDaysMatchingEvent(event) {
         return this.events.filter(e => e.id === event.id).map(e => e.start_date)
       },
       refresh(isNew = true) {
-        this.draggingEventId = null
         isNew && this.getCalendar()
         this.getEventsForSelectedMonth(this.selectedMonth)
       },
+      update(event){
+        const index = this.events.findIndex(ev => (ev.id === event.id))
+        this.events.splice(index, 1, event)
+        this.draggingEventId = null
+      },
+      updateRecurring(event){
+        const index = this.events.findIndex(ev => (ev.id === event.id && isSameDay(ev.start_date, event._start_date)))
+        // this.events.findIndex(ev => (ev.id === event.id && console.log(isSameDay(ev.start_date, event._start_date), event._start_date, ev.start_date)))
+        if(index === -1){
+          this.draggingEventId = null
+          return  
+        }
+        this.events.splice(index, 1, event)
+        this.draggingEventId = null
+      },
       addEvents(events) {
         this.events = events.concat(this.events)
+      },
+      removeEventsAfterDate(event, endDate) {
+        this.events = this.events.filter(ev => !(ev.id === event.id && new Date(ev.start_date) > endDate))
+      },
+      removeEventWithStartDate(event) {
+        this.events = this.events.filter(ev => !(ev.id === event.id && ev.start_date === event.start_date))
+      },
+      removeEvent(event) {
+        this.events = this.events.filter(ev => ev.id !== event.id)
       },
       updateEvents(events) {
         this.refresh(false)
@@ -290,6 +340,14 @@
       },
       calendar(val) {
         if (val) this.$emit('calendar', val)
+      }
+    },
+    filters: {
+      formatDate(dateString) {
+        const date = new Date(dateString)
+        return format(date, dateFormat, {
+          awareOfUnicodeTokens: true
+        })
       }
     }
   }
