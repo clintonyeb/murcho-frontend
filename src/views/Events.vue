@@ -71,8 +71,54 @@
 
       </div>
     </div>
-    <div class="w-1/5 h-screen max-w-xs">
+    <div class="w-1/5 overflow-y-hidden">
+      <div class="mx-auto py-4 pr-2 w-full">
+        <div class="inline-flex w-full items-center justify-between">
+          <h3 class="text-blue-light font-semibold text-base h-10 flex items-center">Upcoming Events</h3>
+          <button class="text-blue-light rounded-full hover:text-blue inline-flex items-center pr-4" @click="loadUpcomingEvents">
+            <svg class="spinner ml-2 h-5 w-5 fill-current animated fadeIn" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
+            xml:space="preserve" v-if="loadingUpcomingEvents">
+            <g>
+              <circle cx="13.792" cy="3.082" r="3.082" />
+              <circle cx="13.792" cy="24.501" r="1.849" />
+              <circle cx="6.219" cy="6.218" r="2.774" />
+              <circle cx="21.365" cy="21.363" r="1.541" />
+              <circle cx="3.082" cy="13.792" r="2.465" />
+              <circle cx="24.501" cy="13.791" r="1.232" />
+              <path d="M4.694,19.84c-0.843,0.843-0.843,2.207,0,3.05c0.842,0.843,2.208,0.843,3.05,0c0.843-0.843,0.843-2.207,0-3.05C6.902,18.996,5.537,18.988,4.694,19.84z" />
+              <circle cx="21.364" cy="6.218" r="0.924" />
+            </g>
+          </svg>
+          <svg v-else class="ml-2 h-5 w-5 fill-current animated fadeIn" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
+            xml:space="preserve">
+            <g>
+              <circle cx="13.792" cy="3.082" r="3.082" />
+              <circle cx="13.792" cy="24.501" r="1.849" />
+              <circle cx="6.219" cy="6.218" r="2.774" />
+              <circle cx="21.365" cy="21.363" r="1.541" />
+              <circle cx="3.082" cy="13.792" r="2.465" />
+              <circle cx="24.501" cy="13.791" r="1.232" />
+              <path d="M4.694,19.84c-0.843,0.843-0.843,2.207,0,3.05c0.842,0.843,2.208,0.843,3.05,0c0.843-0.843,0.843-2.207,0-3.05C6.902,18.996,5.537,18.988,4.694,19.84z" />
+              <circle cx="21.364" cy="6.218" r="0.924" />
+            </g>
+          </svg>
+          </button>
+        </div>
 
+        <div class="w-full h-screen" v-if="upcomingLoaded && !upcomingEvents.length">
+          <div class="container m-auto h-full relative">
+            <div class="absolute my-10">
+              <p class="font-medium text-grey text-lg text-center mt-4">
+                No upcoming events.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <event v-for="event in upcomingEvents" :key="event.id" :event="event" :loading="loadingUpcomingEvents" class="mt-6"></event>
+      </div>
     </div>
 
     <transition enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
@@ -176,6 +222,9 @@
     name: 'People',
     data() {
       return {
+        upcomingEvents: [],
+        loadingUpcomingEvents: false,
+        upcomingLoaded: false,
         icons: {
           edit: editIcon
         },
@@ -239,6 +288,7 @@
     created() {
       this.setPageTitle('Events')
       this.viewMode = this.viewModes[0]
+      this.readyCallbacks([this.loadUpcomingEvents])
     },
     computed: {
       displayedMonth() {
@@ -248,6 +298,25 @@
       }
     },
     methods: {
+      async loadUpcomingEvents() {
+        if(this.loadingUpcomingEvents) return
+
+        this.loadingUpcomingEvents = true
+        this.upcomingLoaded = false
+
+        const limit = 10
+        const path = `upcoming_events?limit=${limit}`
+        this.loadingUpcomingEvents = true
+        try {
+          const response = await this.$http.get(path, this.authToken)
+          this.upcomingEvents = response
+          this.upcomingLoaded = true
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.loadingUpcomingEvents = false
+        }
+      },
       async rescheduleEvent(payload) {
         const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
         this.startDate = calendarSettings.startDate
@@ -280,7 +349,7 @@
             event.start_date = response.start_date
             event.end_date = response.end_date
             event.is_exception = true
-            
+
             this.$refs['calendar'].updateRecurring(event)
           } catch (err) {
             console.log(err)
@@ -405,7 +474,7 @@
             this.creatingEvent = false
           }
         } else {
-           try {
+          try {
             const path = `event_schemas/${event.id}`
             await this.$http.put(path, data, this.authToken)
             this.hideActionDrawer()

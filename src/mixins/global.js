@@ -3,6 +3,7 @@ import Hashids from 'hashids'
 import OnClickOutside from '@/components/globals/OnClickOutside'
 import Avatar from 'vue-avatar'
 import Message from '@/components/globals/Message'
+import Event from '@/components/globals/Event'
 
 let hash = null
 const pluralize = require('pluralize')
@@ -17,7 +18,8 @@ export default {
   components: {
     OnClickOutside,
     Message,
-    Avatar
+    Avatar,
+    Event
   },
   methods: {
     getInputErrorMessage (name) {
