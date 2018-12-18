@@ -307,7 +307,6 @@ export default {
       }
     },
     handleGroupSearchOutside () {
-      console.log('here')
       this.clearGroupSearch()
     },
     clearGroupSearch () {

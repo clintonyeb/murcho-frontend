@@ -20,7 +20,8 @@
                 {{groupPeople.length}} {{pluralize('people', groupPeople.length)}} in group.
               </p>
             </div>
-            <on-click-outside :do="handleSearchOutside" :active="searchedPeople.length">
+
+            <on-click-outside :do="handleSearchOutside" :active="searchedPeople.length" v-if="showAddPersonSearch">
               <div class="relative flex-grow">
 
                 <div class="w-full inline-flex items-center justify-center relative max-w-sm float-right">
@@ -37,7 +38,7 @@
                   </button>
 
                   <input class="appearance-none w-full p-1 h-10 pl-8 text-grey bg-grey-lighter rounded border focus:bg-white border-transparent focus:border-blue-light border-animated"
-                    type="text" placeholder="Search and Add People To Group.." @input="searchPeople" v-model="search">
+                    type="text" placeholder="Search and Add People To Group.." @input="searchPeople" v-model="search" v-autofocus>
                 </div>
 
                 <div v-show="searchedPeople.length" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-l animated zoomIn flex flex-col overflow-hidden w-full max-w-sm z-10">
@@ -51,6 +52,12 @@
 
               </div>
             </on-click-outside>
+
+            <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded" @click="showAddPersonSearch = true" v-else>
+              <span v-html="icons.plus" class="mr-2 text-white"></span>
+              <span class="mr-2">Add Person</span>
+            </button>
+
           </div>
 
           <div class="w-full h-screen" v-if="peopleLoaded && !groupPeople.length">
@@ -73,17 +80,52 @@
       </div>
     </div>
     <div class="w-1/5 min-h-screen">
-      <div class="mx-auto w-full pl-4">
+      <div class="mx-auto px-2 w-full">
+        <div class="inline-flex w-full items-center justify-between">
+          <h3 class="text-blue-light font-semibold text-base h-10 flex items-center">Upcoming Events</h3>
+          <button class="text-blue-light rounded-full hover:text-blue inline-flex items-center pr-4" @click="getEventsForGroup(groupId)">
+            <svg class="spinner ml-2 h-5 w-5 fill-current animated fadeIn" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
+              xml:space="preserve" v-if="events.loading">
+              <g>
+                <circle cx="13.792" cy="3.082" r="3.082" />
+                <circle cx="13.792" cy="24.501" r="1.849" />
+                <circle cx="6.219" cy="6.218" r="2.774" />
+                <circle cx="21.365" cy="21.363" r="1.541" />
+                <circle cx="3.082" cy="13.792" r="2.465" />
+                <circle cx="24.501" cy="13.791" r="1.232" />
+                <path d="M4.694,19.84c-0.843,0.843-0.843,2.207,0,3.05c0.842,0.843,2.208,0.843,3.05,0c0.843-0.843,0.843-2.207,0-3.05C6.902,18.996,5.537,18.988,4.694,19.84z" />
+                <circle cx="21.364" cy="6.218" r="0.924" />
+              </g>
+            </svg>
+            <svg v-else class="ml-2 h-5 w-5 fill-current animated fadeIn" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
+              xml:space="preserve">
+              <g>
+                <circle cx="13.792" cy="3.082" r="3.082" />
+                <circle cx="13.792" cy="24.501" r="1.849" />
+                <circle cx="6.219" cy="6.218" r="2.774" />
+                <circle cx="21.365" cy="21.363" r="1.541" />
+                <circle cx="3.082" cy="13.792" r="2.465" />
+                <circle cx="24.501" cy="13.791" r="1.232" />
+                <path d="M4.694,19.84c-0.843,0.843-0.843,2.207,0,3.05c0.842,0.843,2.208,0.843,3.05,0c0.843-0.843,0.843-2.207,0-3.05C6.902,18.996,5.537,18.988,4.694,19.84z" />
+                <circle cx="21.364" cy="6.218" r="0.924" />
+              </g>
+            </svg>
+          </button>
+        </div>
+
         <div class="w-full h-screen" v-if="events.loaded && !events.data.length">
           <div class="container m-auto h-full relative">
-            <div class="absolute my-10">
+            <div class="absolute">
               <p class="font-medium text-grey text-lg text-center mt-4">
-                No upcoming events scheduled for group members.
+                No upcoming events.
               </p>
             </div>
           </div>
         </div>
-        <events :events="events.data" class="mt-2" v-if="events.data.length" />
+
+        <event v-for="event in events.data" :key="event.id" :event="event" :loading="events.loading" class="mt-6"></event>
       </div>
     </div>
 
@@ -136,7 +178,7 @@
         </div>
 
         <div class="mt-16 pa-4">
-          
+
           <message :info="info" />
 
           <email v-if="activeAction === 'email'" :group_id="drawer.data" @sent="hideActionDrawer" />
@@ -144,7 +186,8 @@
           <edit-group v-if="activeAction === 'edit-group'" :group="drawer.data" :action="drawer.action" @cancel="hideActionDrawer"
             @updated="groupUpdated" />
           <create-group v-if="activeAction === 'create'" @close="hideActionDrawer" @created="groupCreated" />
-          <export-people v-if="activeAction === 'export-people'" :action="drawer.action" :group_id="drawer.data" @cancel="hideActionDrawer" @results="groupExported"  />
+          <export-people v-if="activeAction === 'export-people'" :action="drawer.action" :group_id="drawer.data"
+            @cancel="hideActionDrawer" @results="groupExported" />
           <download-export v-if="activeAction === 'download-export'" :export_file_url="drawer.data" @cancel="hideActionDrawer" />
         </div>
       </div>
@@ -171,6 +214,7 @@
     props: ['group_id'],
     data() {
       return {
+        showAddPersonSearch: false,
         info: {
           message: '',
           type: MESSAGE_TYPES.info,
@@ -243,7 +287,22 @@
       'download-export': () => import('@/components/groups/DownloadExport'),
     },
     methods: {
-      groupExported(fileUrl){
+      async getEventsForGroup(groupId, page = 1, size = 100) {
+        this.events.loading = true
+
+        try {
+          const path = `get_events_for_group/${groupId}`
+          const response = await this.$http.get(path, this.authToken)
+          this.events.data = response
+          this.events.count = response.length
+          this.events.loaded = true
+        } catch (error) {
+
+        } finally {
+          this.events.loading = false
+        }
+      },
+      groupExported(fileUrl) {
         this.drawer.data = fileUrl
         this.activeAction = 'download-export'
       },
@@ -288,6 +347,7 @@
         } finally {}
       },
       clearPeopleSearch() {
+        this.showAddPersonSearch = false
         this.searchedPeople = []
         this.search = ''
         this.searching = false
@@ -430,9 +490,6 @@
           this.loadingMore = false
         }
       },
-      getEventsForGroup(groupId, page = 1, size = 100) {
-        this.events.loaded = true
-      },
       getGroupDetails(groupId) {
         this.getPeopleForGroup(groupId)
         this.getEventsForGroup(groupId)
@@ -441,10 +498,11 @@
     watch: {
       groupId: function (groupId) {
         if (!groupId) return false
-        if (this.appReady)
+        if (this.appReady) {
           this.getGroupDetails(groupId)
-        else
+        } else {
           this.readyCallbacks([() => this.getGroupDetails(groupId)])
+        }
       }
     }
   }

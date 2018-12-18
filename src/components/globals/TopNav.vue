@@ -29,10 +29,10 @@
           <span v-html="icons.event" class="mr-1"></span>
           <span>My Events</span>
         </router-link>
-        <router-link :to="{name: 'services'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
+        <!-- <router-link :to="{name: 'services'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
           <span v-html="icons.service" class="mr-1"></span>
           <span>All Services</span>
-        </router-link>
+        </router-link> -->
       </div>
       <div class="block">
         <div class="inline-block relative inline-flex items-center justify-center h-12">

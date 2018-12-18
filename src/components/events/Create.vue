@@ -33,8 +33,8 @@
         Start Date &amp; Time
       </label>
       <div class="h-8 inline-flex border w-full rounded-sm relative" :class="getInputColor('Start Date')">
-        <input type="text" placeholder="Event Start Date" class="text-grey-dark pl-2 w-full" name="Start Date" v-validate="{required: true}"
-          tabindex="3" ref="start_date" id="Start Date">
+        <input type="text" placeholder="Event Start Date" class="text-grey-dark pl-2 w-full" name="Start Date"
+          v-validate="{required: true}" tabindex="3" ref="start_date" id="Start Date">
       </div>
       <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Start Date')">
         {{getInputErrorMessage('Start Date')}}
@@ -84,6 +84,49 @@
       </p>
     </div>
 
+    <div class="w-full mt-4 mb-6">
+      <p class="text-grey text-xs">Groups:</p>
+      <div class="mt-2 w-full">
+        <on-click-outside :do="clearGroupSearch" :active="groups.searched.length">
+          <div class="mt-2 relative mx-auto">
+            <div class="w-full inline-flex items-center justify-center relative">
+              <button class="h-6 w-6 absolute pin-l ml-2 mr-2">
+                <svg class="h-4 w-4 fill-current text-grey relative" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 129 129" enable-background="new 0 0 129 129"
+                  style="top: 3px;">
+                  <g>
+                    <path d="M51.6,96.7c11,0,21-3.9,28.8-10.5l35,35c0.8,0.8,1.8,1.2,2.9,1.2s2.1-0.4,2.9-1.2c1.6-1.6,1.6-4.2,0-5.8l-35-35c6.5-7.8,10.5-17.9,10.5-28.8c0-24.9-20.2-45.1-45.1-45.1C26.8,6.5,6.5,26.8,6.5,51.6C6.5,76.5,26.8,96.7,51.6,96.7z M51.6,14.7c20.4,0,36.9,16.6,36.9,36.9C88.5,72,72,88.5,51.6,88.5c-20.4,0-36.9-16.6-36.9-36.9C14.7,31.3,31.3,14.7,51.6,14.7z"></path>
+                  </g>
+                </svg>
+              </button>
+
+              <input class="appearance-none w-full p-1 h-10 pl-8 text-grey bg-grey-lighter rounded border focus:bg-white border-transparent focus:border-blue-light border-animated"
+                type="text" placeholder="Search and Tag Groups.." @input="searchGroups" v-model="groups.search">
+            </div>
+
+            <div v-show="groups.searched.length" class="mt-px text-sm text-center shadow-md text-grey-darker leading-normal rounded bg-white border absolute pin-l animated zoomIn flex flex-col overflow-hidden w-full max-w-sm z-10">
+              <a v-for="group in groups.searched" :key="group.id" class="cursor-pointer no-underline flex items-center px-4 py-3 border-b whitespace-no-wrap group hover:text-white hover:bg-blue-light"
+                @click="searchedGroupItemClicked(group)">
+                <span class="group-hover:text-white">{{group.name}}</span>
+              </a>
+            </div>
+          </div>
+        </on-click-outside>
+      </div>
+
+      <div class="w-full mt-4">
+        <div class="mt-2 w-full">
+          <div class="mt-2 w-full inline-flex items-center justify-between" v-for="group in groups.selected" :key="group.id">
+            <p class="text-grey-dark">{{group.name}}</p>
+            <label class="checkbox checkbox-container">
+              <input type="checkbox" v-model="groups.pickedFromSelected" :value="group">
+              <span class="checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="w-full control mt-4">
       <label class="block text-grey text-sm font-bold mb-2" for="Color">
         Color Category
@@ -112,13 +155,14 @@
         <div class="flex-grow w-full">
           <div class="w-full h-8 inline-flex items-center justify-between w-full relative pl-4" :class="getInputColor('Recurrence')">
             <label class="radio-container radio">
-              <input type="radio" name="Recurrence" id="Recurrence" :value="false" v-model="is_recurring"
-                class="text-grey" tabindex="8" v-validate="{required: true}">
+              <input type="radio" name="Recurrence" id="Recurrence" :value="false" v-model="is_recurring" class="text-grey"
+                tabindex="8" v-validate="{required: true}">
               <span class="checkmark"></span>
               <span class="text-grey-dark ml-1 text">One Time Event</span>
             </label>
             <label class="radio-container radio">
-              <input type="radio" name="Recurrence_True" id="Recurrence_True" :value="true" v-model="is_recurring" tabindex="9">
+              <input type="radio" name="Recurrence_True" id="Recurrence_True" :value="true" v-model="is_recurring"
+                tabindex="9">
               <span class="checkmark"></span>
               <span class="text-grey-dark ml-1 text">Is Recurring Event</span>
             </label>
@@ -139,7 +183,7 @@
             Repeat Frequency:
           </label>
           <select name="Frequency" v-model="frequency" class="cursor-pointer w-64 bg-white text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
-            v-validate="{required: true}" id="Frequency" :class="getInputColor('Frequency')"  tabindex="10">
+            v-validate="{required: true}" id="Frequency" :class="getInputColor('Frequency')" tabindex="10">
             <option value="" selected disabled>-- Pick Frequency --</option>
             <option v-for="freq in frequencies" :key="freq.id" :value="freq" class="cursor-pointer">{{freq.text}}</option>
           </select>
@@ -155,7 +199,7 @@
             Repeat Interval:
           </label>
           <select name="Interval" v-model="interval" class="cursor-pointer w-64 bg-white text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
-            v-validate="{required: true}" id="Interval" :class="getInputColor('Interval')"  tabindex="11">
+            v-validate="{required: true}" id="Interval" :class="getInputColor('Interval')" tabindex="11">
             <option value="" selected disabled>-- Pick Interval --</option>
             <option v-for="int in intervals" :key="int.id" :value="int" class="cursor-pointer">{{int.text}}</option>
           </select>
@@ -175,7 +219,7 @@
             <on-click-outside :do="() => byDayActive = false" :active="byDayActive">
               <div class="cursor-beam border rounded w-64 cursor-text relative" @click="byDayActive = !byDayActive"
                 style="min-height: 2rem;">
-                <div class="inline-flex items-center px-2 pb-2 justify-start flex-wrap"  tabindex="12">
+                <div class="inline-flex items-center px-2 pb-2 justify-start flex-wrap" tabindex="12">
                   <p v-for="(date, i) in byDates" v-if="date.selected" :key="i" class="inline-flex items-center justify-between border border-grey-dark text-grey-dark bg-grey-lighter mr-2 p-1 mt-2 text-xs rounded">
                     <span>
                       {{date.text}}
@@ -233,7 +277,8 @@
 
           <div class="flex-col">
             <label class="radio-container radio">
-              <input type="radio" name="Repeat Forever" id="Repeat Forever" value="" v-model="repeat" class="text-grey" tabindex="12">
+              <input type="radio" name="Repeat Forever" id="Repeat Forever" value="" v-model="repeat" class="text-grey"
+                tabindex="12">
               <span class="checkmark"></span>
               <span class="text-grey-dark ml-1 text">Repeat Forever</span>
             </label>
@@ -243,7 +288,8 @@
               <span class="text-grey-dark ml-1 text">Repeat Until</span>
             </label>
             <label class="radio-container radio">
-              <input type="radio" name="Repeat Count" id="Repeat Count" value="count" v-model="repeat" class="text-grey" tabindex="16">
+              <input type="radio" name="Repeat Count" id="Repeat Count" value="count" v-model="repeat" class="text-grey"
+                tabindex="16">
               <span class="checkmark"></span>
               <span class="text-grey-dark ml-1 text">Repeat Count</span>
             </label>
@@ -259,7 +305,8 @@
         </div>
 
         <div class="h-8 inline-flex border w-full rounded-sm relative" v-show="repeat === 'until'">
-          <input type="text" placeholder="Repeat Until" class="pl-2 w-full text-grey-dark" name="Repeat Until" ref="repeat_until" id="Repeat Until" tabindex="18" v-model="repeat_date_value">
+          <input type="text" placeholder="Repeat Until" class="pl-2 w-full text-grey-dark" name="Repeat Until" ref="repeat_until"
+            id="Repeat Until" tabindex="18" v-model="repeat_date_value">
         </div>
 
       </div>
@@ -267,7 +314,8 @@
       <div class="w-full">
         <hr class="my-8 border border-grey-lighter">
         <p class="text-center text-grey">
-          <span class="font-bold underline">Repeat Event For</span>:  <span class="text-grey-dark">{{rruleMessage | capitalize}}.</span> 
+          <span class="font-bold underline">Repeat Event For</span>: <span class="text-grey-dark">{{rruleMessage |
+            capitalize}}.</span>
         </p>
       </div>
 
@@ -305,7 +353,7 @@
         </button>
 
         <button class="inline-flex flex-auto items-center justify-center h-10 rounded-sm text-red-light underline ml-2"
-          @click="$emit('cancel')"  tabindex="20">
+          @click="$emit('cancel')" tabindex="20">
           <span class="font-bold">CANCEL</span>
         </button>
 
@@ -326,6 +374,9 @@
   import {
     COLORS
   } from '@/utils'
+  import {
+    debounce
+  } from 'debounce'
 
   import {
     tickIcon,
@@ -359,6 +410,17 @@
     },
     data() {
       return {
+        search_input: '',
+        selectedFields: [],
+        loadingForm: false,
+        groups: {
+          searching: false,
+          searched: [],
+          search: '',
+          selected: [],
+          loading: false,
+          pickedFromSelected: []
+        },
         repeat_date_value: '',
         repeat_value: '',
         repeat: '',
@@ -476,20 +538,54 @@
       this.frequency = this.frequencies[0]
     },
     computed: {
-      rruleMessage(){
-        if(!this.is_recurring) return ''
+      rruleMessage() {
+        if (!this.is_recurring) return ''
         const startDate = startDateComp && startDateComp.selectedDates[0]
         return this.createRRule(startDate).toText()
       }
     },
     methods: {
+      searchedGroupItemClicked(group) {
+        this.clearGroupSearch()
+        if (this.groups.selected.find(g => g.id === group.id)) return false
+
+        this.groups.selected.unshift(group)
+        this.groups.pickedFromSelected.push(group)
+      },
+      searchGroups: debounce(function (e) {
+        this.doGroupsSearch(e.target.value)
+      }, 200),
+      async doGroupsSearch(name) {
+        if (!name) {
+          this.groups.searching = false
+          return
+        }
+
+        const search = name.toLowerCase()
+        const path = `search_groups/${search}`
+        this.groups.searching = true
+
+        try {
+          const response = await this.$http.get(path, this.authToken)
+          this.groups.searched = response
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.groups.searchings = false
+        }
+      },
+      clearGroupSearch() {
+        this.groups.searched = []
+        this.groups.search = ''
+        this.groups.searching = false
+      },
       createRRule(startDate) {
         const options = {
           freq: this.frequency.value,
           interval: this.interval.value
         }
 
-        if(startDate) {
+        if (startDate) {
           options['dtstart'] = startDate
         }
 
@@ -516,23 +612,26 @@
           if (!state) return false
           this.creatingEvent = true
 
-          const startDate = startDateComp.selectedDates[0] 
+          const startDate = startDateComp.selectedDates[0]
           const duration = this.getDurationInSeconds(this.duration_format, this.duration)
           const rrule = this.createRRule(startDate, duration)
           let endDate = null
 
-          if(!this.is_recurring) {
-            endDate =  addSeconds(startDate, duration)
-          } else if(!this.repeat) {
-            endDate = null 
+          if (!this.is_recurring) {
+            endDate = addSeconds(startDate, duration)
+          } else if (!this.repeat) {
+            endDate = null
           } else {
-            const dates = rrule.all(function (date, i){return i < 1000})
-            endDate = dates[dates.length-1]
+            const dates = rrule.all(function (date, i) {
+              return i < 1000
+            })
+            endDate = dates[dates.length - 1]
           }
 
-          const path = 'event_schemas'
+
           try {
-            const response = await this.$http.post(path, {
+            let path = 'event_schemas'
+            const events = await this.$http.post(path, {
               title: this.title,
               description: this.description,
               calendar_id: this.calendar_id,
@@ -547,7 +646,21 @@
               endDate: this.endDate
             }, this.authToken)
 
-            this.$emit('done', response)
+            // save group with event if any
+
+            if (this.groups.pickedFromSelected.length) {
+              path = 'add_event_to_groups'
+
+              const response = await this.$http.post(path, {
+                event_schema_id: events[0].id,
+                group_ids: this.groups.pickedFromSelected.map(group => group.id)
+              }, this.authToken)
+
+              console.log('added groups to event', response)
+            }
+
+            this.$emit('done', events)
+
           } catch (err) {
             console.log(err)
           } finally {
@@ -653,8 +766,7 @@
 
             this.interval = this.intervals[0]
 
-            this.byDates = [
-              {
+            this.byDates = [{
                 text: 'Monday',
                 selected: false,
                 value: RRule.MO

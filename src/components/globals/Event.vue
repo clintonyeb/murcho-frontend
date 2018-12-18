@@ -11,17 +11,17 @@
       </div>
     </div>
 
-    <div class="w-full mt-2" v-if="event.description">
-      <p class="text-grey-dark">
+    <div class="w-full mt-2" v-if="event.description" style=" text-indent: 1rem;">
+      <p class="text-grey-dark text-xs">
         {{event.description}}
       </p>
     </div>
 
-    <div class="event-start-date w-full mt-2">
-      <p class="text-grey-darker text-xs">{{event.start_date | formatDate}}</p>
+    <div class="event-start-date w-full mt-2 ml-4">
+      <p class="text-grey-dark text-xs">{{event.start_date | formatDate | capitalize}}</p>
     </div>
 
-    <div v-if="event.location" class="w-full mt-2">
+    <div v-if="event.location" class="w-full mt-2 ml-4">
       <p class="text-grey-dark text-xs italic">{{event.location}}</p>
     </div>
 
@@ -30,10 +30,12 @@
 
 <script>
   import {
-    format
+    format,
+    formatRelative
   } from 'date-fns'
 
   const dateFormat = 'do MMMM yyyy; hh:mm a'
+  const today = new Date()
 
   export default {
     props: {
@@ -49,9 +51,7 @@
     filters: {
       formatDate(dateString) {
         const date = new Date(dateString)
-        return format(date, dateFormat, {
-          awareOfUnicodeTokens: true
-        })
+        return formatRelative(date, today)
       }
     }
   }

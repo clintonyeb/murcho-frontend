@@ -339,7 +339,7 @@
             const path = 'event_exceptions'
             const response = await this.$http.post(path, {
               event_schema_id: event.id,
-              exception_date: event.is_exception ? event.start_date : null,
+              exception_date: event.start_date,
               start_date: startDate,
               end_date: endDate,
               is_exception: event.is_exception,
