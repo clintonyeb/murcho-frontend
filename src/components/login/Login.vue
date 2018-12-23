@@ -167,7 +167,7 @@ export default {
     return {
       showPassword: false,
       loadingForm: false,
-      email: 'clint@murch.com',
+      email: 'admin@murcho.com',
       password: '12312312',
       displayMessage: '',
       displayMessageType: MESSAGE_TYPES.info,

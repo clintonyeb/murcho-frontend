@@ -50,9 +50,6 @@
 </template>
 
 <script>
-import Login from '@/components/login/Login'
-import Forgotten from '@/components/login/Forgotten'
-
 export default {
   name: 'LoginPage',
   data () {
@@ -95,8 +92,8 @@ export default {
     }
   },
   components: {
-    Login,
-    Forgotten
+    'login': () => import('@/components/login/Login'),
+    'forgotten': () => import('@/components/login/Forgotten')
   },
   methods: {
     nextCover () {

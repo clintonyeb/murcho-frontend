@@ -90,7 +90,6 @@
   } from 'date-fns'
 
   import Event from '@/components/events/Event'
-  // import CreateEvent from '@/components/events/CreateEvent'
 
   const daysInWeekFormat = 'E'
   const daysInMonthFormat = 'd'

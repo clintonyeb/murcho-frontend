@@ -31,7 +31,7 @@ export default new Router({
         {
           path: 'overview',
           name: 'overview',
-          component: () => import(/* webpackChunkName: "overview" */ './views/Overview.vue')
+          component: () => import(/* webpackChunkName: "overview" */ './views/Home.vue')
         },
         {
           path: 'people',

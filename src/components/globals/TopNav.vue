@@ -15,7 +15,7 @@
       <div class="text-sm lg:flex-grow nav-items">
         <router-link :to="{name: 'overview'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
           <span v-html="icons.overview" class="mr-1"></span>
-          <span>Dashboard</span>
+          <span>Home</span>
         </router-link>
         <router-link :to="{name: 'people'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
           <span v-html="icons.people" class="mr-1"></span>
