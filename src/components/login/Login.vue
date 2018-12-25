@@ -232,7 +232,7 @@ export default {
           sessionStorage.setItem('auth_token', response.auth_token)
           sessionStorage.setItem('email', email)
 
-          const route = this.reRoutePath || 'overview'
+          const route = this.reRoutePath || 'home'
           this.$router.replace({
             name: route
           })

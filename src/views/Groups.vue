@@ -277,7 +277,6 @@
     components: {
       'list-view': () => import('@/components/groups/ListView'),
       'people': () => import('@/components/groups/People'),
-      'events': () => import('@/components/groups/Events'),
       'create-group': () => import('@/components/groups/Create'),
       'confirm-delete': () => import('@/components/groups/ConfirmDelete'),
       'edit-group': () => import('@/components/groups/Edit'),

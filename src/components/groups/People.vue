@@ -70,16 +70,6 @@
 </template>
 
 <script>
-  import {
-    trashIcon,
-    editIcon,
-    groupIcon,
-    removeGroupIcon,
-    mailIcon,
-    smsIcon,
-    fileIcon
-  } from '@/utils/icons'
-
   export default {
     props: ['page', 'pagesEnded', 'people', 'group_id'],
     name: 'GridView',

@@ -54,10 +54,10 @@
   import {
     trashIcon,
     editIcon,
-    mailIcon,
+    mailIconNew,
+    userPlusIcon,
     smsIcon,
-    fileIcon,
-    userPlusIcon
+    fileIcon
   } from '@/utils/icons'
 
   export default {
@@ -79,7 +79,7 @@
             id: 3,
             text: 'Email Group',
             value: 'email',
-            icon: mailIcon
+            icon: mailIconNew
           },
           {
             id: 4,

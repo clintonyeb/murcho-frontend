@@ -26,12 +26,12 @@ export default new Router({
       children: [
         {
           path: '',
-          redirect: { name: 'overview' }
+          redirect: { name: 'home' }
         },
         {
-          path: 'overview',
-          name: 'overview',
-          component: () => import(/* webpackChunkName: "overview" */ './views/Home.vue')
+          path: 'home',
+          name: 'home',
+          component: () => import(/* webpackChunkName: "home" */ './views/Home.vue')
         },
         {
           path: 'people',

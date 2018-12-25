@@ -67,7 +67,7 @@ import {
   editIcon,
   groupIcon,
   removeGroupIcon,
-  mailIcon,
+  mailIconNew,
   smsIcon,
   fileIcon
 } from '@/utils/icons'
@@ -99,7 +99,7 @@ export default {
         id: 3,
         text: 'Send Email',
         value: 'email',
-        icon: mailIcon
+        icon: mailIconNew
       },
       {
         id: 5,

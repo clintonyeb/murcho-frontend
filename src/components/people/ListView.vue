@@ -55,7 +55,7 @@
           <td class="px-1 py-2">{{person.last_name}}</td>
           <td class="px-1 py-2">{{person.email || '-'}}</td>
           <td class="px-1 py-2">{{person.phone_number || '-'}}</td>
-          <td class="px-1 py-2">{{person.membership_status}}</td>
+          <td class="px-1 py-2">{{person.membership_status | capitalize}}</td>
           <td class="px-1 py-2 w-64">
             <div class="inline-flex ">
               <div class="truncate">
@@ -147,7 +147,7 @@ import {
   editIcon,
   groupIcon,
   removeGroupIcon,
-  mailIcon,
+  mailIconNew,
   smsIcon,
   fileIcon,
   viewIcon
@@ -179,7 +179,7 @@ export default {
         id: 2,
         text: 'Send Email',
         value: 'email',
-        icon: mailIcon
+        icon: mailIconNew
       },
       {
         id: 3,

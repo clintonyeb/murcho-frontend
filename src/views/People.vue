@@ -310,7 +310,7 @@ import {
   editIcon,
   groupIcon,
   removeGroupIcon,
-  mailIcon,
+  mailIconNew,
   smsIcon,
   fileIcon,
   importIcon
@@ -427,7 +427,7 @@ export default {
         id: 1,
         text: 'Email People',
         value: 'email',
-        icon: mailIcon
+        icon: mailIconNew
       },
       {
         id: 2,

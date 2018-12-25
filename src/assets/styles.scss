@@ -214,7 +214,8 @@ input[type="file"].is-custom {
   }
 }
 
-#people-list-view, #group-list-view {
+#people-list-view,
+#group-list-view {
   .checkbox {
     .checkmark {
       top: 0;
@@ -287,9 +288,22 @@ input[type="file"].is-custom {
 
 }
 
-.cursor-text {cursor: text;}
+.cursor-text {
+  cursor: text;
+}
 
 .shadow-inner-md {
-  box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.06)
-  inset 0 -2px -4px 0 rgba(0,0,0,0.06);
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) inset 0 -2px -4px 0 rgba(0, 0, 0, 0.06);
+}
+
+nav {
+  .is-tab {
+    color: #B8C2CC;
+
+    &.active {
+      color: #8795a1;
+      font-weight: 700;
+      border-bottom: 2px solid #6CB2EB;
+    }
+  }
 }

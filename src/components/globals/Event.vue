@@ -17,24 +17,23 @@
       </p>
     </div>
 
-    <div class="event-start-date w-full mt-2 ml-4">
-      <p class="text-grey-dark text-xs">{{event.start_date | formatDate | capitalize}}</p>
-    </div>
-
     <div v-if="event.location" class="w-full mt-2 ml-4">
       <p class="text-grey-dark text-xs italic">{{event.location}}</p>
     </div>
+
+      <div class="event-start-date w-full mt-2 ml-4">
+      <p class="text-grey text-xs">{{event.start_date | formatDate | capitalize}}</p>
+    </div>
+
 
   </div>
 </template>
 
 <script>
   import {
-    format,
     formatRelative
   } from 'date-fns'
 
-  const dateFormat = 'do MMMM yyyy; hh:mm a'
   const today = new Date()
 
   export default {

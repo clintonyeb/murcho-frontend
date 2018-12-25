@@ -231,8 +231,7 @@
       getDaysMatchingEvent(event) {
         return this.events.filter(e => e.id === event.id).map(e => e.start_date)
       },
-      refresh(isNew = true) {
-        isNew && this.getCalendar()
+      refresh() {
         this.getEventsForSelectedMonth(this.selectedMonth)
       },
       update(event){
@@ -263,7 +262,7 @@
         this.events = this.events.filter(ev => ev.id !== event.id)
       },
       updateEvents(events) {
-        this.refresh(false)
+        this.refresh()
       },
       eventCreated(event) {
         this.events.unshift(event)

@@ -63,11 +63,6 @@
 import {
   trashIcon,
   editIcon,
-  groupIcon,
-  removeGroupIcon,
-  mailIcon,
-  smsIcon,
-  fileIcon
 } from '@/utils/icons'
 
 export default {
