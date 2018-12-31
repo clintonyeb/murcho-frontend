@@ -30,11 +30,13 @@
     </div>
     <top-nav />
     <router-view />
+    <my-footer />
   </div>
 </template>
 
 <script>
 import TopNav from '@/components/globals/TopNav'
+import Footer from '@/components/globals/Footer'
 import {
   MESSAGE_TYPES
 } from '@/utils'
@@ -66,7 +68,8 @@ export default {
     this.initializeApp(err => {})
   },
   components: {
-    TopNav
+    TopNav,
+    MyFooter: Footer
   }
 }
 

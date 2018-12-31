@@ -71,7 +71,7 @@
 
       </div>
     </div>
-    <div class="w-1/5 overflow-y-hidden">
+    <div class="w-1/5 overflow-hidden">
       <div class="mx-auto py-4 pr-2 w-full">
         <div class="inline-flex w-full items-center justify-between">
           <h3 class="text-blue-light font-semibold text-base h-10 flex items-center">Upcoming Events</h3>

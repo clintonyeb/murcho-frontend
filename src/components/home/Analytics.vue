@@ -46,6 +46,21 @@
         </div>
       </div>
 
+       <div class="w-full mt-4">
+        <div class="h-full bg-white shadow p-4 m-1 rounded">
+
+          <div class="text-grey-light w-full inline-flex justify-between items-center mb-4">
+            <h4 class="text-grey">Actions Density</h4>
+            <router-link :to="{name: 'people'}" class="no-underline text-grey-light text-xs hover:text-grey-dark hover:bg-grey-lighter border rounded-sm p-1 h-5 flex items-center">
+              See People
+            </router-link>
+          </div>
+
+          <div ref="actions-chart" id="actions-chart" class="ct-chart ct-double-octave"></div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -69,6 +84,7 @@
 
   let peopleChart = null
   let eventsDensityChart = null
+  let actionsChart = null
 
   function getLabelName(label, interval) {
     let formatToken = null
@@ -118,12 +134,18 @@
       }
     },
     mounted() {
-      this.setUpPeopleChart()
+      this.setUpCharts()
       this.readyCallbacks([this.refresh])
     },
     methods: {
+      setUpCharts() {
+        this.setUpPeopleChart()
+        this.setUpEventsDensityChart()
+      },
       refresh() {
         this.getPeopleStats()
+        this.getEventDensityStats()
+        this.getActionsStats()
       },
       updateChartForSeries(series, labels, interval) {
         const data = {}
@@ -140,16 +162,63 @@
 
         peopleChart.update(data, options, true)
       },
+      updateEventDensityChart(series, labels, interval) {
+        const data = {}
+        data['series'] = series
+        data['labels'] = labels
+
+        const options = {
+          axisX: {
+            labelInterpolationFnc: function (value) {
+              return getLabelName(value, interval)
+            }
+          }
+        }
+
+        eventsDensityChart.update(data, options, true)
+      },
+      updateActionsChart(series, labels, interval) {
+        const data = {}
+        data['series'] = series
+        data['labels'] = labels
+
+        const options = {
+          axisX: {
+            labelInterpolationFnc: function (value) {
+              return getLabelName(value, interval)
+            }
+          }
+        }
+
+        actionsChart.update(data, options, true)
+      },
       async getPeopleStats() {
         try {
           const path = 'get_people_stats'
           const response = await this.$http.get(path, this.authToken)
           this.peopleLoaded = true
-          // this.people = response.series
           this.updateChartForSeries(response.series, response.labels, response.interval)
         } catch (error) {} finally {}
       },
-      setUpEventsDensityChart(){
+      async getEventDensityStats() {
+        try {
+          const path = 'get_events_density_stats'
+          const response = await this.$http.get(path, this.authToken)
+          this.updateEventDensityChart(response.series, response.labels, response.interval)
+        } catch (error) {
+          console.log(error)
+        } finally {}
+      },
+      async getActionsStats() {
+        try {
+          const path = 'get_actions_stats'
+          const response = await this.$http.get(path, this.authToken)
+          this.updateActionsChart(response.series, response.labels, response.interval)
+        } catch (error) {
+          console.log(error)
+        } finally {}
+      },
+      setUpEventsDensityChart() {
         const vm = this
 
         const data = {
@@ -160,23 +229,14 @@
         }
 
         const options = {
-          axisX: {
-            labelOffset: {
-              x: -10,
-              y: 10
-            }
-          },
           axisY: {
-            labelOffset: {
-              x: -10,
-              y: 10
-            },
             onlyInteger: true
           },
           fullWidth: true
         }
 
-        eventsDensityChart = new Chartist.Line(this.$refs['events-chart'], data, options)
+        eventsDensityChart = new Chartist.Bar(this.$refs['events-chart'], data, options)
+        actionsChart = new Chartist.Bar(this.$refs['actions-chart'], data, options)
       },
       setUpPeopleChart() {
         const vm = this
