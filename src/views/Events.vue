@@ -194,338 +194,338 @@
 </template>
 
 <script>
-  import {
-    leftIcon,
-    rightIcon,
-    editIcon
-  } from '@/utils/icons'
-  import {
-    MESSAGE_TYPES
-  } from '@/utils'
-  import {
-    format,
-    addMonths,
-    subMonths,
-    subMinutes,
-    differenceInSeconds,
-    addSeconds
-  } from 'date-fns'
+import {
+  leftIcon,
+  rightIcon,
+  editIcon
+} from '@/utils/icons'
+import {
+  MESSAGE_TYPES
+} from '@/utils'
+import {
+  format,
+  addMonths,
+  subMonths,
+  subMinutes,
+  differenceInSeconds,
+  addSeconds
+} from 'date-fns'
 
-  const dateFormat = 'MMMM YYYY'
+const dateFormat = 'MMMM YYYY'
 
-  export default {
-    name: 'People',
-    data() {
-      return {
-        upcomingEvents: [],
-        loadingUpcomingEvents: false,
-        upcomingLoaded: false,
-        icons: {
-          edit: editIcon
-        },
-        activeCalendar: null,
-        activeAction: null,
-        modal: {
-          state: false,
-          action: null,
-          cancel: null,
-          data: null,
-          loading: false,
-        },
-        drawer: {
-          state: false,
-          action: null,
-          cancel: null,
-          data: null,
-          loading: false,
-          results: null
-        },
-        info: {
-          message: '',
-          type: MESSAGE_TYPES.info,
-          state: false,
-          data: null
-        },
-        currentMonth: new Date(),
-        selectedMonth: new Date(),
-        icons: {
-          back: leftIcon,
-          forward: rightIcon
-        },
-        viewsActive: false,
-        viewMode: null,
-        viewModes: [{
-            id: 1,
-            text: 'Monthly',
-            value: 'monthly'
-          },
-          {
-            id: 2,
-            text: 'Weekly',
-            value: 'weekly'
-          },
-          {
-            id: 3,
-            text: 'Daily',
-            value: 'daily'
-          }
-        ],
-        startDate: null,
-        endDate: null
+export default {
+  name: 'People',
+  data () {
+    return {
+      upcomingEvents: [],
+      loadingUpcomingEvents: false,
+      upcomingLoaded: false,
+      icons: {
+        edit: editIcon
+      },
+      activeCalendar: null,
+      activeAction: null,
+      modal: {
+        state: false,
+        action: null,
+        cancel: null,
+        data: null,
+        loading: false
+      },
+      drawer: {
+        state: false,
+        action: null,
+        cancel: null,
+        data: null,
+        loading: false,
+        results: null
+      },
+      info: {
+        message: '',
+        type: MESSAGE_TYPES.info,
+        state: false,
+        data: null
+      },
+      currentMonth: new Date(),
+      selectedMonth: new Date(),
+      icons: {
+        back: leftIcon,
+        forward: rightIcon
+      },
+      viewsActive: false,
+      viewMode: null,
+      viewModes: [{
+        id: 1,
+        text: 'Monthly',
+        value: 'monthly'
+      },
+      {
+        id: 2,
+        text: 'Weekly',
+        value: 'weekly'
+      },
+      {
+        id: 3,
+        text: 'Daily',
+        value: 'daily'
+      }
+      ],
+      startDate: null,
+      endDate: null
+    }
+  },
+  components: {
+    'calendar': () => import('@/components/events/Calendar'),
+    'create': () => import('@/components/events/Create'),
+    'edit-event': () => import('@/components/events/Edit'),
+    'confirm-delete': () => import('@/components/events/ConfirmDelete')
+  },
+  created () {
+    this.setPageTitle('Events')
+    this.viewMode = this.viewModes[0]
+    this.readyCallbacks([this.loadUpcomingEvents])
+  },
+  computed: {
+    displayedMonth () {
+      return format(this.selectedMonth, dateFormat, {
+        awareOfUnicodeTokens: true
+      })
+    }
+  },
+  methods: {
+    async loadUpcomingEvents () {
+      if (this.loadingUpcomingEvents) return
+
+      this.loadingUpcomingEvents = true
+      this.upcomingLoaded = false
+
+      const limit = 10
+      const path = `upcoming_events?limit=${limit}`
+      this.loadingUpcomingEvents = true
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.upcomingEvents = response
+        this.upcomingLoaded = true
+      } catch (err) {
+        console.log(err)
+      } finally {
+        this.loadingUpcomingEvents = false
       }
     },
-    components: {
-      'calendar': () => import('@/components/events/Calendar'),
-      'create': () => import('@/components/events/Create'),
-      'edit-event': () => import('@/components/events/Edit'),
-      'confirm-delete': () => import('@/components/events/ConfirmDelete'),
-    },
-    created() {
-      this.setPageTitle('Events')
-      this.viewMode = this.viewModes[0]
-      this.readyCallbacks([this.loadUpcomingEvents])
-    },
-    computed: {
-      displayedMonth() {
-        return format(this.selectedMonth, dateFormat, {
-          awareOfUnicodeTokens: true
-        })
+    async rescheduleEvent (payload) {
+      const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
+      this.startDate = calendarSettings.startDate
+      this.endDate = calendarSettings.endDate
+
+      const event = payload.event
+      const startDate = payload.startDate
+
+      let endDate = null
+
+      if (!event.is_recurring) {
+        endDate = addSeconds(startDate, event.duration)
+      } else {
+        const diff = differenceInSeconds(event.start_date, startDate)
+        endDate = addSeconds(event.end_date, diff)
       }
-    },
-    methods: {
-      async loadUpcomingEvents() {
-        if(this.loadingUpcomingEvents) return
 
-        this.loadingUpcomingEvents = true
-        this.upcomingLoaded = false
-
-        const limit = 10
-        const path = `upcoming_events?limit=${limit}`
-        this.loadingUpcomingEvents = true
+      if (event.is_recurring) {
         try {
-          const response = await this.$http.get(path, this.authToken)
-          this.upcomingEvents = response
-          this.upcomingLoaded = true
+          const path = 'event_exceptions'
+          const response = await this.$http.post(path, {
+            event_schema_id: event.id,
+            exception_date: event.start_date,
+            start_date: startDate,
+            end_date: endDate,
+            is_exception: event.is_exception,
+            status: 'rescheduled'
+          }, this.authToken)
+
+          event.start_date = response.start_date
+          event.end_date = response.end_date
+          event.is_exception = true
+
+          this.$refs['calendar'].updateRecurring(event)
         } catch (err) {
           console.log(err)
         } finally {
-          this.loadingUpcomingEvents = false
+          this.creatingEvent = false
         }
-      },
-      async rescheduleEvent(payload) {
-        const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
-        this.startDate = calendarSettings.startDate
-        this.endDate = calendarSettings.endDate
-
-        const event = payload.event
-        const startDate = payload.startDate
-
-        let endDate = null
-
-        if (!event.is_recurring) {
-          endDate = addSeconds(startDate, event.duration)
-        } else {
-          const diff = differenceInSeconds(event.start_date, startDate)
-          endDate = addSeconds(event.end_date, diff)
-        }
-
-        if (event.is_recurring) {
-          try {
-            const path = 'event_exceptions'
-            const response = await this.$http.post(path, {
-              event_schema_id: event.id,
-              exception_date: event.start_date,
-              start_date: startDate,
-              end_date: endDate,
-              is_exception: event.is_exception,
-              status: 'rescheduled'
-            }, this.authToken)
-
-            event.start_date = response.start_date
-            event.end_date = response.end_date
-            event.is_exception = true
-
-            this.$refs['calendar'].updateRecurring(event)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            this.creatingEvent = false
-          }
-        } else {
-          try {
-            const path = `event_schemas/${event.id}`
-            await this.$http.put(path, {
-              start_date: startDate,
-              end_date: endDate,
-            }, this.authToken)
-            event.start_date = startDate
-            event.end_date = endDate
-
-            this.$refs['calendar'].update(event)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            // this.creatingEvent = false
-          }
-        }
-      },
-      showEditEvent(data) {
-        const event = data.event
-        const day = data.day
-
-        const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
-        this.startDate = calendarSettings.startDate
-        this.endDate = calendarSettings.endDate
-
-        let daysWithEvent = []
-        if (event.is_recurring) {
-          daysWithEvent = this.$refs['calendar'].getDaysMatchingEvent(event)
-        }
-
-        this.drawer.data = {
-          event: event,
-          day,
-          disabledDates: daysWithEvent
-        }
-        this.activeAction = 'edit-event'
-        this.drawer.state = true
-      },
-      async doEventDelete(payload) {
-        const event = payload.event
-        const type = payload.type
-
-        if (!event.is_recurring) {
+      } else {
+        try {
           const path = `event_schemas/${event.id}`
+          await this.$http.put(path, {
+            start_date: startDate,
+            end_date: endDate
+          }, this.authToken)
+          event.start_date = startDate
+          event.end_date = endDate
 
-          try {
-            const response = await this.$http.delete(path, this.authToken)
-            this.closeModal()
-            this.$refs['calendar'].removeEvent(event)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            this.creatingEvent = false
-          }
-        } else if (type === 'all') { // remove this event from the schema
-          const path = `event_schemas/${event.id}`
+          this.$refs['calendar'].update(event)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          // this.creatingEvent = false
+        }
+      }
+    },
+    showEditEvent (data) {
+      const event = data.event
+      const day = data.day
 
-          const end_date = subMinutes(new Date(), 1)
-          try {
-            const response = await this.$http.put(path, {
-              end_date: end_date // DEC: Whether from today or from event onwards
-            }, this.authToken)
-            this.closeModal()
-            this.$refs['calendar'].removeEventsAfterDate(event, end_date)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            this.creatingEvent = false
-          }
-        } else { // cancel this event only
+      const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
+      this.startDate = calendarSettings.startDate
+      this.endDate = calendarSettings.endDate
+
+      let daysWithEvent = []
+      if (event.is_recurring) {
+        daysWithEvent = this.$refs['calendar'].getDaysMatchingEvent(event)
+      }
+
+      this.drawer.data = {
+        event: event,
+        day,
+        disabledDates: daysWithEvent
+      }
+      this.activeAction = 'edit-event'
+      this.drawer.state = true
+    },
+    async doEventDelete (payload) {
+      const event = payload.event
+      const type = payload.type
+
+      if (!event.is_recurring) {
+        const path = `event_schemas/${event.id}`
+
+        try {
+          const response = await this.$http.delete(path, this.authToken)
+          this.closeModal()
+          this.$refs['calendar'].removeEvent(event)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.creatingEvent = false
+        }
+      } else if (type === 'all') { // remove this event from the schema
+        const path = `event_schemas/${event.id}`
+
+        const end_date = subMinutes(new Date(), 1)
+        try {
+          const response = await this.$http.put(path, {
+            end_date: end_date // DEC: Whether from today or from event onwards
+          }, this.authToken)
+          this.closeModal()
+          this.$refs['calendar'].removeEventsAfterDate(event, end_date)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.creatingEvent = false
+        }
+      } else { // cancel this event only
+        const path = 'event_exceptions'
+
+        try {
+          const response = await this.$http.post(path, {
+            event_schema_id: event.id,
+            exception_date: event.start_date,
+            start_date: event.start_date,
+            end_date: event.end_date,
+            status: 'cancelled'
+          }, this.authToken)
+
+          this.closeModal()
+          this.$refs['calendar'].removeEventWithStartDate(event)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.creatingEvent = false
+        }
+      }
+    },
+    async editEvent (payload) {
+      const event = payload.event
+      const data = payload.data
+
+      if (event.is_recurring) {
+        try {
           const path = 'event_exceptions'
+          const response = await this.$http.post(path, {
+            event_schema_id: event.id,
+            exception_date: event.start_date,
+            start_date: data.start_date,
+            end_date: data.end_date,
+            status: 'rescheduled',
+            is_exception: event.is_exception
+          }, this.authToken)
 
-          try {
-            const response = await this.$http.post(path, {
-              event_schema_id: event.id,
-              exception_date: event.start_date,
-              start_date: event.start_date,
-              end_date: event.end_date,
-              status: 'cancelled'
-            }, this.authToken)
-
-            this.closeModal()
-            this.$refs['calendar'].removeEventWithStartDate(event)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            this.creatingEvent = false
-          }
+          this.hideActionDrawer()
+          event.start_date = data.start_date
+          event.end_date = data.end_date
+          event.is_exception = true
+          this.$refs['calendar'].updateRecurring(event)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.creatingEvent = false
         }
-      },
-      async editEvent(payload) {
-        const event = payload.event
-        const data = payload.data
+      } else {
+        try {
+          const path = `event_schemas/${event.id}`
+          await this.$http.put(path, data, this.authToken)
+          this.hideActionDrawer()
 
-        if (event.is_recurring) {
-          try {
-            const path = 'event_exceptions'
-            const response = await this.$http.post(path, {
-              event_schema_id: event.id,
-              exception_date: event.start_date,
-              start_date: data.start_date,
-              end_date: data.end_date,
-              status: 'rescheduled',
-              is_exception: event.is_exception,
-            }, this.authToken)
-
-            this.hideActionDrawer()
-            event.start_date = data.start_date
-            event.end_date = data.end_date
-            event.is_exception = true
-            this.$refs['calendar'].updateRecurring(event)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            this.creatingEvent = false
-          }
-        } else {
-          try {
-            const path = `event_schemas/${event.id}`
-            await this.$http.put(path, data, this.authToken)
-            this.hideActionDrawer()
-
-            event.start_date = data.start_date
-            event.end_date = data.end_date
-            this.$refs['calendar'].update(event)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            // this.creatingEvent = false
-          }
+          event.start_date = data.start_date
+          event.end_date = data.end_date
+          this.$refs['calendar'].update(event)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          // this.creatingEvent = false
         }
-      },
-      deleteEvent(event) {
-        this.hideActionDrawer()
-        this.activeAction = 'delete'
-        this.modal.data = event
-        this.modal.state = true
-      },
-      eventsUpdated(events) {
-        this.$refs['calendar'].updateEvents(events)
-        this.hideActionDrawer()
-      },
-      eventsCreated(events) {
-        this.$refs['calendar'].addEvents(events)
-        this.hideActionDrawer()
-      },
-      createEvent() {
-        this.activeAction = 'create'
-        this.drawer.state = true
-        const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
-        this.startDate = calendarSettings.startDate
-        this.endDate = calendarSettings.endDate
-      },
-      closeModal() {
-        this.modal.state = false
-        this.activeAction = null
-      },
-      hideActionDrawer() {
-        this.drawer.data = null
-        this.activeAction = null
-        this.drawer.state = false
-      },
-      previousMonth() {
-        this.selectedMonth = subMonths(this.selectedMonth, 1)
-      },
-      nextMonth() {
-        this.selectedMonth = addMonths(this.selectedMonth, 1)
-      },
-      actionHandler(value) {
-        this.activeAction = value
-        this.takingAction = true
-      },
-      setUpPeopleUI() {}
-    }
+      }
+    },
+    deleteEvent (event) {
+      this.hideActionDrawer()
+      this.activeAction = 'delete'
+      this.modal.data = event
+      this.modal.state = true
+    },
+    eventsUpdated (events) {
+      this.$refs['calendar'].updateEvents(events)
+      this.hideActionDrawer()
+    },
+    eventsCreated (events) {
+      this.$refs['calendar'].addEvents(events)
+      this.hideActionDrawer()
+    },
+    createEvent () {
+      this.activeAction = 'create'
+      this.drawer.state = true
+      const calendarSettings = this.$refs['calendar'].getDateSettings(this.selectedMonth)
+      this.startDate = calendarSettings.startDate
+      this.endDate = calendarSettings.endDate
+    },
+    closeModal () {
+      this.modal.state = false
+      this.activeAction = null
+    },
+    hideActionDrawer () {
+      this.drawer.data = null
+      this.activeAction = null
+      this.drawer.state = false
+    },
+    previousMonth () {
+      this.selectedMonth = subMonths(this.selectedMonth, 1)
+    },
+    nextMonth () {
+      this.selectedMonth = addMonths(this.selectedMonth, 1)
+    },
+    actionHandler (value) {
+      this.activeAction = value
+      this.takingAction = true
+    },
+    setUpPeopleUI () {}
   }
+}
 
 </script>

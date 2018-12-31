@@ -148,96 +148,96 @@
 </template>
 
 <script>
-  import {
-    formatRelative
-  } from 'date-fns'
+import {
+  formatRelative
+} from 'date-fns'
 
-  const today = new Date()
+import {
+  eventIcon,
+  groupIcon,
+  peopleIcon,
+  servicesIcon,
+  homeIcon
+} from '@/utils/icons'
 
-  import {
-    eventIcon,
-    groupIcon,
-    peopleIcon,
-    servicesIcon,
-    homeIcon,
-  } from '@/utils/icons'
+const today = new Date()
 
-  export default {
-    name: 'Actions',
-    data() {
-      return {
-        people: [],
-        groups: [],
-        events: [],
-        icons: {
-          event: eventIcon,
-          group: groupIcon,
-          people: peopleIcon,
-          service: servicesIcon,
-          home: homeIcon
-        }
+export default {
+  name: 'Actions',
+  data () {
+    return {
+      people: [],
+      groups: [],
+      events: [],
+      icons: {
+        event: eventIcon,
+        group: groupIcon,
+        people: peopleIcon,
+        service: servicesIcon,
+        home: homeIcon
       }
+    }
+  },
+  created () {
+    // this.readyCallbacks([this.refresh])
+  },
+  methods: {
+    refresh () {
+      this.getPeopleUpdates()
+      this.getGroupsUpdates()
+      this.getEventsUpdates()
     },
-    created() {
-      // this.readyCallbacks([this.refresh])
+    async getPeopleUpdates () {
+      try {
+        const path = 'get_people_updates'
+        const response = await this.$http.get(path, this.authToken)
+        this.people = response
+      } catch (error) {} finally {}
     },
-    methods: {
-      refresh() {
-        this.getPeopleUpdates()
-        this.getGroupsUpdates()
-        this.getEventsUpdates()
-      },
-      async getPeopleUpdates() {
-        try {
-          const path = 'get_people_updates'
-          const response = await this.$http.get(path, this.authToken)
-          this.people = response
-        } catch (error) {} finally {}
-      },
-      async getGroupsUpdates() {
-        try {
-          const path = 'get_groups_updates'
-          const response = await this.$http.get(path, this.authToken)
-          this.groups = response
-        } catch (error) {} finally {}
-      },
-      async getEventsUpdates() {
-        try {
-          const path = 'get_events_updates'
-          const response = await this.$http.get(path, this.authToken)
-          this.events = response
-        } catch (error) {} finally {}
-      },
-      formatDuration(seconds) {
-        if (!seconds) return ''
-
-        seconds = Number(seconds)
-        let time
-
-        time = Math.floor(seconds / (60 * 60 * 24 * 7 * 4))
-        if (time >= 1) return `${time} ${this.pluralize('month', time)}`
-
-        time = Math.floor(seconds / (60 * 60 * 24 * 7))
-        if (time >= 1) return `${time} ${this.pluralize('week', time)}`
-
-        time = Math.floor(seconds / (60 * 60 * 24))
-        if (time >= 1) return `${time} ${this.pluralize('day', time)}`
-
-        time = Math.floor(seconds / (60 * 60))
-        if (time >= 1) return `${time} ${this.pluralize('hour', time)}`
-
-        time = Math.floor(seconds / (60))
-        if (time >= 1) return `${time} ${this.pluralize('minute', time)}`
-
-        return `${time} ${this.pluralize('second', time)}`
-      }
+    async getGroupsUpdates () {
+      try {
+        const path = 'get_groups_updates'
+        const response = await this.$http.get(path, this.authToken)
+        this.groups = response
+      } catch (error) {} finally {}
     },
-    filters: {
-      formatDate(dateString) {
-        const date = new Date(dateString)
-        return formatRelative(date, today)
-      },
+    async getEventsUpdates () {
+      try {
+        const path = 'get_events_updates'
+        const response = await this.$http.get(path, this.authToken)
+        this.events = response
+      } catch (error) {} finally {}
+    },
+    formatDuration (seconds) {
+      if (!seconds) return ''
+
+      seconds = Number(seconds)
+      let time
+
+      time = Math.floor(seconds / (60 * 60 * 24 * 7 * 4))
+      if (time >= 1) return `${time} ${this.pluralize('month', time)}`
+
+      time = Math.floor(seconds / (60 * 60 * 24 * 7))
+      if (time >= 1) return `${time} ${this.pluralize('week', time)}`
+
+      time = Math.floor(seconds / (60 * 60 * 24))
+      if (time >= 1) return `${time} ${this.pluralize('day', time)}`
+
+      time = Math.floor(seconds / (60 * 60))
+      if (time >= 1) return `${time} ${this.pluralize('hour', time)}`
+
+      time = Math.floor(seconds / (60))
+      if (time >= 1) return `${time} ${this.pluralize('minute', time)}`
+
+      return `${time} ${this.pluralize('second', time)}`
+    }
+  },
+  filters: {
+    formatDate (dateString) {
+      const date = new Date(dateString)
+      return formatRelative(date, today)
     }
   }
+}
 
 </script>

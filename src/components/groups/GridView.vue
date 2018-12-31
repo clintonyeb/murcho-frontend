@@ -62,7 +62,7 @@
 <script>
 import {
   trashIcon,
-  editIcon,
+  editIcon
 } from '@/utils/icons'
 
 export default {

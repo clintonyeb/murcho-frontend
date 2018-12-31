@@ -309,7 +309,6 @@ import {
   trashIcon,
   editIcon,
   groupIcon,
-  removeGroupIcon,
   mailIconNew,
   smsIcon,
   fileIcon,
@@ -668,7 +667,6 @@ export default {
           break
         default:
           throw new Error('Invalid action provided.')
-          break
       }
     },
     async deletePerson (personId, index) {

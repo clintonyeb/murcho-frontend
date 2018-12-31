@@ -25,34 +25,33 @@
       <p class="text-grey text-xs">{{event.start_date | formatDate | capitalize}}</p>
     </div>
 
-
   </div>
 </template>
 
 <script>
-  import {
-    formatRelative
-  } from 'date-fns'
+import {
+  formatRelative
+} from 'date-fns'
 
-  const today = new Date()
+const today = new Date()
 
-  export default {
-    props: {
-      event: {
-        required: true
-      },
-      loading: {
-        required: false,
-        default: false
-      },
+export default {
+  props: {
+    event: {
+      required: true
     },
-    name: 'Event',
-    filters: {
-      formatDate(dateString) {
-        const date = new Date(dateString)
-        return formatRelative(date, today)
-      }
+    loading: {
+      required: false,
+      default: false
+    }
+  },
+  name: 'Event',
+  filters: {
+    formatDate (dateString) {
+      const date = new Date(dateString)
+      return formatRelative(date, today)
     }
   }
+}
 
 </script>

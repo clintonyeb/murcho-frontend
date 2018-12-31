@@ -70,17 +70,17 @@
 </template>
 
 <script>
-  export default {
-    props: ['page', 'pagesEnded', 'people', 'group_id'],
-    name: 'GridView',
-    data() {
-      return {
-        selectedPeople: [],
-        activePerson: null
-      }
-    },
-    methods: {
-      async removePersonFromGroup (personId, personIndex) {
+export default {
+  props: ['page', 'pagesEnded', 'people', 'group_id'],
+  name: 'GridView',
+  data () {
+    return {
+      selectedPeople: [],
+      activePerson: null
+    }
+  },
+  methods: {
+    async removePersonFromGroup (personId, personIndex) {
       const path = 'remove_person_groups'
 
       try {
@@ -88,7 +88,7 @@
           person_id: personId,
           group_id: this.group_id
         }, this.authToken)
-        
+
         this.$emit('action', {
           action: 'removed-group',
           person: null,
@@ -100,23 +100,23 @@
         this.loadingForm = false
       }
     },
-      selectAll() {
-        const el = this.$refs['select-all']
-        const state = el.checked
+    selectAll () {
+      const el = this.$refs['select-all']
+      const state = el.checked
 
-        this.selectedPeople = []
-        if (state) this.selectedPeople = this.people.map(person => person.id)
-      },
-      personRowClicked(personId) {
-        const index = this.selectedPeople.indexOf(personId)
-        const checked = index !== -1
-        if (checked) {
-          this.selectedPeople.splice(index, 1)
-        } else {
-          this.selectedPeople.push(personId)
-        }
+      this.selectedPeople = []
+      if (state) this.selectedPeople = this.people.map(person => person.id)
+    },
+    personRowClicked (personId) {
+      const index = this.selectedPeople.indexOf(personId)
+      const checked = index !== -1
+      if (checked) {
+        this.selectedPeople.splice(index, 1)
+      } else {
+        this.selectedPeople.push(personId)
       }
     }
   }
+}
 
 </script>

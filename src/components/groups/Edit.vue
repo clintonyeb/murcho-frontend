@@ -70,67 +70,67 @@
 </template>
 
 <script>
-  export default {
-    props: ['group', 'action'],
-    name: 'EditGroup',
-    data() {
-      return {
-        loadingForm: false,
-        name: '',
-        description: ''
-      }
-    },
-    created() {
-      this.setUpUI()
-    },
-    methods: {
-      getChangedFields(object, original) {
-        const fields = {}
+export default {
+  props: ['group', 'action'],
+  name: 'EditGroup',
+  data () {
+    return {
+      loadingForm: false,
+      name: '',
+      description: ''
+    }
+  },
+  created () {
+    this.setUpUI()
+  },
+  methods: {
+    getChangedFields (object, original) {
+      const fields = {}
 
-        for (const key in object) {
-          if (object.hasOwnProperty(key)) {
-            const ori = original[key]
-            const ob = object[key]
+      for (const key in object) {
+        if (object.hasOwnProperty(key)) {
+          const ori = original[key]
+          const ob = object[key]
 
-            if (ori !== ob) {
-              fields[key] = object[key]
-            }
+          if (ori !== ob) {
+            fields[key] = object[key]
           }
         }
+      }
 
-        return fields
-      },
-      editGroup() {
-        if (this.loadingForm) return false
-        this.validateForm(async state => {
-          if (!state) return false
-          const path = `groups/${this.group.id}`
-
-          const fields = {
-            name: this.name,
-            description: this.description || null
-          }
-
-          const data = this.getChangedFields(fields, this.group)
-          if(!Object.keys(data).length) return false
-
-          this.loadingForm = true
-
-          try {
-            const response = await this.$http.put(path, data, this.authToken)
-            this.action(response)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            this.loadingForm = false
-          }
-        })
-      },
-      setUpUI() {
-        this.name = this.group.name
-        this.description = this.group.description
-      },
+      return fields
     },
+    editGroup () {
+      if (this.loadingForm) return false
+      this.validateForm(async state => {
+        if (!state) return false
+        const path = `groups/${this.group.id}`
+
+        const fields = {
+          name: this.name,
+          description: this.description || null
+        }
+
+        const data = this.getChangedFields(fields, this.group)
+        if (!Object.keys(data).length) return false
+
+        this.loadingForm = true
+
+        try {
+          const response = await this.$http.put(path, data, this.authToken)
+          this.action(response)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.loadingForm = false
+        }
+      })
+    },
+    setUpUI () {
+      this.name = this.group.name
+      this.description = this.group.description
+    }
   }
+}
 
 </script>

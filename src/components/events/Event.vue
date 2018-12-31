@@ -61,81 +61,81 @@
 </template>
 
 <script>
-  import {
-    format
-  } from 'date-fns'
-  import {
-    COLORS
-  } from '@/utils'
-  import {
-    trashIcon,
-    editIcon
-  } from '@/utils/icons'
+import {
+  format
+} from 'date-fns'
+import {
+  COLORS
+} from '@/utils'
+import {
+  trashIcon,
+  editIcon
+} from '@/utils/icons'
 
-  const dateFormat = 'hh:mm a'
+const dateFormat = 'hh:mm a'
 
-  export default {
-    props: ['day', 'event'],
-    data() {
-      return {
-        loadingEvent: true,
-        eventDetail: {},
-        colors: COLORS,
-        icons: {
-          delete: trashIcon,
-          edit: editIcon
-        }
-      }
-    },
-    created() {
-      this.getEventDetails(this.event.id)
-    },
-    methods: {
-      async getEventDetails(id) {
-        const path = `event_schemas/${id}`
-        this.loadingEvent = true
-
-        try {
-          const response = await this.$http.get(path, this.authToken)
-          this.eventDetail = response
-        } catch (err) {
-
-        } finally {
-          this.loadingEvent = false
-        }
-      },
-      formatDuration(seconds) {
-        if (!seconds) return ''
-
-        seconds = Number(seconds)
-        let time
-
-        time = Math.floor(seconds / (60 * 60 * 24 * 7 * 4))
-        if (time >= 1) return `${time} ${this.pluralize('month', time)}`
-
-        time = Math.floor(seconds / (60 * 60 * 24 * 7))
-        if (time >= 1) return `${time} ${this.pluralize('week', time)}`
-
-        time = Math.floor(seconds / (60 * 60 * 24))
-        if (time >= 1) return `${time} ${this.pluralize('day', time)}`
-
-        time = Math.floor(seconds / (60 * 60))
-        if (time >= 1) return `${time} ${this.pluralize('hour', time)}`
-
-        time = Math.floor(seconds / (60))
-        if (time >= 1) return `${time} ${this.pluralize('minute', time)}`
-
-        return `${time} ${this.pluralize('second', time)}`
-      }
-    },
-    filters: {
-      formatDate(dateString) {
-        const date = new Date(dateString)
-        return format(date, dateFormat, {
-          awareOfUnicodeTokens: true
-        })
+export default {
+  props: ['day', 'event'],
+  data () {
+    return {
+      loadingEvent: true,
+      eventDetail: {},
+      colors: COLORS,
+      icons: {
+        delete: trashIcon,
+        edit: editIcon
       }
     }
+  },
+  created () {
+    this.getEventDetails(this.event.id)
+  },
+  methods: {
+    async getEventDetails (id) {
+      const path = `event_schemas/${id}`
+      this.loadingEvent = true
+
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.eventDetail = response
+      } catch (err) {
+
+      } finally {
+        this.loadingEvent = false
+      }
+    },
+    formatDuration (seconds) {
+      if (!seconds) return ''
+
+      seconds = Number(seconds)
+      let time
+
+      time = Math.floor(seconds / (60 * 60 * 24 * 7 * 4))
+      if (time >= 1) return `${time} ${this.pluralize('month', time)}`
+
+      time = Math.floor(seconds / (60 * 60 * 24 * 7))
+      if (time >= 1) return `${time} ${this.pluralize('week', time)}`
+
+      time = Math.floor(seconds / (60 * 60 * 24))
+      if (time >= 1) return `${time} ${this.pluralize('day', time)}`
+
+      time = Math.floor(seconds / (60 * 60))
+      if (time >= 1) return `${time} ${this.pluralize('hour', time)}`
+
+      time = Math.floor(seconds / (60))
+      if (time >= 1) return `${time} ${this.pluralize('minute', time)}`
+
+      return `${time} ${this.pluralize('second', time)}`
+    }
+  },
+  filters: {
+    formatDate (dateString) {
+      const date = new Date(dateString)
+      return format(date, dateFormat, {
+        awareOfUnicodeTokens: true
+      })
+    }
   }
+}
 
 </script>

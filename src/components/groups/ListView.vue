@@ -51,81 +51,81 @@
 </template>
 
 <script>
-  import {
-    trashIcon,
-    editIcon,
-    mailIconNew,
-    userPlusIcon,
-    smsIcon,
-    fileIcon
-  } from '@/utils/icons'
+import {
+  trashIcon,
+  editIcon,
+  mailIconNew,
+  userPlusIcon,
+  smsIcon,
+  fileIcon
+} from '@/utils/icons'
 
-  export default {
-    props: ['page', 'pagesEnded', 'groups', 'totalGroup', 'activeGroup'],
-    name: 'ListView',
-    data() {
-      return {
-        icons: {
-          plus: userPlusIcon,
-        },
-        actionGroup: null,
-        groupActions: [{
-            id: 1,
-            text: 'Edit Group',
-            value: 'edit-group',
-            icon: editIcon
-          },
-          {
-            id: 3,
-            text: 'Email Group',
-            value: 'email',
-            icon: mailIconNew
-          },
-          {
-            id: 4,
-            text: 'SMS Group',
-            value: 'sms',
-            icon: smsIcon
-          },
-          {
-            id: 5,
-            text: 'Export Group',
-            value: 'export-people',
-            icon: fileIcon
-          },
-          {
-            id: 2,
-            text: 'Delete',
-            value: 'delete',
-            icon: trashIcon
-          },
-        ]
+export default {
+  props: ['page', 'pagesEnded', 'groups', 'totalGroup', 'activeGroup'],
+  name: 'ListView',
+  data () {
+    return {
+      icons: {
+        plus: userPlusIcon
+      },
+      actionGroup: null,
+      groupActions: [{
+        id: 1,
+        text: 'Edit Group',
+        value: 'edit-group',
+        icon: editIcon
+      },
+      {
+        id: 3,
+        text: 'Email Group',
+        value: 'email',
+        icon: mailIconNew
+      },
+      {
+        id: 4,
+        text: 'SMS Group',
+        value: 'sms',
+        icon: smsIcon
+      },
+      {
+        id: 5,
+        text: 'Export Group',
+        value: 'export-people',
+        icon: fileIcon
+      },
+      {
+        id: 2,
+        text: 'Delete',
+        value: 'delete',
+        icon: trashIcon
       }
-    },
-    methods: {
-      actionClicked(action, group, groupIndex) {
-        this.actionGroup = null
+      ]
+    }
+  },
+  methods: {
+    actionClicked (action, group, groupIndex) {
+      this.actionGroup = null
 
-        this.$emit('action', {
-          action: action.value,
-          group: group,
-          index: groupIndex
-        })
-      },
-      createGroup() {
-        this.activeAction = 'create'
-        this.modal = true
-      },
-      personRowClicked(personId) {
-        const index = this.selectedPeople.indexOf(personId)
-        const checked = index !== -1
-        if (checked) {
-          this.selectedPeople.splice(index, 1)
-        } else {
-          this.selectedPeople.push(personId)
-        }
+      this.$emit('action', {
+        action: action.value,
+        group: group,
+        index: groupIndex
+      })
+    },
+    createGroup () {
+      this.activeAction = 'create'
+      this.modal = true
+    },
+    personRowClicked (personId) {
+      const index = this.selectedPeople.indexOf(personId)
+      const checked = index !== -1
+      if (checked) {
+        this.selectedPeople.splice(index, 1)
+      } else {
+        this.selectedPeople.push(personId)
       }
     }
   }
+}
 
 </script>

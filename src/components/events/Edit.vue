@@ -14,7 +14,6 @@
       </p>
     </div>
 
-
     <div class="mt-8 mb-4 inline-flex justify-start w-full">
       <div class="w-full inline-flex justify-between items-center">
         <button class="inline-flex flex-auto items-center justify-center h-10 bg-blue rounded-sm text-white shadow-md mr-2"
@@ -71,153 +70,153 @@
 </template>
 
 <script>
-  import {
-    tickIcon,
-    eventIcon,
-    closeIcon
-  } from '@/utils/icons'
+import {
+  tickIcon,
+  eventIcon,
+  closeIcon
+} from '@/utils/icons'
 
-  import {
-    differenceInSeconds,
-    addSeconds,
-    isSameDay
-  } from 'date-fns'
-  import {
-    RRule
-  } from 'rrule'
-  import flatpickr from 'flatpickr'
-  import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
-  const dateFormat = 'EEEE, do; h:m a'
-  let startDateComp = null
+import {
+  differenceInSeconds,
+  addSeconds,
+  isSameDay
+} from 'date-fns'
+import {
+  RRule
+} from 'rrule'
+import flatpickr from 'flatpickr'
+import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
+const dateFormat = 'EEEE, do; h:m a'
+let startDateComp = null
 
-  export default {
-    name: 'Edit-Event',
-    props: {
-      calendar_id: {
-        required: true
+export default {
+  name: 'Edit-Event',
+  props: {
+    calendar_id: {
+      required: true
+    },
+    startDate: {
+      required: false
+    },
+    endDate: {
+      required: false
+    },
+    data: {
+      required: true
+    }
+  },
+  data () {
+    return {
+      loadingForm: false,
+      icons: {
+        event: eventIcon,
+        cancel: closeIcon
       },
-      startDate: {
-        required: false
-      },
-      endDate: {
-        required: false
-      },
-      data: {
-        required: true
-      }
-    },
-    data() {
-      return {
-        loadingForm: false,
-        icons: {
-          event: eventIcon,
-          cancel: closeIcon
-        },
-        creatingEvent: false,
-      }
-    },
-    computed: {
-      event() {
-        return this.data.event
-      }
-    },
-    mounted() {
-      this.initializeDatePickers()
-      this.setUpPreviousData()
-      console.log(this.event.start_date, 'created')
-    },
-    methods: {
-      getChangedFields(object, original) {
-        const fields = {}
+      creatingEvent: false
+    }
+  },
+  computed: {
+    event () {
+      return this.data.event
+    }
+  },
+  mounted () {
+    this.initializeDatePickers()
+    this.setUpPreviousData()
+    console.log(this.event.start_date, 'created')
+  },
+  methods: {
+    getChangedFields (object, original) {
+      const fields = {}
 
-        for (const key in object) {
-          if (object.hasOwnProperty(key)) {
-            const ori = original[key]
-            const ob = object[key]
+      for (const key in object) {
+        if (object.hasOwnProperty(key)) {
+          const ori = original[key]
+          const ob = object[key]
 
-            if (ob instanceof Date) {
-              if (new Date(ori).getTime() !== ob.getTime()) fields[key] = object[key]
-            } else if (ori !== ob) {
-              fields[key] = object[key]
-            }
+          if (ob instanceof Date) {
+            if (new Date(ori).getTime() !== ob.getTime()) fields[key] = object[key]
+          } else if (ori !== ob) {
+            fields[key] = object[key]
           }
         }
+      }
 
-        return fields
-      },
-      setUpPreviousData() {
-        startDateComp.setDate(this.event.start_date)
-      },
-      createRRule(rruleString, startDate) {
-        const rrule = new RRule.fromText(rruleString)
-        const options = rrule.options
-        options['dtstart'] = startDate
-        return new RRule(options)
-      },
-      updateEvent() {
-        if (this.creatingEvent) return false
-
-        this.validateForm(async state => {
-          if (!state) return false
-
-          const startDate = startDateComp.selectedDates[0]
-
-          const fields = {
-            start_date: startDate.toISOString(),
-          }
-
-          const data = this.getChangedFields(fields, this.event)
-          if (!Object.keys(data).length) return false
-
-          // this.creatingEvent = true
-
-          data['startDate'] = this.startDate
-          data['endDate'] = this.endDate
-
-          // if (this.event.is_recurring) {
-          //   const rrule = this.createRRule(this.event.recurrence, this.startDate)
-          //   data['recurrence'] = rrule.toString()
-          // }
-          let endDate = null
-
-          if (!this.event.is_recurring) {
-            endDate = addSeconds(startDate, this.event.duration)
-          } else {
-            const diff = differenceInSeconds(startDate, this.event.start_date)
-            endDate = addSeconds(this.event.end_date, diff)
-          }
-
-          data['end_date'] = endDate
-
-          const event = this.event
-          event._start_date = this.data.day.value
-          
-          this.$emit('edit', {
-            event,
-            data: data
-          })
-        })
-      },
-      initializeDatePickers() {
-        const startDate = this.start_date
-
-        startDateComp = flatpickr(this.$refs['start_date'], {
-          enableTime: true,
-          dateFormat: 'J M, Y; h i K',
-          minDate: new Date(),
-          // defaultDate: startDate,
-          disable: this.data.disabledDates,
-          plugins: [new confirmDatePlugin({
-            confirmIcon: tickIcon,
-            confirmText: 'Done',
-            showAlways: true
-          })]
-        })
-      },
+      return fields
     },
-    beforeDestroy() {
-      if (startDateComp !== null) startDateComp.destroy()
+    setUpPreviousData () {
+      startDateComp.setDate(this.event.start_date)
+    },
+    createRRule (rruleString, startDate) {
+      const rrule = new RRule.fromText(rruleString)
+      const options = rrule.options
+      options['dtstart'] = startDate
+      return new RRule(options)
+    },
+    updateEvent () {
+      if (this.creatingEvent) return false
+
+      this.validateForm(async state => {
+        if (!state) return false
+
+        const startDate = startDateComp.selectedDates[0]
+
+        const fields = {
+          start_date: startDate.toISOString()
+        }
+
+        const data = this.getChangedFields(fields, this.event)
+        if (!Object.keys(data).length) return false
+
+        // this.creatingEvent = true
+
+        data['startDate'] = this.startDate
+        data['endDate'] = this.endDate
+
+        // if (this.event.is_recurring) {
+        //   const rrule = this.createRRule(this.event.recurrence, this.startDate)
+        //   data['recurrence'] = rrule.toString()
+        // }
+        let endDate = null
+
+        if (!this.event.is_recurring) {
+          endDate = addSeconds(startDate, this.event.duration)
+        } else {
+          const diff = differenceInSeconds(startDate, this.event.start_date)
+          endDate = addSeconds(this.event.end_date, diff)
+        }
+
+        data['end_date'] = endDate
+
+        const event = this.event
+        event._start_date = this.data.day.value
+
+        this.$emit('edit', {
+          event,
+          data: data
+        })
+      })
+    },
+    initializeDatePickers () {
+      const startDate = this.start_date
+
+      startDateComp = flatpickr(this.$refs['start_date'], {
+        enableTime: true,
+        dateFormat: 'J M, Y; h i K',
+        minDate: new Date(),
+        // defaultDate: startDate,
+        disable: this.data.disabledDates,
+        plugins: [new confirmDatePlugin({
+          confirmIcon: tickIcon,
+          confirmText: 'Done',
+          showAlways: true
+        })]
+      })
     }
+  },
+  beforeDestroy () {
+    if (startDateComp !== null) startDateComp.destroy()
   }
+}
 
 </script>

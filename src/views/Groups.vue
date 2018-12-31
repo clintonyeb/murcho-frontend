@@ -197,313 +197,313 @@
 </template>
 
 <script>
-  import {
-    filterIcon,
-    userPlusIcon
-  } from '@/utils/icons'
+import {
+  filterIcon,
+  userPlusIcon
+} from '@/utils/icons'
 
-  import {
-    debounce
-  } from 'debounce'
-  import {
-    MESSAGE_TYPES
-  } from '@/utils'
+import {
+  debounce
+} from 'debounce'
+import {
+  MESSAGE_TYPES
+} from '@/utils'
 
-  export default {
-    name: 'Groups',
-    props: ['group_id'],
-    data() {
-      return {
-        showAddPersonSearch: false,
-        info: {
-          message: '',
-          type: MESSAGE_TYPES.info,
-          state: false,
-          data: null
-        },
-        events: {
-          data: [],
-          count: 0,
-          loading: false,
-          loaded: false
-        },
-        groups: [],
-        groupCount: null,
-        groupPage: 1,
-        groupEnded: false,
-        loadingGroups: false,
-        icons: {
-          filter: filterIcon,
-          plus: userPlusIcon
-        },
-        groupPeople: [],
-        groupId: null,
-        searching: false,
-        searchedPeople: [],
-        search: '',
-        peopleEnded: false,
-        peoplePage: 1,
-        peopleLoaded: false,
-        groupsLoaded: false,
-        modal: {
-          state: false,
-          action: null,
-          cancel: null,
-          data: null,
-          loading: false,
-        },
-        drawer: {
-          state: false,
-          action: null,
-          cancel: null,
-          data: null,
-          loading: false,
-          results: null
-        },
-        activeAction: null
+export default {
+  name: 'Groups',
+  props: ['group_id'],
+  data () {
+    return {
+      showAddPersonSearch: false,
+      info: {
+        message: '',
+        type: MESSAGE_TYPES.info,
+        state: false,
+        data: null
+      },
+      events: {
+        data: [],
+        count: 0,
+        loading: false,
+        loaded: false
+      },
+      groups: [],
+      groupCount: null,
+      groupPage: 1,
+      groupEnded: false,
+      loadingGroups: false,
+      icons: {
+        filter: filterIcon,
+        plus: userPlusIcon
+      },
+      groupPeople: [],
+      groupId: null,
+      searching: false,
+      searchedPeople: [],
+      search: '',
+      peopleEnded: false,
+      peoplePage: 1,
+      peopleLoaded: false,
+      groupsLoaded: false,
+      modal: {
+        state: false,
+        action: null,
+        cancel: null,
+        data: null,
+        loading: false
+      },
+      drawer: {
+        state: false,
+        action: null,
+        cancel: null,
+        data: null,
+        loading: false,
+        results: null
+      },
+      activeAction: null
+    }
+  },
+  created () {
+    const id = this.group_id
+    if (id) {
+      this.groupId = this.decodeHash(id)
+    } else {
+      this.groupId = null
+    }
+
+    this.readyCallbacks([this.refresh])
+    this.setPageTitle('Groups')
+  },
+  components: {
+    'list-view': () => import('@/components/groups/ListView'),
+    'people': () => import('@/components/groups/People'),
+    'create-group': () => import('@/components/groups/Create'),
+    'confirm-delete': () => import('@/components/groups/ConfirmDelete'),
+    'edit-group': () => import('@/components/groups/Edit'),
+    'email': () => import('@/components/groups/Email'),
+    'sms': () => import('@/components/groups/SMS'),
+    'export-people': () => import('@/components/groups/ExportPeople'),
+    'download-export': () => import('@/components/groups/DownloadExport')
+  },
+  methods: {
+    async getEventsForGroup (groupId, page = 1, size = 100) {
+      this.events.loading = true
+
+      try {
+        const path = `get_events_for_group/${groupId}`
+        const response = await this.$http.get(path, this.authToken)
+        this.events.data = response
+        this.events.count = response.length
+        this.events.loaded = true
+      } catch (error) {
+
+      } finally {
+        this.events.loading = false
       }
     },
-    created() {
-      const id = this.group_id
-      if (id) {
-        this.groupId = this.decodeHash(id)
-      } else {
-        this.groupId = null
-      }
-
-      this.readyCallbacks([this.refresh])
-      this.setPageTitle('Groups')
+    groupExported (fileUrl) {
+      this.drawer.data = fileUrl
+      this.activeAction = 'download-export'
     },
-    components: {
-      'list-view': () => import('@/components/groups/ListView'),
-      'people': () => import('@/components/groups/People'),
-      'create-group': () => import('@/components/groups/Create'),
-      'confirm-delete': () => import('@/components/groups/ConfirmDelete'),
-      'edit-group': () => import('@/components/groups/Edit'),
-      'email': () => import('@/components/groups/Email'),
-      'sms': () => import('@/components/groups/SMS'),
-      'export-people': () => import('@/components/groups/ExportPeople'),
-      'download-export': () => import('@/components/groups/DownloadExport'),
+    hideActionDrawer () {
+      this.drawer.data = null
+      this.activeAction = null
+      this.drawer.state = false
     },
-    methods: {
-      async getEventsForGroup(groupId, page = 1, size = 100) {
-        this.events.loading = true
+    groupUpdated (group, groupIndex) {
+      this.groups.splice(groupIndex, 1, group)
+      this.hideActionDrawer()
+    },
+    groupCreated (group) {
+      this.groups.unshift(group)
+      this.hideActionDrawer()
+      this.groupId = group.id
+    },
+    createNewGroup () {
+      this.activeAction = 'create'
+      this.drawer.state = true
+    },
+    closeModal () {
+      this.modal.state = false
+      this.activeAction = null
+    },
+    groupItemClicked (groupId) {
+      this.groupId = groupId
+    },
+    async searchPersonClicked (personId) {
+      const path = `add_person_to_group`
 
-        try {
-          const path = `get_events_for_group/${groupId}`
-          const response = await this.$http.get(path, this.authToken)
-          this.events.data = response
-          this.events.count = response.length
-          this.events.loaded = true
-        } catch (error) {
+      try {
+        const response = await this.$http.post(path, {
+          person_id: personId,
+          group_id: this.groupId
+        }, this.authToken)
 
-        } finally {
-          this.events.loading = false
-        }
-      },
-      groupExported(fileUrl) {
-        this.drawer.data = fileUrl
-        this.activeAction = 'download-export'
-      },
-      hideActionDrawer() {
-        this.drawer.data = null
-        this.activeAction = null
-        this.drawer.state = false
-      },
-      groupUpdated(group, groupIndex) {
-        this.groups.splice(groupIndex, 1, group)
-        this.hideActionDrawer()
-      },
-      groupCreated(group) {
-        this.groups.unshift(group)
-        this.hideActionDrawer()
-        this.groupId = group.id
-      },
-      createNewGroup() {
-        this.activeAction = 'create'
-        this.drawer.state = true
-      },
-      closeModal() {
-        this.modal.state = false
-        this.activeAction = null
-      },
-      groupItemClicked(groupId) {
-        this.groupId = groupId
-      },
-      async searchPersonClicked(personId) {
-        const path = `add_person_to_group`
-
-        try {
-          const response = await this.$http.post(path, {
-            person_id: personId,
-            group_id: this.groupId
-          }, this.authToken)
-
-          this.groupPeople.unshift(response)
-          this.clearPeopleSearch()
-        } catch (err) {
-
-        } finally {}
-      },
-      clearPeopleSearch() {
-        this.showAddPersonSearch = false
-        this.searchedPeople = []
-        this.search = ''
-        this.searching = false
-      },
-      handleSearchOutside() {
+        this.groupPeople.unshift(response)
         this.clearPeopleSearch()
-      },
-      searchPeople: debounce(function (e) {
-        this.doPeopleSearch(e.target.value)
-      }, 200),
-      async doPeopleSearch(name) {
-        if (!name) {
-          this.searching = false
-          return
-        }
+      } catch (err) {
 
-        const search = name.toLowerCase()
-        const path = `search_people/${search}`
-        this.searching = true
-
-        try {
-          const response = await this.$http.get(path, this.authToken)
-          this.searchedPeople = response
-        } catch (error) {
-          console.log(error)
-        } finally {
-          // this.loadingMore = false
-        }
-      },
-      refresh(isNew = true) {
-        this.getGroups()
-        if (isNew) this.getGroupsCount()
-      },
-      goBack() {
-        if (this.page === 1) return false
-        const page = this.page - 1
-        this.getPeople(page)
-      },
-      goForward() {
-        if (this.ended) return false
-        const page = this.page + 1
-        this.getPeople(page)
-      },
-      handleGroupAction(data) {
-        switch (data.action) {
-          case 'delete':
-            this.modal.action = () => this.deleteGroup(data.group.id, data.index)
-            this.modal.cancel = () => this.closeModal()
-            this.modal.data = data.group
-            this.activeAction = data.action
-            this.modal.state = true
-            break
-          case 'removed-group':
-            this.groupPeople.splice(data.index, 1)
-            break
-          case 'edit-group':
-            this.drawer.data = data.group
-            this.drawer.action = (group) => {
-              this.groupUpdated(group, data.index)
-            }
-            this.activeAction = data.action
-            this.drawer.state = true
-            break
-          case 'email':
-          case 'sms':
-            this.drawer.data = data.group.id
-            this.activeAction = data.action
-            this.drawer.state = true
-            break
-          case 'export-people':
-            this.drawer.data = data.group.id
-            this.activeAction = data.action
-            this.drawer.state = true
-          default:
-            break
-        }
-      },
-      async deleteGroup(groupId, index) {
-        const path = `groups/${groupId}`
-
-        try {
-          await this.$http.delete(path, this.authToken)
-          this.groups.splice(index, 1)
-          this.groupCount--
-          this.closeModal()
-
-          if (groupId === this.groupId) this.groupId = this.groups[0].id
-        } catch (err) {
-
-        } finally {}
-      },
-      async getGroups(page = 1, size = 100) {
-        const path = `groups?page=${page}&size=${size}`
-        this.loadingGroups = true
-
-        try {
-          const response = await this.$http.get(path, this.authToken)
-
-          if (response.length) {
-            this.groups = response
-            this.page = page
-          }
-
-          if (response.length < size) this.ended = true
-          else this.ended = false
-
-          if (!this.groupId) {
-            this.groupId = response[0].id
-          }
-
-          this.groupsLoaded = true
-        } catch (err) {
-
-        } finally {
-          this.loadingGroups = false
-        }
-      },
-      async getGroupsCount() {
-        const path = 'total_groups'
-
-        try {
-          const response = await this.$http.get(path, this.authToken)
-          this.groupCount = response
-        } catch (error) {}
-      },
-      async getPeopleForGroup(groupId, page = 1, size = 100) {
-        const path = `get_people/${groupId}?page=${page}&size=${size}`
-        this.loadingMore = true
-        this.groupPeople = []
-        this.peopleLoaded = false
-
-        try {
-          const response = await this.$http.get(path, this.authToken)
-
-          this.groupPeople = response
-          this.peopleLoaded = true
-        } catch (err) {
-
-        } finally {
-          this.loadingMore = false
-        }
-      },
-      getGroupDetails(groupId) {
-        this.getPeopleForGroup(groupId)
-        this.getEventsForGroup(groupId)
-      },
+      } finally {}
     },
-    watch: {
-      groupId: function (groupId) {
-        if (!groupId) return false
-        if (this.appReady) {
-          this.getGroupDetails(groupId)
-        } else {
-          this.readyCallbacks([() => this.getGroupDetails(groupId)])
+    clearPeopleSearch () {
+      this.showAddPersonSearch = false
+      this.searchedPeople = []
+      this.search = ''
+      this.searching = false
+    },
+    handleSearchOutside () {
+      this.clearPeopleSearch()
+    },
+    searchPeople: debounce(function (e) {
+      this.doPeopleSearch(e.target.value)
+    }, 200),
+    async doPeopleSearch (name) {
+      if (!name) {
+        this.searching = false
+        return
+      }
+
+      const search = name.toLowerCase()
+      const path = `search_people/${search}`
+      this.searching = true
+
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.searchedPeople = response
+      } catch (error) {
+        console.log(error)
+      } finally {
+        // this.loadingMore = false
+      }
+    },
+    refresh (isNew = true) {
+      this.getGroups()
+      if (isNew) this.getGroupsCount()
+    },
+    goBack () {
+      if (this.page === 1) return false
+      const page = this.page - 1
+      this.getPeople(page)
+    },
+    goForward () {
+      if (this.ended) return false
+      const page = this.page + 1
+      this.getPeople(page)
+    },
+    handleGroupAction (data) {
+      switch (data.action) {
+        case 'delete':
+          this.modal.action = () => this.deleteGroup(data.group.id, data.index)
+          this.modal.cancel = () => this.closeModal()
+          this.modal.data = data.group
+          this.activeAction = data.action
+          this.modal.state = true
+          break
+        case 'removed-group':
+          this.groupPeople.splice(data.index, 1)
+          break
+        case 'edit-group':
+          this.drawer.data = data.group
+          this.drawer.action = (group) => {
+            this.groupUpdated(group, data.index)
+          }
+          this.activeAction = data.action
+          this.drawer.state = true
+          break
+        case 'email':
+        case 'sms':
+          this.drawer.data = data.group.id
+          this.activeAction = data.action
+          this.drawer.state = true
+          break
+        case 'export-people':
+          this.drawer.data = data.group.id
+          this.activeAction = data.action
+          this.drawer.state = true
+        default:
+          break
+      }
+    },
+    async deleteGroup (groupId, index) {
+      const path = `groups/${groupId}`
+
+      try {
+        await this.$http.delete(path, this.authToken)
+        this.groups.splice(index, 1)
+        this.groupCount--
+        this.closeModal()
+
+        if (groupId === this.groupId) this.groupId = this.groups[0].id
+      } catch (err) {
+
+      } finally {}
+    },
+    async getGroups (page = 1, size = 100) {
+      const path = `groups?page=${page}&size=${size}`
+      this.loadingGroups = true
+
+      try {
+        const response = await this.$http.get(path, this.authToken)
+
+        if (response.length) {
+          this.groups = response
+          this.page = page
         }
+
+        if (response.length < size) this.ended = true
+        else this.ended = false
+
+        if (!this.groupId) {
+          this.groupId = response[0].id
+        }
+
+        this.groupsLoaded = true
+      } catch (err) {
+
+      } finally {
+        this.loadingGroups = false
+      }
+    },
+    async getGroupsCount () {
+      const path = 'total_groups'
+
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.groupCount = response
+      } catch (error) {}
+    },
+    async getPeopleForGroup (groupId, page = 1, size = 100) {
+      const path = `get_people/${groupId}?page=${page}&size=${size}`
+      this.loadingMore = true
+      this.groupPeople = []
+      this.peopleLoaded = false
+
+      try {
+        const response = await this.$http.get(path, this.authToken)
+
+        this.groupPeople = response
+        this.peopleLoaded = true
+      } catch (err) {
+
+      } finally {
+        this.loadingMore = false
+      }
+    },
+    getGroupDetails (groupId) {
+      this.getPeopleForGroup(groupId)
+      this.getEventsForGroup(groupId)
+    }
+  },
+  watch: {
+    groupId: function (groupId) {
+      if (!groupId) return false
+      if (this.appReady) {
+        this.getGroupDetails(groupId)
+      } else {
+        this.readyCallbacks([() => this.getGroupDetails(groupId)])
       }
     }
   }
+}
 
 </script>

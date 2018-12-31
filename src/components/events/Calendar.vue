@@ -32,7 +32,7 @@
                     </p>
                   </div>
                   <div v-for="event in showMore(day, day.events)" :key="event.id" class="relative  mx-1 my-2 p-2 rounded-r"
-                    :class="[`bg-${event.color}-lightest text-${event.color}-dark`, {'opacity-0' : draggingEventId === event.id && draggingEventDayId === day.id}, 
+                    :class="[`bg-${event.color}-lightest text-${event.color}-dark`, {'opacity-0' : draggingEventId === event.id && draggingEventDayId === day.id},
                     {'shadow cursor-move hover:shadow-md': !day.isPast}, !day.isPast ? `border-l-4 border-${event.color}-dark` : 'rounded-l' ]"
                     @click.stop="selectedEvent = selectedEvent ? null : `${event.id}${day.id}`" :draggable="!day.isPast"
                     @dragstart="dragEvent($event, event, day)" v-else>
@@ -75,279 +75,278 @@
 </template>
 
 <script>
-  import {
-    format,
-    startOfWeek,
-    endOfWeek,
-    addDays,
-    startOfMonth,
-    endOfMonth,
-    isSameMonth,
-    isSameDay,
-    differenceInDays,
-    setHours,
-    setMinutes
-  } from 'date-fns'
+import {
+  format,
+  startOfWeek,
+  endOfWeek,
+  addDays,
+  startOfMonth,
+  endOfMonth,
+  isSameMonth,
+  isSameDay,
+  differenceInDays,
+  setHours,
+  setMinutes
+} from 'date-fns'
 
-  import Event from '@/components/events/Event'
+import Event from '@/components/events/Event'
 
-  const daysInWeekFormat = 'E'
-  const daysInMonthFormat = 'd'
-  const nonDaysInMonthFormat = 'LLL d'
-  const dateFormat = 'hh:mm a'
-  const today = new Date()
+const daysInWeekFormat = 'E'
+const daysInMonthFormat = 'd'
+const nonDaysInMonthFormat = 'LLL d'
+const dateFormat = 'hh:mm a'
+const today = new Date()
 
-  export default {
-    props: ['selectedMonth'],
-    data() {
-      return {
-        days: [],
-        selectedDay: null,
-        selectedEvent: null,
-        events: [],
-        showingMoreDay: null,
-        hoveredDay: null,
-        addingEventDay: null,
-        calendar: {},
-        eventsLoaded: false,
-        activeAction: null,
-        draggingOverId: null,
-        draggingEventId: null,
-        draggingEventDayId: null
-      }
-    },
-    created() {
-      this.daysInAWeek()
-      this.readyCallbacks([this.refresh])
-    },
-    components: {
-      Event,
-      // CreateEvent,
-    },
-    computed: {
-      daysInSelectedMonth() {
-        const daysInMonth = []
+export default {
+  props: ['selectedMonth'],
+  data () {
+    return {
+      days: [],
+      selectedDay: null,
+      selectedEvent: null,
+      events: [],
+      showingMoreDay: null,
+      hoveredDay: null,
+      addingEventDay: null,
+      calendar: {},
+      eventsLoaded: false,
+      activeAction: null,
+      draggingOverId: null,
+      draggingEventId: null,
+      draggingEventDayId: null
+    }
+  },
+  created () {
+    this.daysInAWeek()
+    this.readyCallbacks([this.refresh])
+  },
+  components: {
+    Event
+    // CreateEvent,
+  },
+  computed: {
+    daysInSelectedMonth () {
+      const daysInMonth = []
 
-        const monthStartDate = startOfMonth(this.selectedMonth)
-        const monthEndDate = endOfMonth(this.selectedMonth)
-        const startDate = startOfWeek(monthStartDate)
-        const endDate = endOfWeek(monthEndDate)
+      const monthStartDate = startOfMonth(this.selectedMonth)
+      const monthEndDate = endOfMonth(this.selectedMonth)
+      const startDate = startOfWeek(monthStartDate)
+      const endDate = endOfWeek(monthEndDate)
 
-        let day = startDate
-        let id = 0
+      let day = startDate
+      let id = 0
 
-        while (day < endDate) {
-          const week = []
-          for (let i = 0; i < 7; i++) {
-            const date = addDays(day, i)
-            const inCurrentMonth = isSameMonth(date, monthStartDate)
-            const isSelected = isSameDay(date, this.selectedDay)
-            const isToday = isSameDay(date, today)
-            const events = this.eventsInDay(date)
-            const isPast = differenceInDays(date, today) < 0
-            const isFirstOrLast = isSameDay(date, startDate) || isSameDay(date, endDate)
+      while (day < endDate) {
+        const week = []
+        for (let i = 0; i < 7; i++) {
+          const date = addDays(day, i)
+          const inCurrentMonth = isSameMonth(date, monthStartDate)
+          const isSelected = isSameDay(date, this.selectedDay)
+          const isToday = isSameDay(date, today)
+          const events = this.eventsInDay(date)
+          const isPast = differenceInDays(date, today) < 0
+          const isFirstOrLast = isSameDay(date, startDate) || isSameDay(date, endDate)
 
-            let form = null
+          let form = null
 
-            if (isFirstOrLast) {
-              form = nonDaysInMonthFormat
-            } else {
-              form = daysInMonthFormat
-            }
-
-            const formattedDay = format(date, form, {
-              awareOfUnicodeTokens: true
-            })
-
-            week.push({
-              id: ++id,
-              text: formattedDay,
-              value: date,
-              inCurrentMonth,
-              isSelected,
-              isToday,
-              isPast,
-              events
-            })
+          if (isFirstOrLast) {
+            form = nonDaysInMonthFormat
+          } else {
+            form = daysInMonthFormat
           }
 
-          day = addDays(day, 7)
-          daysInMonth.push(week)
+          const formattedDay = format(date, form, {
+            awareOfUnicodeTokens: true
+          })
+
+          week.push({
+            id: ++id,
+            text: formattedDay,
+            value: date,
+            inCurrentMonth,
+            isSelected,
+            isToday,
+            isPast,
+            events
+          })
         }
 
-        return daysInMonth
+        day = addDays(day, 7)
+        daysInMonth.push(week)
+      }
+
+      return daysInMonth
+    }
+  },
+  methods: {
+    allowEventDrop ($event, day) {
+      $event.preventDefault()
+      if (!day.isPast) {
+        this.draggingOverId = day.id
       }
     },
-    methods: {
-      allowEventDrop($event, day) {
-        $event.preventDefault()
-        if (!day.isPast) {
-          this.draggingOverId = day.id
-        }
-      },
-      dropEvent($event, day) {
-        this.draggingOverId = null
+    dropEvent ($event, day) {
+      this.draggingOverId = null
 
-        const event = JSON.parse($event.dataTransfer.getData("event"));
-        const eventDayId = Number($event.dataTransfer.getData("day"));
-        const previousDayDate = $event.dataTransfer.getData("day_date");
+      const event = JSON.parse($event.dataTransfer.getData('event'))
+      const eventDayId = Number($event.dataTransfer.getData('day'))
+      const previousDayDate = $event.dataTransfer.getData('day_date')
 
-        if (day.isPast || eventDayId === day.id) {
+      if (day.isPast || eventDayId === day.id) {
+        this.draggingEventId = null
+        return
+      }
+
+      // check if day doesn't already contain similar events
+      if (event.is_recurring) {
+        const similar = day.events.find(ev => ev.id === event.id)
+        if (similar) {
           this.draggingEventId = null
           return
         }
+      }
 
-        // check if day doesn't already contain similar events
-        if (event.is_recurring) {
-          const similar = day.events.find(ev => ev.id === event.id)
-          if (similar) {
-            this.draggingEventId = null
-            return
-          }
-        }
+      let startDate = day.value
+      startDate = setHours(startDate, new Date(event.start_date).getHours())
+      startDate = setMinutes(startDate, new Date(event.start_date).getMinutes())
 
-        let startDate = day.value
-        startDate = setHours(startDate, new Date(event.start_date).getHours())
-        startDate = setMinutes(startDate, new Date(event.start_date).getMinutes())
+      $event.preventDefault()
 
-        $event.preventDefault()
+      // for UI update
+      event._start_date = previousDayDate
 
-        // for UI update
-        event._start_date = previousDayDate
-
-        this.$emit('reschedule', {
-          event,
-          startDate
-        })
-
-      },
-      dragEvent($event, event, day) {
-        this.draggingEventId = event.id
-        this.draggingEventDayId = day.id
-        $event.dataTransfer.setData("event", JSON.stringify(event));
-        $event.dataTransfer.setData("day", day.id);
-        $event.dataTransfer.setData("day_date", day.value.toISOString());
-      },
-      getDaysMatchingEvent(event) {
-        return this.events.filter(e => e.id === event.id).map(e => e.start_date)
-      },
-      refresh() {
-        this.getEventsForSelectedMonth(this.selectedMonth)
-      },
-      update(event){
-        const index = this.events.findIndex(ev => (ev.id === event.id))
-        this.events.splice(index, 1, event)
+      this.$emit('reschedule', {
+        event,
+        startDate
+      })
+    },
+    dragEvent ($event, event, day) {
+      this.draggingEventId = event.id
+      this.draggingEventDayId = day.id
+      $event.dataTransfer.setData('event', JSON.stringify(event))
+      $event.dataTransfer.setData('day', day.id)
+      $event.dataTransfer.setData('day_date', day.value.toISOString())
+    },
+    getDaysMatchingEvent (event) {
+      return this.events.filter(e => e.id === event.id).map(e => e.start_date)
+    },
+    refresh () {
+      this.getEventsForSelectedMonth(this.selectedMonth)
+    },
+    update (event) {
+      const index = this.events.findIndex(ev => (ev.id === event.id))
+      this.events.splice(index, 1, event)
+      this.draggingEventId = null
+    },
+    updateRecurring (event) {
+      const index = this.events.findIndex(ev => (ev.id === event.id && isSameDay(ev.start_date, event._start_date)))
+      // this.events.findIndex(ev => (ev.id === event.id && console.log(isSameDay(ev.start_date, event._start_date), event._start_date, ev.start_date)))
+      if (index === -1) {
         this.draggingEventId = null
-      },
-      updateRecurring(event){
-        const index = this.events.findIndex(ev => (ev.id === event.id && isSameDay(ev.start_date, event._start_date)))
-        // this.events.findIndex(ev => (ev.id === event.id && console.log(isSameDay(ev.start_date, event._start_date), event._start_date, ev.start_date)))
-        if(index === -1){
-          this.draggingEventId = null
-          return  
-        }
-        this.events.splice(index, 1, event)
-        this.draggingEventId = null
-      },
-      addEvents(events) {
-        this.events = events.concat(this.events)
-      },
-      removeEventsAfterDate(event, endDate) {
-        this.events = this.events.filter(ev => !(ev.id === event.id && new Date(ev.start_date) > endDate))
-      },
-      removeEventWithStartDate(event) {
-        this.events = this.events.filter(ev => !(ev.id === event.id && ev.start_date === event.start_date))
-      },
-      removeEvent(event) {
-        this.events = this.events.filter(ev => ev.id !== event.id)
-      },
-      updateEvents(events) {
-        this.refresh()
-      },
-      eventCreated(event) {
-        this.events.unshift(event)
-        this.addingEventDay = null
-      },
-      async getCalendar() {
-        const path = `calendars`
+        return
+      }
+      this.events.splice(index, 1, event)
+      this.draggingEventId = null
+    },
+    addEvents (events) {
+      this.events = events.concat(this.events)
+    },
+    removeEventsAfterDate (event, endDate) {
+      this.events = this.events.filter(ev => !(ev.id === event.id && new Date(ev.start_date) > endDate))
+    },
+    removeEventWithStartDate (event) {
+      this.events = this.events.filter(ev => !(ev.id === event.id && ev.start_date === event.start_date))
+    },
+    removeEvent (event) {
+      this.events = this.events.filter(ev => ev.id !== event.id)
+    },
+    updateEvents (events) {
+      this.refresh()
+    },
+    eventCreated (event) {
+      this.events.unshift(event)
+      this.addingEventDay = null
+    },
+    async getCalendar () {
+      const path = `calendars`
 
-        try {
-          const response = await this.$http.get(path, this.authToken)
-          this.calendar = response[0]
-        } catch (err) {
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.calendar = response[0]
+      } catch (err) {
 
-        } finally {
-          // this.loadingMore = false
-        }
-      },
-      showMore(day, events) {
-        if (day.id === this.showingMoreDay) {
-          return events
-        } else {
-          return events.slice(0, 2)
-        }
-      },
-      eventsInDay(day) {
-        return this.events.filter(event => isSameDay(event.start_date, day))
-      },
-      daysInAWeek() {
-        let startDate = startOfWeek(this.selectedMonth)
-        for (let i = 0; i < 7; i++) {
-          let day = format(addDays(startDate, i), daysInWeekFormat, {
-            awareOfUnicodeTokens: true
-          })
-          this.days.push(day)
-        }
-      },
-      getDateSettings(month = this.month) {
-        const monthStartDate = startOfMonth(month)
-        const monthEndDate = endOfMonth(month)
-        const startDate = startOfWeek(monthStartDate)
-        const endDate = endOfWeek(monthEndDate)
-
-        return {
-          monthStartDate,
-          monthEndDate,
-          startDate,
-          endDate
-        }
-      },
-      async getEventsForSelectedMonth(month) {
-        this.events = []
-        const settings = this.getDateSettings(month)
-
-        const path = `event_schemas?start_date=${settings.startDate}&end_date=${settings.endDate}`
-        // this.loadingMore = true
-
-        try {
-          const response = await this.$http.get(path, this.authToken)
-          this.events = response
-          this.eventsLoaded = true
-        } catch (err) {
-
-        } finally {
-          // this.loadingMore = false
-        }
+      } finally {
+        // this.loadingMore = false
       }
     },
-    watch: {
-      selectedMonth(month) {
-        if (month) {
-          this.getEventsForSelectedMonth(month)
-        }
-      },
-      calendar(val) {
-        if (val) this.$emit('calendar', val)
+    showMore (day, events) {
+      if (day.id === this.showingMoreDay) {
+        return events
+      } else {
+        return events.slice(0, 2)
       }
     },
-    filters: {
-      formatDate(dateString) {
-        const date = new Date(dateString)
-        return format(date, dateFormat, {
+    eventsInDay (day) {
+      return this.events.filter(event => isSameDay(event.start_date, day))
+    },
+    daysInAWeek () {
+      let startDate = startOfWeek(this.selectedMonth)
+      for (let i = 0; i < 7; i++) {
+        let day = format(addDays(startDate, i), daysInWeekFormat, {
           awareOfUnicodeTokens: true
         })
+        this.days.push(day)
+      }
+    },
+    getDateSettings (month = this.month) {
+      const monthStartDate = startOfMonth(month)
+      const monthEndDate = endOfMonth(month)
+      const startDate = startOfWeek(monthStartDate)
+      const endDate = endOfWeek(monthEndDate)
+
+      return {
+        monthStartDate,
+        monthEndDate,
+        startDate,
+        endDate
+      }
+    },
+    async getEventsForSelectedMonth (month) {
+      this.events = []
+      const settings = this.getDateSettings(month)
+
+      const path = `event_schemas?start_date=${settings.startDate}&end_date=${settings.endDate}`
+      // this.loadingMore = true
+
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.events = response
+        this.eventsLoaded = true
+      } catch (err) {
+
+      } finally {
+        // this.loadingMore = false
       }
     }
+  },
+  watch: {
+    selectedMonth (month) {
+      if (month) {
+        this.getEventsForSelectedMonth(month)
+      }
+    },
+    calendar (val) {
+      if (val) this.$emit('calendar', val)
+    }
+  },
+  filters: {
+    formatDate (dateString) {
+      const date = new Date(dateString)
+      return format(date, dateFormat, {
+        awareOfUnicodeTokens: true
+      })
+    }
   }
+}
 
 </script>

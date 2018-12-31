@@ -64,7 +64,7 @@
                     &middot;
                   </p>
                   <p class="text-grey-dark">
-                    <span class="font-black mr-1">122</span> <span class="text-xs">Followers</span>
+                    <span class="font-black mr-1">0</span> <span class="text-xs">Followers</span>
                   </p>
                 </div>
                 <p class="mt-3 text-grey-dark" v-if="church.website_link">
@@ -146,99 +146,104 @@
 </template>
 
 <script>
-  import {
-    editIcon
-  } from '@/utils/icons'
+import {
+  editIcon
+} from '@/utils/icons'
 
-  import Updates from '@/components/home/Updates'
-  import Analytics from '@/components/home/Analytics'
-  import Actions from '@/components/home/Actions'
+import Updates from '@/components/home/Updates'
+import Analytics from '@/components/home/Analytics'
+import Actions from '@/components/home/Actions'
 
-  export default {
-    data() {
-      return {
-        upcomingEvents: [],
-        loadingUpcomingEvents: false,
-        upcomingLoaded: false,
-        homeTabMenu: [{
-            id: 1,
-            text: 'Church Updates',
-            value: 'Updates',
-            icon: ''
-          },
-          {
-            id: 2,
-            text: 'Church Analytics',
-            value: 'Analytics',
-            icon: ''
-          },
-          {
-            id: 3,
-            text: 'Church Actions',
-            value: 'Actions',
-            icon: ''
-          }
-        ],
-        church: {},
-        churchInfo: {},
-        loadingChurchInfo: false,
-        showChurchMore: false,
-        churchMore: [{
-          id: 1,
-          text: 'Edit Church',
-          value: 'edit',
-          icon: editIcon
-        }],
-        currentTabComponent: 'Updates'
+export default {
+  data () {
+    return {
+      upcomingEvents: [],
+      loadingUpcomingEvents: false,
+      upcomingLoaded: false,
+      homeTabMenu: [{
+        id: 1,
+        text: 'Church Updates',
+        value: 'Updates',
+        icon: ''
+      },
+      {
+        id: 2,
+        text: 'Church Analytics',
+        value: 'Analytics',
+        icon: ''
+      },
+      {
+        id: 3,
+        text: 'Church Actions',
+        value: 'Actions',
+        icon: ''
+      }
+      ],
+      church: {},
+      churchInfo: {},
+      loadingChurchInfo: false,
+      showChurchMore: false,
+      churchMore: [{
+        id: 1,
+        text: 'Edit Church',
+        value: 'edit',
+        icon: editIcon
+      }],
+      currentTabComponent: 'Updates'
+    }
+  },
+  created () {
+    this.setPageTitle('Home')
+    this.readyCallbacks([this.refresh])
+  },
+  components: {
+    Updates,
+    Actions,
+    Analytics
+  },
+  methods: {
+    refresh () {
+      this.getChurchInfo(this.$store.state.user.church_id)
+      this.loadUpcomingEvents()
+    },
+    async loadUpcomingEvents () {
+      if (this.loadingUpcomingEvents) return
+
+      this.loadingUpcomingEvents = true
+      this.upcomingLoaded = false
+
+      const limit = 10
+      const path = `upcoming_events?limit=${limit}`
+      this.loadingUpcomingEvents = true
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.upcomingEvents = response
+        this.upcomingLoaded = true
+      } catch (err) {
+        console.log(err)
+      } finally {
+        this.loadingUpcomingEvents = false
       }
     },
-    created() {
-      this.setPageTitle('Home')
-      this.readyCallbacks([this.refresh])
-    },
-    components: {
-      Updates,
-      Actions,
-      Analytics
-    },
-    methods: {
-      refresh() {
-        this.getChurchInfo(this.$store.state.user.church_id)
-        this.loadUpcomingEvents()
-      },
-      async loadUpcomingEvents() {
-        if (this.loadingUpcomingEvents) return
+    async getChurchInfo (churchId) {
+      try {
+        this.loadingChurchInfo = true
+        const path = `get_church_info/${churchId}`
+        const response = await this.$http.get(path, this.authToken)
+        this.church = response.church
+        this.churchInfo = response
+      } catch (error) {
 
-        this.loadingUpcomingEvents = true
-        this.upcomingLoaded = false
-
-        const limit = 10
-        const path = `upcoming_events?limit=${limit}`
-        this.loadingUpcomingEvents = true
-        try {
-          const response = await this.$http.get(path, this.authToken)
-          this.upcomingEvents = response
-          this.upcomingLoaded = true
-        } catch (err) {
-          console.log(err)
-        } finally {
-          this.loadingUpcomingEvents = false
-        }
-      },
-      async getChurchInfo(churchId) {
-        try {
-          this.loadingChurchInfo = true
-          const path = `get_church_info/${churchId}`
-          const response = await this.$http.get(path, this.authToken)
-          this.church = response.church
-          this.churchInfo = response
-        } catch (error) {
-
-        } finally {
-          this.loadingChurchInfo = false
-        }
+      } finally {
+        this.loadingChurchInfo = false
       }
     }
   }
+}
 
 </script>
+
+<style lang="scss">
+@import "../assets/charts.scss";
+@import "chartist/dist/scss/chartist.scss"
+</style>

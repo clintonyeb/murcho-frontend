@@ -364,861 +364,853 @@
 </template>
 
 <script>
-  import {
-    format,
-    subDays,
-    eachDayOfInterval,
-    eachWeekOfInterval,
-    addSeconds
-  } from 'date-fns'
-  import {
-    COLORS
-  } from '@/utils'
-  import {
-    debounce
-  } from 'debounce'
+import {
+  format,
+  subDays,
+  eachDayOfInterval,
+  eachWeekOfInterval,
+  addSeconds
+} from 'date-fns'
+import {
+  COLORS
+} from '@/utils'
+import {
+  debounce
+} from 'debounce'
 
-  import {
-    tickIcon,
-    eventIcon,
-    closeIcon
-  } from '@/utils/icons'
+import {
+  tickIcon,
+  eventIcon,
+  closeIcon
+} from '@/utils/icons'
 
-  import flatpickr from 'flatpickr'
-  import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
+import flatpickr from 'flatpickr'
+import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
 
-  const dateFormat = 'EEEE, do; h:m a'
-  let startDateComp = null
-  let repeatDateComp = null
+import {
+  RRule
+} from 'rrule'
 
-  import {
-    RRule
-  } from 'rrule'
+const dateFormat = 'EEEE, do; h:m a'
+let startDateComp = null
+let repeatDateComp = null
 
-  export default {
-    name: 'Create-Event',
-    props: {
-      calendar_id: {
-        required: true
+export default {
+  name: 'Create-Event',
+  props: {
+    calendar_id: {
+      required: true
+    },
+    startDate: {
+      required: false
+    },
+    endDate: {
+      required: false
+    }
+  },
+  data () {
+    return {
+      search_input: '',
+      selectedFields: [],
+      loadingForm: false,
+      groups: {
+        searching: false,
+        searched: [],
+        search: '',
+        selected: [],
+        loading: false,
+        pickedFromSelected: []
       },
-      startDate: {
-        required: false
+      repeat_date_value: '',
+      repeat_value: '',
+      repeat: '',
+      byMonthActive: false,
+      selectedByMothDate: null,
+      byMonths: [],
+      byMonthType: null,
+      byDayActive: false,
+      byDates: [],
+      byDateType: null,
+      interval: 1,
+      intervals: [],
+      frequency: null,
+      frequencies: [{
+        id: 1,
+        text: 'Daily',
+        value: RRule.DAILY
       },
-      endDate: {
-        required: false
+      {
+        id: 2,
+        text: 'Weekly',
+        value: RRule.WEEKLY
+      },
+      {
+        id: 3,
+        text: 'Monthly by day',
+        value: RRule.MONTHLY
+      },
+      {
+        id: 4,
+        text: 'Monthly by date',
+        value: RRule.MONTHLY
+      },
+      {
+        id: 5,
+        text: 'Yearly by day',
+        value: RRule.YEARLY
+      },
+      {
+        id: 6,
+        text: 'Yearly by date',
+        value: RRule.YEARLY
+      }
+      ],
+      loadingForm: false,
+      is_recurring: false,
+      colors: COLORS,
+      title: '',
+      description: '',
+      duration: '',
+      location: '',
+      duration_format: 'hrs',
+      color: 0,
+      icons: {
+        event: eventIcon,
+        cancel: closeIcon
+      },
+      creatingEvent: false,
+      durations: [{
+        id: 1,
+        text: 'Minutes',
+        value: 'mins'
+      },
+      {
+        id: 2,
+        text: 'Hours',
+        value: 'hrs'
+      },
+      {
+        id: 3,
+        text: 'Days',
+        value: 'days'
+      },
+      {
+        id: 4,
+        text: 'Weeks',
+        value: 'wks'
+      },
+      {
+        id: 5,
+        text: 'Months',
+        value: 'mnths'
+      }
+      ],
+      colors: [{
+        id: 1,
+        text: 'Blue',
+        value: 0
+      },
+      {
+        id: 2,
+        text: 'Green',
+        value: 1
+      },
+      {
+        id: 3,
+        text: 'Yellow',
+        value: 2
+      },
+      {
+        id: 4,
+        text: 'Purple',
+        value: 3
+      },
+      {
+        id: 5,
+        text: 'Red',
+        value: 4
+      }
+      ]
+    }
+  },
+  mounted () {
+    this.initializeDatePickers()
+    this.frequency = this.frequencies[0]
+  },
+  computed: {
+    rruleMessage () {
+      if (!this.is_recurring) return ''
+      const startDate = startDateComp && startDateComp.selectedDates[0]
+      return this.createRRule(startDate).toText()
+    }
+  },
+  methods: {
+    searchedGroupItemClicked (group) {
+      this.clearGroupSearch()
+      if (this.groups.selected.find(g => g.id === group.id)) return false
+
+      this.groups.selected.unshift(group)
+      this.groups.pickedFromSelected.push(group)
+    },
+    searchGroups: debounce(function (e) {
+      this.doGroupsSearch(e.target.value)
+    }, 200),
+    async doGroupsSearch (name) {
+      if (!name) {
+        this.groups.searching = false
+        return
+      }
+
+      const search = name.toLowerCase()
+      const path = `search_groups/${search}`
+      this.groups.searching = true
+
+      try {
+        const response = await this.$http.get(path, this.authToken)
+        this.groups.searched = response
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.groups.searchings = false
       }
     },
-    data() {
-      return {
-        search_input: '',
-        selectedFields: [],
-        loadingForm: false,
-        groups: {
-          searching: false,
-          searched: [],
-          search: '',
-          selected: [],
-          loading: false,
-          pickedFromSelected: []
-        },
-        repeat_date_value: '',
-        repeat_value: '',
-        repeat: '',
-        byMonthActive: false,
-        selectedByMothDate: null,
-        byMonths: [],
-        byMonthType: null,
-        byDayActive: false,
-        byDates: [],
-        byDateType: null,
-        interval: 1,
-        intervals: [],
-        frequency: null,
-        frequencies: [{
-            id: 1,
-            text: 'Daily',
-            value: RRule.DAILY
-          },
-          {
-            id: 2,
-            text: 'Weekly',
-            value: RRule.WEEKLY
-          },
-          {
-            id: 3,
-            text: 'Monthly by day',
-            value: RRule.MONTHLY
-          },
-          {
-            id: 4,
-            text: 'Monthly by date',
-            value: RRule.MONTHLY
-          },
-          {
-            id: 5,
-            text: 'Yearly by day',
-            value: RRule.YEARLY
-          },
-          {
-            id: 6,
-            text: 'Yearly by date',
-            value: RRule.YEARLY
-          },
-        ],
-        loadingForm: false,
-        is_recurring: false,
-        colors: COLORS,
-        title: '',
-        description: '',
-        duration: '',
-        location: '',
-        duration_format: 'hrs',
-        color: 0,
-        icons: {
-          event: eventIcon,
-          cancel: closeIcon
-        },
-        creatingEvent: false,
-        durations: [{
-            id: 1,
-            text: 'Minutes',
-            value: 'mins'
-          },
-          {
-            id: 2,
-            text: 'Hours',
-            value: 'hrs'
-          },
-          {
-            id: 3,
-            text: 'Days',
-            value: 'days'
-          },
-          {
-            id: 4,
-            text: 'Weeks',
-            value: 'wks'
-          },
-          {
-            id: 5,
-            text: 'Months',
-            value: 'mnths'
+    clearGroupSearch () {
+      this.groups.searched = []
+      this.groups.search = ''
+      this.groups.searching = false
+    },
+    createRRule (startDate) {
+      const options = {
+        freq: this.frequency.value,
+        interval: this.interval.value
+      }
+
+      if (startDate) {
+        options['dtstart'] = startDate
+      }
+
+      if (this.byDateType) {
+        options[this.byDateType] = this.byDates.filter(day => day.selected).map(day => day.value)
+      }
+
+      if (this.byMonthType) {
+        options[this.byMonthType] = this.selectedByMothDate.value
+      }
+
+      if (this.repeat === 'count') {
+        options[this.repeat] = this.repeat_value
+      } else if (this.repeat === 'until') {
+        options[this.repeat] = this.repeat_date_value && repeatDateComp.selectedDates[0]
+      }
+
+      return new RRule(options)
+    },
+    createEvent () {
+      if (this.creatingEvent) return false
+
+      this.validateForm(async state => {
+        if (!state) return false
+        this.creatingEvent = true
+
+        const startDate = startDateComp.selectedDates[0]
+        const duration = this.getDurationInSeconds(this.duration_format, this.duration)
+        const rrule = this.createRRule(startDate, duration)
+        let endDate = null
+
+        if (!this.is_recurring) {
+          endDate = addSeconds(startDate, duration)
+        } else if (!this.repeat) {
+          endDate = null
+        } else {
+          const dates = rrule.all(function (date, i) {
+            return i < 1000
+          })
+          endDate = dates[dates.length - 1]
+        }
+
+        try {
+          let path = 'event_schemas'
+          const events = await this.$http.post(path, {
+            title: this.title,
+            description: this.description,
+            calendar_id: this.calendar_id,
+            duration: duration,
+            start_date: startDate,
+            end_date: endDate,
+            location: this.location,
+            color: this.color,
+            is_recurring: this.is_recurring,
+            recurrence: this.is_recurring ? rrule.toString() : null,
+            startDate: this.startDate,
+            endDate: this.endDate
+          }, this.authToken)
+
+          // save group with event if any
+
+          if (this.groups.pickedFromSelected.length) {
+            path = 'add_event_to_groups'
+
+            const response = await this.$http.post(path, {
+              event_schema_id: events[0].id,
+              group_ids: this.groups.pickedFromSelected.map(group => group.id)
+            }, this.authToken)
+
+            console.log('added groups to event', response)
           }
-        ],
-        colors: [{
-            id: 1,
-            text: 'Blue',
-            value: 0
+
+          this.$emit('done', events)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.creatingEvent = false
+        }
+      })
+    },
+    getDurationInSeconds (format, duration) {
+      // convert duration to seconds based on format chosen
+      duration = Number(duration)
+      switch (format) {
+        case 'mins':
+          return duration * 60
+        case 'hrs':
+          return duration * 3600
+        case 'days':
+          return duration * 86400
+        case 'wks':
+          return duration * 604800
+        case 'mnths':
+          return duration * 2.628e+6
+        default:
+          throw new Error('Invalid date format given')
+      }
+    },
+    initializeDatePickers () {
+      const startDate = new Date()
+
+      startDateComp = flatpickr(this.$refs['start_date'], {
+        enableTime: true,
+        minDate: startDate,
+        dateFormat: 'J M, Y; h i K',
+        defaultDate: startDate,
+        plugins: [new confirmDatePlugin({
+          confirmIcon: tickIcon,
+          confirmText: 'Done',
+          showAlways: true
+        })]
+      })
+    },
+    mergeArrays (first, second) {
+      const results = []
+
+      for (let i = 0; i < first.length; i++) {
+        for (let j = 0; j < second.length; j++) {
+          results.push({
+            text: `${first[i].text} ${second[j].text}`,
+            selected: false,
+            value: second[j].value.nth(first[i].value)
+          })
+        }
+      }
+      return results
+    },
+    setOptions (freq) {
+      switch (freq.value) {
+        case RRule.DAILY:
+          this.intervals = eachDayOfInterval({
+            start: new Date(2018, 8, 1),
+            end: new Date(2018, 8, 30)
+          }).map((date, i) => {
+            const id = i + 1
+            let text = format(date, 'do', {
+              awareOfUnicodeTokens: true
+            })
+            if (text == '1st') text = ''
+            else if (text === '2nd') text = 'other '
+            else text = `${text} `
+
+            return {
+              id: id,
+              text: `Every ${text}day`,
+              value: id
+            }
+          })
+
+          this.interval = this.intervals[0]
+          break
+        case RRule.WEEKLY:
+
+          this.byDateType = 'byweekday'
+
+          this.intervals = eachWeekOfInterval({
+            start: new Date(2018, 0, 1),
+            end: new Date(2018, 5, 30)
+          }).map((date, i) => {
+            const id = i + 1
+            let text = format(date, 'wo', {
+              awareOfUnicodeTokens: true
+            })
+            if (text == '1st') text = ''
+            else if (text === '2nd') text = 'other '
+            else text = `${text} `
+
+            return {
+              id: id,
+              text: `Every ${text}week`,
+              value: id
+            }
+          })
+
+          this.interval = this.intervals[0]
+
+          this.byDates = [{
+            text: 'Monday',
+            selected: false,
+            value: RRule.MO
           },
           {
-            id: 2,
-            text: 'Green',
+            text: 'Tuesday',
+            selected: false,
+            value: RRule.TU
+          },
+          {
+            text: 'Wednesday',
+            selected: false,
+            value: RRule.WE
+          },
+          {
+            text: 'Thursday',
+            selected: false,
+            value: RRule.TH
+          },
+          {
+            text: 'Friday',
+            selected: false,
+            value: RRule.FR
+          },
+          {
+            text: 'Saturday',
+            selected: false,
+            value: RRule.SA
+          },
+          {
+            text: 'Sunday',
+            selected: false,
+            value: RRule.SU
+          }
+          ]
+          break
+        case RRule.MONTHLY:
+          this.intervals = [{
+            id: 1,
+            text: 'Every month',
             value: 1
           },
           {
-            id: 3,
-            text: 'Yellow',
+            id: 2,
+            text: 'Every other month',
             value: 2
           },
           {
-            id: 4,
-            text: 'Purple',
+            id: 3,
+            text: 'Every 3rd month',
             value: 3
           },
           {
-            id: 5,
-            text: 'Red',
+            id: 4,
+            text: 'Every 4th month',
             value: 4
+          },
+          {
+            id: 5,
+            text: 'Every 5th month',
+            value: 5
+          },
+          {
+            id: 6,
+            text: 'Every 6th month',
+            value: 6
+          },
+          {
+            id: 7,
+            text: 'Every 7th month',
+            value: 7
+          },
+          {
+            id: 8,
+            text: 'Every 8th month',
+            value: 8
+          },
+          {
+            id: 9,
+            text: 'Every 9th month',
+            value: 9
+          },
+          {
+            id: 10,
+            text: 'Every 10th month',
+            value: 10
+          },
+          {
+            id: 11,
+            text: 'Every 11th month',
+            value: 11
+          },
+          {
+            id: 12,
+            text: 'Every 12th month',
+            value: 12
+          },
+          {
+            id: 18,
+            text: 'Every 18th month',
+            value: 18
+          },
+          {
+            id: 24,
+            text: 'Every 24th month',
+            value: 24
+          },
+          {
+            id: 36,
+            text: 'Every 36th month',
+            value: 36
+          },
+          {
+            id: 48,
+            text: 'Every 48th month',
+            value: 48
           }
-        ]
-      }
-    },
-    mounted() {
-      this.initializeDatePickers()
-      this.frequency = this.frequencies[0]
-    },
-    computed: {
-      rruleMessage() {
-        if (!this.is_recurring) return ''
-        const startDate = startDateComp && startDateComp.selectedDates[0]
-        return this.createRRule(startDate).toText()
-      }
-    },
-    methods: {
-      searchedGroupItemClicked(group) {
-        this.clearGroupSearch()
-        if (this.groups.selected.find(g => g.id === group.id)) return false
+          ]
 
-        this.groups.selected.unshift(group)
-        this.groups.pickedFromSelected.push(group)
-      },
-      searchGroups: debounce(function (e) {
-        this.doGroupsSearch(e.target.value)
-      }, 200),
-      async doGroupsSearch(name) {
-        if (!name) {
-          this.groups.searching = false
-          return
-        }
+          this.interval = this.intervals[0]
 
-        const search = name.toLowerCase()
-        const path = `search_groups/${search}`
-        this.groups.searching = true
+          if (freq.id === 3) {
+            this.byDateType = 'byweekday'
 
-        try {
-          const response = await this.$http.get(path, this.authToken)
-          this.groups.searched = response
-        } catch (error) {
-          console.log(error)
-        } finally {
-          this.groups.searchings = false
-        }
-      },
-      clearGroupSearch() {
-        this.groups.searched = []
-        this.groups.search = ''
-        this.groups.searching = false
-      },
-      createRRule(startDate) {
-        const options = {
-          freq: this.frequency.value,
-          interval: this.interval.value
-        }
-
-        if (startDate) {
-          options['dtstart'] = startDate
-        }
-
-        if (this.byDateType) {
-          options[this.byDateType] = this.byDates.filter(day => day.selected).map(day => day.value)
-        }
-
-        if (this.byMonthType) {
-          options[this.byMonthType] = this.selectedByMothDate.value
-        }
-
-        if (this.repeat === 'count') {
-          options[this.repeat] = this.repeat_value
-        } else if (this.repeat === 'until') {
-          options[this.repeat] = this.repeat_date_value && repeatDateComp.selectedDates[0]
-        }
-
-        return new RRule(options)
-      },
-      createEvent() {
-        if (this.creatingEvent) return false
-
-        this.validateForm(async state => {
-          if (!state) return false
-          this.creatingEvent = true
-
-          const startDate = startDateComp.selectedDates[0]
-          const duration = this.getDurationInSeconds(this.duration_format, this.duration)
-          const rrule = this.createRRule(startDate, duration)
-          let endDate = null
-
-          if (!this.is_recurring) {
-            endDate = addSeconds(startDate, duration)
-          } else if (!this.repeat) {
-            endDate = null
-          } else {
-            const dates = rrule.all(function (date, i) {
-              return i < 1000
-            })
-            endDate = dates[dates.length - 1]
-          }
-
-
-          try {
-            let path = 'event_schemas'
-            const events = await this.$http.post(path, {
-              title: this.title,
-              description: this.description,
-              calendar_id: this.calendar_id,
-              duration: duration,
-              start_date: startDate,
-              end_date: endDate,
-              location: this.location,
-              color: this.color,
-              is_recurring: this.is_recurring,
-              recurrence: this.is_recurring ? rrule.toString() : null,
-              startDate: this.startDate,
-              endDate: this.endDate
-            }, this.authToken)
-
-            // save group with event if any
-
-            if (this.groups.pickedFromSelected.length) {
-              path = 'add_event_to_groups'
-
-              const response = await this.$http.post(path, {
-                event_schema_id: events[0].id,
-                group_ids: this.groups.pickedFromSelected.map(group => group.id)
-              }, this.authToken)
-
-              console.log('added groups to event', response)
+            const weekTime = [{
+              text: 'First',
+              value: 1
+            },
+            {
+              text: 'Second',
+              value: 2
+            },
+            {
+              text: 'Third',
+              value: 3
+            },
+            {
+              text: 'Fourth',
+              value: 4
+            },
+            {
+              text: 'Fifth',
+              value: 5
+            },
+            {
+              text: 'Last',
+              value: -1
             }
+            ]
 
-            this.$emit('done', events)
+            const weekDay = [{
+              text: 'Monday',
+              value: RRule.MO
+            },
+            {
+              text: 'Tuesday',
+              value: RRule.TU
+            },
+            {
+              text: 'Wednesday',
+              value: RRule.WE
+            },
+            {
+              text: 'Thursday',
+              value: RRule.TH
+            },
+            {
+              text: 'Friday',
+              value: RRule.FR
+            },
+            {
+              text: 'Saturday',
+              value: RRule.SA
+            },
+            {
+              text: 'Sunday',
+              value: RRule.SU
+            }
+            ]
 
-          } catch (err) {
-            console.log(err)
-          } finally {
-            this.creatingEvent = false
+            this.byDates = this.mergeArrays(weekTime, weekDay)
+          } else if (freq.id === 4) {
+            this.byDateType = 'bymonthday'
+
+            this.byDates = [{
+              text: 'Use today\'s date',
+              value: new Date().getDate()
+            }]
+
+            eachDayOfInterval({
+              start: new Date(2018, 0, 1),
+              end: new Date(2018, 0, 31)
+            }).forEach((date, i) => {
+              let text = format(date, 'do', {
+                awareOfUnicodeTokens: true
+              })
+              this.byDates.push({
+                text: `${text} day`,
+                selected: false,
+                value: i + 1
+              })
+            })
           }
-        })
-      },
-      getDurationInSeconds(format, duration) {
-        // convert duration to seconds based on format chosen
-        duration = Number(duration)
-        switch (format) {
-          case 'mins':
-            return duration * 60
-          case 'hrs':
-            return duration * 3600
-          case 'days':
-            return duration * 86400
-          case 'wks':
-            return duration * 604800
-          case 'mnths':
-            return duration * 2.628e+6
-          default:
-            throw new Error('Invalid date format given')
-        }
-      },
-      initializeDatePickers() {
-        const startDate = new Date()
+          break
 
-        startDateComp = flatpickr(this.$refs['start_date'], {
+        case RRule.YEARLY:
+          this.intervals = [{
+            id: 1,
+            text: 'Every year',
+            value: 1
+          },
+          {
+            id: 2,
+            text: 'Every other year',
+            value: 2
+          },
+          {
+            id: 3,
+            text: 'Every 3rd year',
+            value: 3
+          },
+          {
+            id: 4,
+            text: 'Every 4th year',
+            value: 4
+          },
+          {
+            id: 5,
+            text: 'Every 5th year',
+            value: 5
+          },
+          {
+            id: 6,
+            text: 'Every 6th year',
+            value: 6
+          },
+          {
+            id: 7,
+            text: 'Every 7th year',
+            value: 7
+          },
+          {
+            id: 8,
+            text: 'Every 8th year',
+            value: 8
+          },
+          {
+            id: 9,
+            text: 'Every 9th year',
+            value: 9
+          },
+          {
+            id: 10,
+            text: 'Every 10th year',
+            value: 9
+          }
+          ]
+
+          this.interval = this.intervals[0]
+
+          this.byMonthType = 'bymonth'
+
+          this.byMonths = [{
+            text: 'Use today\'s month',
+            value: new Date().getMonth()
+          },
+          {
+            text: 'January',
+            value: 1
+          },
+          {
+            text: 'February',
+            value: 2
+          },
+          {
+            text: 'March',
+            value: 3
+          },
+          {
+            text: 'April',
+            value: 4
+          },
+          {
+            text: 'May',
+            value: 5
+          },
+          {
+            text: 'June',
+            value: 6
+          },
+          {
+            text: 'July',
+            value: 7
+          },
+          {
+            text: 'August',
+            value: 8
+          },
+          {
+            text: 'September',
+            value: 9
+          },
+          {
+            text: 'October',
+            value: 10
+          },
+          {
+            text: 'November',
+            value: 11
+          },
+          {
+            text: 'December',
+            value: 12
+          }
+          ]
+
+          this.selectedByMothDate = this.byMonths[0]
+
+          if (freq.id === 5) {
+            this.byDateType = 'byweekday'
+
+            const weekTime = [{
+              text: 'First',
+              value: 1
+            },
+            {
+              text: 'Second',
+              value: 2
+            },
+            {
+              text: 'Third',
+              value: 3
+            },
+            {
+              text: 'Fourth',
+              value: 4
+            },
+            {
+              text: 'Fifth',
+              value: 5
+            },
+            {
+              text: 'Last',
+              value: -1
+            }
+            ]
+
+            const weekDay = [{
+              text: 'Monday',
+              value: RRule.MO
+            },
+            {
+              text: 'Tuesday',
+              value: RRule.TU
+            },
+            {
+              text: 'Wednesday',
+              value: RRule.WE
+            },
+            {
+              text: 'Thursday',
+              value: RRule.TH
+            },
+            {
+              text: 'Friday',
+              value: RRule.FR
+            },
+            {
+              text: 'Saturday',
+              value: RRule.SA
+            },
+            {
+              text: 'Sunday',
+              value: RRule.SU
+            }
+            ]
+
+            this.byDates = this.mergeArrays(weekTime, weekDay)
+          } else if (freq.id === 6) {
+            this.byDateType = 'bymonthday'
+
+            this.byDates = [{
+              text: 'Use today\'s date',
+              value: new Date().getDate()
+            }]
+
+            eachDayOfInterval({
+              start: new Date(2018, 0, 1),
+              end: new Date(2018, 0, 31)
+            }).forEach((date, i) => {
+              let text = format(date, 'do', {
+                awareOfUnicodeTokens: true
+              })
+              this.byDates.push({
+                text: `${text} day`,
+                selected: false,
+                value: i + 1
+              })
+            })
+          }
+
+          break
+
+        default:
+          break
+      }
+    },
+    resetSettings () {
+      this.byDates = []
+      this.byDateType = null
+      this.interval = null
+      this.byDayActive = false
+      this.intervals = []
+      this.byMonthActive = false
+      this.selectedByMothDates = []
+      this.byMonths = []
+      this.byMonthType = null
+    }
+  },
+  beforeDestroy () {
+    if (startDateComp !== null) startDateComp.destroy()
+    if (repeatDateComp !== null) repeatDateComp.destroy()
+  },
+  watch: {
+    frequency (val) {
+      if (!val) return
+      this.resetSettings()
+      this.setOptions(val)
+    },
+    repeat (val) {
+      this.repeat_value = ''
+
+      if (!val || repeatDateComp) return
+
+      this.$nextTick(() => {
+        repeatDateComp = flatpickr(this.$refs['repeat_until'], {
           enableTime: true,
-          minDate: startDate,
           dateFormat: 'J M, Y; h i K',
-          defaultDate: startDate,
+          defaultDate: new Date(),
           plugins: [new confirmDatePlugin({
             confirmIcon: tickIcon,
             confirmText: 'Done',
             showAlways: true
           })]
         })
-      },
-      mergeArrays(first, second) {
-        const results = []
-
-        for (let i = 0; i < first.length; i++) {
-          for (let j = 0; j < second.length; j++) {
-            results.push({
-              text: `${first[i].text} ${second[j].text}`,
-              selected: false,
-              value: second[j].value.nth(first[i].value)
-            })
-          }
-        }
-        return results
-      },
-      setOptions(freq) {
-        switch (freq.value) {
-          case RRule.DAILY:
-            this.intervals = eachDayOfInterval({
-              start: new Date(2018, 8, 1),
-              end: new Date(2018, 8, 30)
-            }).map((date, i) => {
-
-              const id = i + 1
-              let text = format(date, "do", {
-                awareOfUnicodeTokens: true
-              })
-              if (text == '1st') text = ''
-              else if (text === '2nd') text = 'other '
-              else text = `${text} `
-
-              return {
-                id: id,
-                text: `Every ${text}day`,
-                value: id
-              }
-            })
-
-            this.interval = this.intervals[0]
-            break;
-          case RRule.WEEKLY:
-
-            this.byDateType = 'byweekday'
-
-            this.intervals = eachWeekOfInterval({
-              start: new Date(2018, 0, 1),
-              end: new Date(2018, 5, 30)
-            }).map((date, i) => {
-
-              const id = i + 1
-              let text = format(date, "wo", {
-                awareOfUnicodeTokens: true
-              })
-              if (text == '1st') text = ''
-              else if (text === '2nd') text = 'other '
-              else text = `${text} `
-
-              return {
-                id: id,
-                text: `Every ${text}week`,
-                value: id
-              }
-            })
-
-            this.interval = this.intervals[0]
-
-            this.byDates = [{
-                text: 'Monday',
-                selected: false,
-                value: RRule.MO
-              },
-              {
-                text: 'Tuesday',
-                selected: false,
-                value: RRule.TU
-              },
-              {
-                text: 'Wednesday',
-                selected: false,
-                value: RRule.WE
-              },
-              {
-                text: 'Thursday',
-                selected: false,
-                value: RRule.TH
-              },
-              {
-                text: 'Friday',
-                selected: false,
-                value: RRule.FR
-              },
-              {
-                text: 'Saturday',
-                selected: false,
-                value: RRule.SA
-              },
-              {
-                text: 'Sunday',
-                selected: false,
-                value: RRule.SU
-              },
-            ]
-            break
-          case RRule.MONTHLY:
-            this.intervals = [{
-                id: 1,
-                text: 'Every month',
-                value: 1,
-              },
-              {
-                id: 2,
-                text: 'Every other month',
-                value: 2,
-              },
-              {
-                id: 3,
-                text: 'Every 3rd month',
-                value: 3,
-              },
-              {
-                id: 4,
-                text: 'Every 4th month',
-                value: 4,
-              },
-              {
-                id: 5,
-                text: 'Every 5th month',
-                value: 5,
-              },
-              {
-                id: 6,
-                text: 'Every 6th month',
-                value: 6,
-              },
-              {
-                id: 7,
-                text: 'Every 7th month',
-                value: 7,
-              },
-              {
-                id: 8,
-                text: 'Every 8th month',
-                value: 8,
-              },
-              {
-                id: 9,
-                text: 'Every 9th month',
-                value: 9,
-              },
-              {
-                id: 10,
-                text: 'Every 10th month',
-                value: 10,
-              },
-              {
-                id: 11,
-                text: 'Every 11th month',
-                value: 11,
-              },
-              {
-                id: 12,
-                text: 'Every 12th month',
-                value: 12,
-              },
-              {
-                id: 18,
-                text: 'Every 18th month',
-                value: 18,
-              },
-              {
-                id: 24,
-                text: 'Every 24th month',
-                value: 24,
-              },
-              {
-                id: 36,
-                text: 'Every 36th month',
-                value: 36,
-              },
-              {
-                id: 48,
-                text: 'Every 48th month',
-                value: 48,
-              },
-            ]
-
-            this.interval = this.intervals[0]
-
-            if (freq.id === 3) {
-              this.byDateType = 'byweekday'
-
-              const weekTime = [{
-                  text: "First",
-                  value: 1
-                },
-                {
-                  text: "Second",
-                  value: 2
-                },
-                {
-                  text: "Third",
-                  value: 3
-                },
-                {
-                  text: "Fourth",
-                  value: 4
-                },
-                {
-                  text: "Fifth",
-                  value: 5
-                },
-                {
-                  text: "Last",
-                  value: -1
-                }
-              ]
-
-              const weekDay = [{
-                  text: "Monday",
-                  value: RRule.MO
-                },
-                {
-                  text: "Tuesday",
-                  value: RRule.TU
-                },
-                {
-                  text: "Wednesday",
-                  value: RRule.WE
-                },
-                {
-                  text: "Thursday",
-                  value: RRule.TH
-                },
-                {
-                  text: "Friday",
-                  value: RRule.FR
-                },
-                {
-                  text: "Saturday",
-                  value: RRule.SA
-                },
-                {
-                  text: "Sunday",
-                  value: RRule.SU
-                }
-              ]
-
-              this.byDates = this.mergeArrays(weekTime, weekDay)
-            } else if (freq.id === 4) {
-
-              this.byDateType = 'bymonthday'
-
-              this.byDates = [{
-                text: 'Use today\'s date',
-                value: new Date().getDate()
-              }]
-
-              eachDayOfInterval({
-                start: new Date(2018, 0, 1),
-                end: new Date(2018, 0, 31)
-              }).forEach((date, i) => {
-
-                let text = format(date, "do", {
-                  awareOfUnicodeTokens: true
-                })
-                this.byDates.push({
-                  text: `${text} day`,
-                  selected: false,
-                  value: i + 1
-                })
-              })
-            }
-            break
-
-          case RRule.YEARLY:
-            this.intervals = [{
-                id: 1,
-                text: 'Every year',
-                value: 1,
-              },
-              {
-                id: 2,
-                text: 'Every other year',
-                value: 2,
-              },
-              {
-                id: 3,
-                text: 'Every 3rd year',
-                value: 3,
-              },
-              {
-                id: 4,
-                text: 'Every 4th year',
-                value: 4,
-              },
-              {
-                id: 5,
-                text: 'Every 5th year',
-                value: 5,
-              },
-              {
-                id: 6,
-                text: 'Every 6th year',
-                value: 6,
-              },
-              {
-                id: 7,
-                text: 'Every 7th year',
-                value: 7,
-              },
-              {
-                id: 8,
-                text: 'Every 8th year',
-                value: 8,
-              },
-              {
-                id: 9,
-                text: 'Every 9th year',
-                value: 9,
-              },
-              {
-                id: 10,
-                text: 'Every 10th year',
-                value: 9
-              }
-            ]
-
-            this.interval = this.intervals[0]
-
-            this.byMonthType = 'bymonth'
-
-            this.byMonths = [{
-                text: 'Use today\'s month',
-                value: new Date().getMonth()
-              },
-              {
-                text: 'January',
-                value: 1
-              },
-              {
-                text: 'February',
-                value: 2
-              },
-              {
-                text: 'March',
-                value: 3
-              },
-              {
-                text: 'April',
-                value: 4
-              },
-              {
-                text: 'May',
-                value: 5
-              },
-              {
-                text: 'June',
-                value: 6
-              },
-              {
-                text: 'July',
-                value: 7
-              },
-              {
-                text: 'August',
-                value: 8
-              },
-              {
-                text: 'September',
-                value: 9
-              },
-              {
-                text: 'October',
-                value: 10
-              },
-              {
-                text: 'November',
-                value: 11
-              },
-              {
-                text: 'December',
-                value: 12
-              },
-            ]
-
-            this.selectedByMothDate = this.byMonths[0]
-
-            if (freq.id === 5) {
-              this.byDateType = 'byweekday'
-
-              const weekTime = [{
-                  text: "First",
-                  value: 1
-                },
-                {
-                  text: "Second",
-                  value: 2
-                },
-                {
-                  text: "Third",
-                  value: 3
-                },
-                {
-                  text: "Fourth",
-                  value: 4
-                },
-                {
-                  text: "Fifth",
-                  value: 5
-                },
-                {
-                  text: "Last",
-                  value: -1
-                }
-              ]
-
-              const weekDay = [{
-                  text: "Monday",
-                  value: RRule.MO
-                },
-                {
-                  text: "Tuesday",
-                  value: RRule.TU
-                },
-                {
-                  text: "Wednesday",
-                  value: RRule.WE
-                },
-                {
-                  text: "Thursday",
-                  value: RRule.TH
-                },
-                {
-                  text: "Friday",
-                  value: RRule.FR
-                },
-                {
-                  text: "Saturday",
-                  value: RRule.SA
-                },
-                {
-                  text: "Sunday",
-                  value: RRule.SU
-                }
-              ]
-
-              this.byDates = this.mergeArrays(weekTime, weekDay)
-
-            } else if (freq.id === 6) {
-              this.byDateType = 'bymonthday'
-
-              this.byDates = [{
-                text: 'Use today\'s date',
-                value: new Date().getDate()
-              }]
-
-              eachDayOfInterval({
-                start: new Date(2018, 0, 1),
-                end: new Date(2018, 0, 31)
-              }).forEach((date, i) => {
-
-                let text = format(date, "do", {
-                  awareOfUnicodeTokens: true
-                })
-                this.byDates.push({
-                  text: `${text} day`,
-                  selected: false,
-                  value: i + 1
-                })
-              })
-            }
-
-            break
-
-          default:
-            break;
-        }
-      },
-      resetSettings() {
-        this.byDates = []
-        this.byDateType = null
-        this.interval = null
-        this.byDayActive = false
-        this.intervals = []
-        this.byMonthActive = false
-        this.selectedByMothDates = []
-        this.byMonths = []
-        this.byMonthType = null
-      }
-    },
-    beforeDestroy() {
-      if (startDateComp !== null) startDateComp.destroy()
-      if (repeatDateComp !== null) repeatDateComp.destroy()
-    },
-    watch: {
-      frequency(val) {
-        if (!val) return
-        this.resetSettings()
-        this.setOptions(val)
-      },
-      repeat(val) {
-        this.repeat_value = ''
-
-        if (!val || repeatDateComp) return
-
-        this.$nextTick(() => {
-          repeatDateComp = flatpickr(this.$refs['repeat_until'], {
-            enableTime: true,
-            dateFormat: 'J M, Y; h i K',
-            defaultDate: new Date(),
-            plugins: [new confirmDatePlugin({
-              confirmIcon: tickIcon,
-              confirmText: 'Done',
-              showAlways: true
-            })]
-          })
-        })
-      }
+      })
     }
   }
+}
 
 </script>

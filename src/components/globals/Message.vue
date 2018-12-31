@@ -30,21 +30,17 @@
 </template>
 
 <script>
-  import {
-    MESSAGE_TYPES
-  } from '@/utils'
-  export default {
-    props: ['info'],
-    data() {
-      return {
-        MESSAGE_TYPES: MESSAGE_TYPES,
-      }
+import {
+  MESSAGE_TYPES
+} from '@/utils'
+export default {
+  props: ['info'],
+  data () {
+    return {
+      MESSAGE_TYPES: MESSAGE_TYPES
     }
-
   }
 
+}
+
 </script>
-
-<style>
-
-</style>

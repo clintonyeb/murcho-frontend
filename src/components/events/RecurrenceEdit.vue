@@ -29,8 +29,8 @@
 </template>
 
 <script>
-  export default {
-    props: ['data', 'loading']
-  }
+export default {
+  props: ['data', 'loading']
+}
 
 </script>

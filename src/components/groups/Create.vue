@@ -70,39 +70,39 @@
 </template>
 
 <script>
-  export default {
-    name: 'Create',
-    data() {
-      return {
-        loadingForm: false,
-        name: '',
-        description: ''
-      }
-    },
-    methods: {
-      submit() {
-        if (this.loadingForm) return false
-        this.validateForm(async state => {
-          if (!state) return false
+export default {
+  name: 'Create',
+  data () {
+    return {
+      loadingForm: false,
+      name: '',
+      description: ''
+    }
+  },
+  methods: {
+    submit () {
+      if (this.loadingForm) return false
+      this.validateForm(async state => {
+        if (!state) return false
 
-          this.loadingForm = true
+        this.loadingForm = true
 
-          const path = `groups`
+        const path = `groups`
 
-          try {
-            const response = await this.$http.post(path, {
-              name: this.name,
-              description: this.description
-            }, this.authToken)
-            this.$emit('created', response)
-          } catch (err) {
-            console.log(err)
-          } finally {
-            this.loadingForm = false
-          }
-        })
-      },
-    },
+        try {
+          const response = await this.$http.post(path, {
+            name: this.name,
+            description: this.description
+          }, this.authToken)
+          this.$emit('created', response)
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.loadingForm = false
+        }
+      })
+    }
   }
+}
 
 </script>

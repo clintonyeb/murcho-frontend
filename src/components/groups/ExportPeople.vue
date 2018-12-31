@@ -44,39 +44,39 @@
 </template>
 
 <script>
-  export default {
-    props: ['group_id'],
-    data() {
-      return {
-        format: 'csv',
-        formats: [{
-          id: 1,
-          text: 'CSV Format',
-          value: 'csv'
-        }]
-      }
-    },
-    created() {
-      this.$emit('change', this.format)
-    },
-    methods: {
-      async exportPeople() {
-        const path = 'group_bulk_export'
+export default {
+  props: ['group_id'],
+  data () {
+    return {
+      format: 'csv',
+      formats: [{
+        id: 1,
+        text: 'CSV Format',
+        value: 'csv'
+      }]
+    }
+  },
+  created () {
+    this.$emit('change', this.format)
+  },
+  methods: {
+    async exportPeople () {
+      const path = 'group_bulk_export'
 
-        try {
-          const response = await this.$http.post(
-            path, {
-              group_id: this.group_id,
-              export_format: this.format
-            },
-            this.authToken
-          )
+      try {
+        const response = await this.$http.post(
+          path, {
+            group_id: this.group_id,
+            export_format: this.format
+          },
+          this.authToken
+        )
 
-          this.$emit('results', response.file_url)
-          this.modal = true
-        } catch (err) {} finally {}
-      },
-    },
+        this.$emit('results', response.file_url)
+        this.modal = true
+      } catch (err) {} finally {}
+    }
   }
+}
 
 </script>

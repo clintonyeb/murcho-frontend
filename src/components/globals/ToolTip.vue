@@ -5,8 +5,8 @@
 </template>
 
 <script>
-  export default {
-    name: 'ToolTip'
-  }
+export default {
+  name: 'ToolTip'
+}
 
 </script>
