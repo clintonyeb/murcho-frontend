@@ -7,28 +7,28 @@ module.exports = {
   plugins: [
     postcssImport,
     tailwindcss('./tailwind.js'),
-    // cssnano({
-    //   preset: 'default'
-    // }),
-    // purgecss({
-    //   content: [
-    //     './src/**/*.vue',
-    //     // './src/*.vue',
-    //     './src/**/*.js',
-    //     // './src/*.js',
-    //     './public/*.html'
-    //   ],
-    //   extractors: [
-    //     {
-    //       extractor: class TailwindExtractor {
-    //         static extract (content) {
-    //           return content.match(/[A-z0-9-:/]+/g) || []
-    //         }
-    //       },
-    //       extensions: ['vue', 'js', 'html']
-    //     }
-    //   ]
-    // }),
+    cssnano({
+      preset: 'default'
+    }),
+    purgecss({
+      content: [
+        './src/**/*.vue',
+        // './src/*.vue',
+        './src/**/*.js',
+        // './src/*.js',
+        './public/*.html'
+      ],
+      extractors: [
+        {
+          extractor: class TailwindExtractor {
+            static extract (content) {
+              return content.match(/[A-z0-9-:/]+/g) || []
+            }
+          },
+          extensions: ['vue', 'js', 'html']
+        }
+      ]
+    }),
     require('autoprefixer')
   ]
 }
