@@ -2,12 +2,12 @@ module.exports = {
   pluginOptions: {
     s3Deploy: {
       awsProfile: 'default',
-      region: 'ap-south-1',
-      bucket: 'frontend',
+      region: 'us-east-2',
+      bucket: 'murcho',
       createBucket: true,
       staticHosting: true,
       staticIndexPage: 'index.html',
-      staticErrorPage: 'error.html',
+      staticErrorPage: 'index.html',
       assetPath: 'dist',
       assetMatch: '**',
       deployPath: '/',
