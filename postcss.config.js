@@ -13,9 +13,7 @@ module.exports = {
     purgecss({
       content: [
         './src/**/*.vue',
-        // './src/*.vue',
         './src/**/*.js',
-        // './src/*.js',
         './public/*.html'
       ],
       extractors: [
@@ -27,7 +25,8 @@ module.exports = {
           },
           extensions: ['vue', 'js', 'html']
         }
-      ]
+      ],
+      whitelistPatterns: [/$ct-/]
     }),
     require('autoprefixer')
   ]
