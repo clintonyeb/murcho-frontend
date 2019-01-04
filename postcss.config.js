@@ -26,7 +26,7 @@ module.exports = {
           extensions: ['vue', 'js', 'html']
         }
       ],
-      whitelistPatterns: [/$ct-/]
+      whitelistPatterns: [/ct-*/, /flatpickr-*/]
     }),
     require('autoprefixer')
   ]

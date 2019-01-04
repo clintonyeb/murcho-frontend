@@ -155,6 +155,7 @@ import Analytics from '@/components/home/Analytics'
 import Actions from '@/components/home/Actions'
 
 export default {
+  name: 'dashboard',
   data () {
     return {
       upcomingEvents: [],
@@ -244,6 +245,8 @@ export default {
 </script>
 
 <style lang="scss">
+/* purgecss start ignore */
 @import "../assets/charts.scss";
-@import "chartist/dist/scss/chartist.scss"
+@import "chartist/dist/scss/chartist.scss";
+/* purgecss end ignore */
 </style>
