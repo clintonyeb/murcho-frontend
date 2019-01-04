@@ -245,8 +245,6 @@ export default {
 </script>
 
 <style lang="scss">
-/* purgecss start ignore */
 @import "../assets/charts.scss";
 @import "chartist/dist/scss/chartist.scss";
-/* purgecss end ignore */
 </style>
