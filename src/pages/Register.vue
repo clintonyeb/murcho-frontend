@@ -49,7 +49,7 @@
               <input type="text" placeholder="Enter Church Name" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
                 v-model="church_name" name="Church Name" v-validate="{required: true}" tabindex="1" v-autofocus id="Church Name"
                 :class="getInputColor('Church Name')">
-              <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Church Name')">
+              <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Church Name')">
                 {{getInputErrorMessage('Church Name')}}
               </p>
             </div>
@@ -60,7 +60,7 @@
               </label>
               <input type="text" placeholder="Enter Church Location" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
                 v-model="church_location" name="Church Location" tabindex="2" id="Church Location" :class="getInputColor('Church Location')">
-              <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Church Location')">
+              <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Church Location')">
                 {{getInputErrorMessage('Church Location')}}
               </p>
             </div>
@@ -71,7 +71,7 @@
               </label>
               <input type="text" placeholder="Enter Church Motto" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
                 v-model="church_motto" name="Church Motto" tabindex="3" id="Church Motto" :class="getInputColor('Church Motto')">
-              <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Church Motto')">
+              <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Church Motto')">
                 {{getInputErrorMessage('Church Motto')}}
               </p>
             </div>
@@ -92,7 +92,7 @@
                         for="Church Logo">
                         Click to choose a photo
                       </label>
-                      <p class="text-red-light text-xs italic animated shake" v-show="getInputState('Church Logo')">
+                      <p class="text-red-light text-xs  animated shake" v-show="getInputState('Church Logo')">
                         {{getInputErrorMessage('Church Logo')}}
                       </p>
                     </div>
@@ -134,7 +134,7 @@
             <input type="email" placeholder="Enter Email Address" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
               v-model="email" name="Email address" v-validate="{required: true, email: true}" tabindex="5" id="Email address"
               :class="getInputColor('Email address')">
-            <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Email address')">
+            <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Email address')">
               {{getInputErrorMessage('Email address')}}
             </p>
           </div>
@@ -146,7 +146,7 @@
             <input type="password" placeholder="Account Password" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
               v-model="password" name="Account Password" tabindex="6" id="Account Password" :class="getInputColor('Account Password')"
               ref="Account Password" v-validate="{required: true, min: 4}">
-            <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Account Password')">
+            <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Account Password')">
               {{getInputErrorMessage('Account Password')}}
             </p>
           </div>
@@ -158,7 +158,7 @@
             <input type="password" placeholder="Confirm Password" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
               v-model="confirm_password" name="Confirm Password" tabindex="7" id="Confirm Password" :class="getInputColor('Confirm Password')"
               v-validate="{required: true, confirmed: 'Account Password'}">
-            <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Confirm Password')">
+            <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Confirm Password')">
               {{getInputErrorMessage('Confirm Password')}}
             </p>
           </div>

@@ -9,7 +9,7 @@
           <input type="text" placeholder="Enter First Name" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
             v-model="first_name" name="First Name" v-validate="{required: true}" tabindex="1" v-autofocus id="First Name"
             :class="getInputColor('First Name')">
-          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('First Name')">
+          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('First Name')">
             {{getInputErrorMessage('First Name')}}
           </p>
         </div>
@@ -22,7 +22,7 @@
           </label>
           <input type="text" placeholder="Enter Last Name" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
             v-model="last_name" name="Last Name" v-validate="{required: true}" tabindex="2" id="Last Name" :class="getInputColor('Last Name')">
-          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Last Name')">
+          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Last Name')">
             {{getInputErrorMessage('Last Name')}}
           </p>
         </div>
@@ -38,7 +38,7 @@
           </label>
           <input type="email" placeholder="Enter Email Address" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
             v-model="email" name="Email Address" tabindex="3" id="Email Address" :class="getInputColor('Email Address')">
-          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Email Address')">
+          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Email Address')">
             {{getInputErrorMessage('Email Address')}}
           </p>
         </div>
@@ -51,7 +51,7 @@
           </label>
           <input type="text" placeholder="Enter Phone Number" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
             v-model="phone_number" name="Phone Number" tabindex="4" id="Phone Number" :class="getInputColor('Phone Number')">
-          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Phone Number')">
+          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Phone Number')">
             {{getInputErrorMessage('Phone Number')}}
           </p>
         </div>
@@ -67,7 +67,7 @@
           </label>
           <input type="text" placeholder="Enter Date Person Joined" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
             name="Date Joined" tabindex="5" ref="date_joined" id="Date Joined" :class="getInputColor('Date Joined')">
-          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Date Joined')">
+          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Date Joined')">
             {{getInputErrorMessage('Date Joined')}}
           </p>
         </div>
@@ -82,7 +82,7 @@
             v-validate="{required: true}" tabindex="6" id="Membership Status" :class="getInputColor('Membership Status')">
             <option v-for="status in membershipStatuses" :key="status.id" :value="status.value">{{status.text}}</option>
           </select>
-          <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Membership Status')">
+          <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Membership Status')">
             {{getInputErrorMessage('Membership Status')}}
           </p>
         </div>
@@ -104,7 +104,7 @@
               for="Profile Photo">
               Click to choose a photo
             </label>
-            <p class="text-red-light text-xs italic animated shake absolute pin-b" v-show="getInputState('Profile Photo')">
+            <p class="text-red-light text-xs  animated shake absolute pin-b" v-show="getInputState('Profile Photo')">
               {{getInputErrorMessage('Profile Photo')}}
             </p>
           </div>

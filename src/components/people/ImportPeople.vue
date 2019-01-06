@@ -17,7 +17,7 @@
                   for="People File">
                   Click to choose file
                 </label>
-                <p class="text-red-light text-xs italic animated shake absolute pin-b" v-show="getInputState('People File')">
+                <p class="text-red-light text-xs  animated shake absolute pin-b" v-show="getInputState('People File')">
                   {{getInputErrorMessage('People File')}}
                 </p>
               </div>

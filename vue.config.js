@@ -3,7 +3,7 @@ module.exports = {
     s3Deploy: {
       awsProfile: 'default',
       region: 'us-east-2',
-      bucket: 'www.murcho.com',
+      bucket: 'murcho.com',
       createBucket: true,
       staticHosting: true,
       staticIndexPage: 'index.html',

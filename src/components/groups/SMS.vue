@@ -11,7 +11,7 @@
             <textarea name="Message" placeholder="Enter Message Here.." class="ml-4 w-full h-48 p-1 resize-none"
               v-model="message" v-validate="{required: true}" tabindex="2" id="Message"></textarea>
           </div>
-          <p class="text-red-light text-xs pt-1 h-1 italic pt-1 animated shake" v-show="getInputState('Message')">
+          <p class="text-red-light text-xs pt-1 h-1  pt-1 animated shake" v-show="getInputState('Message')">
             {{getInputErrorMessage('Message')}}
           </p>
         </div>

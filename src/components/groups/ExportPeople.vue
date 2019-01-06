@@ -9,7 +9,7 @@
           v-validate="{required: true}" tabindex="1" id="Format" :class="getInputColor('Format')">
           <option v-for="format in formats" :key="format.id" :value="format.value">{{format.text}}</option>
         </select>
-        <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Format')">
+        <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Format')">
           {{getInputErrorMessage('Format')}}
         </p>
       </div>

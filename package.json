@@ -6,8 +6,10 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "npm run build && vue-cli-service s3-deploy",
-    "clean": "rm -rf dist/"
+    "init-deploy": "vue-cli-service s3-deploy",
+    "clean": "rm -rf dist/",
+    "deploy": "npm run build && aws s3 sync dist s3://murcho.com",
+    "invalidate-cloudfront": "aws cloudfront create-invalidation --distribution-id E1EPHSGB5Q60DF --paths '/*'"
   },
   "dependencies": {
     "animate.css": "^3.7.0",

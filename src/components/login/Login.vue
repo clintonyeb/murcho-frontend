@@ -57,7 +57,7 @@
             <input type="text" placeholder="Email address" class="ml-4 bg-grey-lightest" v-model="email" name="Email"
               v-validate="{required: true, email: true}" tabindex="1" v-autofocus>
           </div>
-          <p class="text-red-light text-xs ml-12 italic pt-1 animated shake" v-show="getInputState('Email')">
+          <p class="text-red-light text-xs ml-12 pt-1 animated shake" v-show="getInputState('Email')">
             {{getInputErrorMessage('Email')}}
           </p>
         </div>
@@ -98,7 +98,7 @@
             </button>
           </div>
 
-          <p class="text-red-light text-xs ml-12 pt-1 h-1 italic pt-1 animated shake" v-show="getInputState('Password')">
+          <p class="text-red-light text-xs ml-12 pt-1 h-1 pt-1 animated shake" v-show="getInputState('Password')">
             {{getInputErrorMessage('Password')}}
           </p>
 
@@ -167,8 +167,8 @@ export default {
     return {
       showPassword: false,
       loadingForm: false,
-      email: 'admin@murcho.com',
-      password: '12312312',
+      email: '',
+      password: '',
       displayMessage: '',
       displayMessageType: MESSAGE_TYPES.info,
       shouldDisplayMessage: false,

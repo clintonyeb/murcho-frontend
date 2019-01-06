@@ -9,7 +9,7 @@
         <input type="text" placeholder="Enter Event Title" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
           v-model="title" name="Event Title" v-validate="{required: true}" tabindex="1" v-autofocus id="Event Title"
           :class="getInputColor('Event Title')">
-        <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Event Title')">
+        <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Event Title')">
           {{getInputErrorMessage('Event Title')}}
         </p>
       </div>
@@ -22,7 +22,7 @@
         </label>
         <textarea name="Group Description" placeholder="Event Description.." class="w-full h-24 p-1 pl-2 resize-none border text-grey-darker"
           v-model="description" tabindex="2" id="Event Description" :class="getInputColor('Event Description')"></textarea>
-        <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Event Description')">
+        <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Event Description')">
           {{getInputErrorMessage('Event Description')}}
         </p>
       </div>
@@ -36,7 +36,7 @@
         <input type="text" placeholder="Event Start Date" class="text-grey-dark pl-2 w-full" name="Start Date"
           v-validate="{required: true}" tabindex="3" ref="start_date" id="Start Date">
       </div>
-      <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Start Date')">
+      <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Start Date')">
         {{getInputErrorMessage('Start Date')}}
       </p>
     </div>
@@ -53,7 +53,7 @@
               <option v-for="dur in durations" :key="dur.id" :value="dur.value">{{dur.text}}</option>
             </select>
           </div>
-          <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Duration Format')">
+          <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Duration Format')">
             {{getInputErrorMessage('Duration Format')}}
           </p>
         </div>
@@ -63,7 +63,7 @@
             <input type="number" placeholder="Event Duration" v-model="duration" class="pl-2 w-full" name="Duration"
               v-validate="{required: true, numeric: true}" tabindex="5">
           </div>
-          <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Duration')">
+          <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Duration')">
             {{getInputErrorMessage('Duration')}}
           </p>
         </div>
@@ -79,7 +79,7 @@
         <input type="text" placeholder="Event Location" v-model="location" class="ml-2 w-full" name="Location" tabindex="6"
           id="Location">
       </div>
-      <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Location')">
+      <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Location')">
         {{getInputErrorMessage('Location')}}
       </p>
     </div>
@@ -139,7 +139,7 @@
               <option v-for="col in colors" :key="col.id" :value="col.value">{{col.text}}</option>
             </select>
           </div>
-          <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Color')">
+          <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Color')">
             {{getInputErrorMessage('Color')}}
           </p>
         </div>
@@ -167,7 +167,7 @@
               <span class="text-grey-dark ml-1 text">Is Recurring Event</span>
             </label>
           </div>
-          <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Recurrence')">
+          <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Recurrence')">
             {{getInputErrorMessage('Recurrence')}}
           </p>
         </div>
@@ -187,7 +187,7 @@
             <option value="" selected disabled>-- Pick Frequency --</option>
             <option v-for="freq in frequencies" :key="freq.id" :value="freq" class="cursor-pointer">{{freq.text}}</option>
           </select>
-          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Frequency')">
+          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Frequency')">
             {{getInputErrorMessage('Frequency')}}
           </p>
         </div>
@@ -203,7 +203,7 @@
             <option value="" selected disabled>-- Pick Interval --</option>
             <option v-for="int in intervals" :key="int.id" :value="int" class="cursor-pointer">{{int.text}}</option>
           </select>
-          <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Interval')">
+          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Interval')">
             {{getInputErrorMessage('Interval')}}
           </p>
         </div>
@@ -220,7 +220,7 @@
               <div class="cursor-beam border rounded w-64 cursor-text relative" @click="byDayActive = !byDayActive"
                 style="min-height: 2rem;">
                 <div class="inline-flex items-center px-2 pb-2 justify-start flex-wrap" tabindex="12">
-                  <p v-for="(date, i) in byDates" v-if="date.selected" :key="i" class="inline-flex items-center justify-between border border-grey-dark text-grey-dark bg-grey-lighter mr-2 p-1 mt-2 text-xs rounded">
+                  <p v-for="(date, i) in selectedByDates" :key="i" class="inline-flex items-center justify-between border border-grey-dark text-grey-dark bg-grey-lighter mr-2 p-1 mt-2 text-xs rounded">
                     <span>
                       {{date.text}}
                     </span>
@@ -542,6 +542,9 @@ export default {
       if (!this.is_recurring) return ''
       const startDate = startDateComp && startDateComp.selectedDates[0]
       return this.createRRule(startDate).toText()
+    },
+    selectedByDates(){
+      return this.byDates.filter(day => day.selected === true)
     }
   },
   methods: {

@@ -33,7 +33,7 @@
             <input type="text" placeholder="Email address" class="ml-4 bg-grey-lightest" v-model="email" name="Email"
               v-validate="{required: true, email: true}" tabindex="1" v-autofocus>
           </div>
-          <p class="text-red-light text-xs ml-12 italic pt-1" v-show="getInputState('Email')">
+          <p class="text-red-light text-xs ml-12  pt-1" v-show="getInputState('Email')">
             {{getInputErrorMessage('Email')}}
           </p>
         </div>

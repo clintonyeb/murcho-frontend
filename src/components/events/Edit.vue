@@ -9,7 +9,7 @@
         <input type="text" placeholder="Event Start Date" class="text-grey-dark pl-2 w-full" name="Start Date"
           v-validate="{required: true}" tabindex="3" ref="start_date" id="Start Date">
       </div>
-      <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Start Date')">
+      <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Start Date')">
         {{getInputErrorMessage('Start Date')}}
       </p>
     </div>

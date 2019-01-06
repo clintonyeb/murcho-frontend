@@ -10,7 +10,7 @@
           <input type="text" placeholder="Event Title" class="ml-2" v-model="title" name="Title" v-validate="{required: true}"
             tabindex="1" v-autofocus id="Subject">
         </div>
-        <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Title')">
+        <p class="text-red-light text-xs pt-1 animated shake h-4" v-show="getInputState('Title')">
           {{getInputErrorMessage('Title')}}
         </p>
       </div>
@@ -25,7 +25,7 @@
             <textarea name="Description" placeholder="Event Description.." class="ml-2 w-full h-24 p-1 resize-none"
               v-model="description" tabindex="2" id="Description"></textarea>
           </div>
-          <p class="text-red-light text-xs pt-1 h-1 italic pt-1 animated shake" v-show="getInputState('Description')">
+          <p class="text-red-light text-xs pt-1 h-1  pt-1 animated shake" v-show="getInputState('Description')">
             {{getInputErrorMessage('Description')}}
           </p>
         </div>
@@ -39,7 +39,7 @@
           <input type="text" placeholder="Event Start Date" class="ml-2 w-full" name="Start Date" v-validate="{required: true}"
             tabindex="3" ref="start_date" id="Start Date">
         </div>
-        <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Start Date')">
+        <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Start Date')">
           {{getInputErrorMessage('Start Date')}}
         </p>
       </div>
@@ -55,7 +55,7 @@
                 <option v-for="dur in durations" :key="dur.id" :value="dur.value">{{dur.text}}</option>
               </select>
             </div>
-            <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Duration Format')">
+            <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Duration Format')">
               {{getInputErrorMessage('Duration Format')}}
             </p>
           </div>
@@ -65,7 +65,7 @@
               <input type="number" placeholder="Event Duration" v-model="duration" class="pl-2 w-full" name="Duration"
                 v-validate="{required: true, numeric: true}" tabindex="5">
             </div>
-            <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Duration')">
+            <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Duration')">
               {{getInputErrorMessage('Duration')}}
             </p>
           </div>
@@ -81,7 +81,7 @@
           <input type="text" placeholder="Event Location" v-model="location" class="ml-2 w-full" name="Location"
             tabindex="6" id="Location">
         </div>
-        <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Location')">
+        <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Location')">
           {{getInputErrorMessage('Location')}}
         </p>
       </div>
@@ -97,7 +97,7 @@
                 <option v-for="col in colors" :key="col.id" :value="col.value">{{col.text}}</option>
               </select>
             </div>
-            <p class="text-red-light text-xs italic pt-1 animated shake" v-show="getInputState('Color')">
+            <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Color')">
               {{getInputErrorMessage('Color')}}
             </p>
           </div>

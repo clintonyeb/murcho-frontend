@@ -8,7 +8,7 @@
         <input type="text" placeholder="Enter Group Name" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
           v-model="name" name="Group Name" v-validate="{required: true}" tabindex="1" v-autofocus id="Group Name"
           :class="getInputColor('Group Name')">
-        <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Group Name')">
+        <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Group Name')">
           {{getInputErrorMessage('Group Name')}}
         </p>
       </div>
@@ -21,7 +21,7 @@
         </label>
         <textarea name="Group Description" placeholder="Group Description.." class="w-full h-24 p-1 resize-none border text-grey-darker"
               v-model="description" tabindex="2" id="Group Description" :class="getInputColor('Group Description')"></textarea>
-        <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Group Description')">
+        <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Group Description')">
           {{getInputErrorMessage('Group Description')}}
         </p>
       </div>

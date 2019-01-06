@@ -46,14 +46,14 @@
             <label class="block text-grey text-sm font-bold mb-2" for="Start Date">Start Date</label>
             <input type="text" placeholder="Start Date" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
               name="Start Date" ref="start_date_joined" id="Start Date" :class="getInputColor('Start Date')">
-            <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('Start Date')">
+            <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Start Date')">
               {{getInputErrorMessage('Start Date')}}</p>
           </div>
           <div class="mt-2 w-1/2 ml-1">
             <label class="block text-grey text-sm font-bold mb-2" for="End Date">End Date</label>
             <input type="text" placeholder="End Date" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
               name="End Date" ref="end_date_joined" id="End Date" :class="getInputColor('End Date')">
-            <p class="text-red-light text-xs italic pt-1 animated shake h-4" v-show="getInputState('End Date')">
+            <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('End Date')">
               {{getInputErrorMessage('End Date')}}</p>
           </div>
         </div>
