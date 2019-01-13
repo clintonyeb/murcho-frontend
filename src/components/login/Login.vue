@@ -29,19 +29,20 @@
 
     </div>
 
-    <div class="container mx-auto md:p-20 sm:p-12 bg-pattern">
+    <div class="container mx-auto lg:p-20 p-4 bg-pattern">
 
       <div class="mb-4 h-10">
         <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-10">
       </div>
 
-      <div class="my-8 text-grey-dark w-64 font-medium text-lg">
+      <div class="my-8 text-grey-dark font-medium text-lg">
         Welcome Back, Please Login to your account or Register
       </div>
-      <div class="mt-16">
+      <form @submit.prevent="login">
+      <div class="mt-8 lg:mt-16">
         <div class="control mb-4 mt-4 h-16">
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Email')">
-            <button class="border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
+            <button class="hidden md:flex border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
 
               <svg class="h-6 w-6 fill-current text-grey-light" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 350 350" style="enable-background:new 0 0 50 50;"
@@ -54,17 +55,17 @@
                 </g>
               </svg>
             </button>
-            <input type="text" placeholder="Email address" class="ml-4 bg-grey-lightest" v-model="email" name="Email"
+            <input type="text" placeholder="Email address" class="w-full mx-2 bg-grey-lightest" v-model="email" name="Email"
               v-validate="{required: true, email: true}" tabindex="1" v-autofocus>
           </div>
-          <p class="text-red-light text-xs ml-12 pt-1 animated shake" v-show="getInputState('Email')">
+          <p class="text-red-light text-xs md:ml-8 pt-1 animated shake" v-show="getInputState('Email')">
             {{getInputErrorMessage('Email')}}
           </p>
         </div>
 
         <div class="control mt-4 mb-4 h-16">
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Password')">
-            <button class="border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
+            <button class="hidden md:flex border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
 
               <svg class="h-6 w-6 fill-current text-grey-light" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 58" style="enable-background:new 0 0 50 50;"
@@ -73,7 +74,7 @@
               </svg>
 
             </button>
-            <input :type=" showPassword ? 'text' : 'password'" placeholder="Password" class="ml-4 bg-grey-lightest"
+            <input :type=" showPassword ? 'text' : 'password'" placeholder="Password" class="w-full mx-2 bg-grey-lightest"
               v-model="password" name="Password" v-validate="{required: true}" tabindex="2">
 
             <button class="p-1 h-12 w-12 absolute pin-r" @click="showPassword = !showPassword">
@@ -98,7 +99,7 @@
             </button>
           </div>
 
-          <p class="text-red-light text-xs ml-12 pt-1 h-1 pt-1 animated shake" v-show="getInputState('Password')">
+          <p class="text-red-light text-xs md:ml-8 pt-1 h-1 pt-1 animated shake" v-show="getInputState('Password')">
             {{getInputErrorMessage('Password')}}
           </p>
 
@@ -106,13 +107,14 @@
 
       </div>
 
-      <div class="mt-4 mb-4 inline-flex justify-between w-full">
-        <a style="line-height: 3;" class="cursor-pointer text-grey-dark hover:text-blue-light underline" @click="$emit('forgotten')">
+      <div class="mt-4 mb-4 flex flex-wrap-reverse justify-between w-full">
+        <a style="line-height: 3;" class="cursor-pointer text-grey-dark hover:text-blue-light underline w-full lg:w-1/2 text-center lg:text-left mt-4 lg:mt-0" 
+        @click="$emit('forgotten')">
           Forgot Password?
         </a>
-        <div>
+        <div class="w-full lg:w-1/2 text-center lg:text-right">
           <button class="inline-flex items-center justify-center p-1 h-12 bg-blue rounded-sm w-32 text-white shadow-md"
-            @click="login">
+            @click.prevent.stop="login" type="submit">
             LOGIN
             <svg class="spinner ml-2 h-6 w-6 text-grey-light fill-current animated fadeIn" version="1.1" xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
@@ -131,14 +133,15 @@
           </button>
         </div>
       </div>
+      </form>
 
-      <div class="mt-12 mb-4">
+      <div class="my-8">
         <p class="is-dashed text-grey">
           <span>or</span>
         </p>
       </div>
 
-      <div class="mt-12 inline-flex w-full shadow-md" @click="$router.replace({name: 'signup'})">
+      <div class="inline-flex w-full shadow-md" @click="$router.replace({name: 'signup'})">
         <button class="bg-blue-dark h-12 w-12 p-2">
 
           <svg class="h-6 w-6 fill-current text-white" viewBox="-7 0 429 429.5" xmlns="http://www.w3.org/2000/svg">

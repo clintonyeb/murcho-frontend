@@ -84,7 +84,6 @@
           </div>
         </div>
 
-
       </div>
     </div>
     <div class="text-xs bg-black w-full p-4 text-white flex justify-between">
@@ -103,13 +102,13 @@
 </template>
 
 <script>
-  export default {
-    name: 'Footer',
-    data() {
-      return {
-        userMenu: false,
-      }
+export default {
+  name: 'Footer',
+  data () {
+    return {
+      userMenu: false
     }
   }
+}
 
 </script>

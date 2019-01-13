@@ -1,6 +1,6 @@
 <template>
-  <div class="flex h-screen w-screen font-sans" id="login">
-    <div class="w-1/2 h-screen bg-grey-lightest relative border-r-2 border-dashed bg-pattern" id="form-section">
+  <div class="flex flex-wrap h-screen w-screen font-sans" id="register">
+    <div class="w-full lg:w-1/2 lg:h-screen bg-grey-lightest relative border-r-2 border-dashed bg-pattern" id="form-section">
       <div>
         <div class="absolute flex items-center text-white text-sm font-bold px-4 py-3 w-full mb-4 " role="alert" v-if="shouldDisplayMessage"
           :class="alertClass" style="animation-delay: 1s;">
@@ -31,7 +31,7 @@
 
         </div>
 
-        <div class="max-w-md container mx-auto py-10 px-16">
+        <div class="max-w-md container mx-auto lg:p-20 p-4">
 
           <div class="mb-4">
             <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="w-64">
@@ -84,7 +84,7 @@
                   </label>
                   <div class="w-full flex items-top justify-between">
 
-                    <div class="w-2/3 relative pr-1 h-16">
+                    <div class="w-full relative pr-1 h-16">
                       <input type="file" id="Church Logo" placeholder="Upload Church Logo" class="text-grey-darker is-custom"
                         name="Church Logo" tabindex="4" @change="photoUploaded" v-validate.continues="{image: true, ext: ['jpeg', 'jpg', 'png', 'svg']}"
                         ref="church-photo">
@@ -118,9 +118,9 @@
       </div>
     </div>
 
-    <div class="w-1/2 h-screen bg-grey-lightest bg-pattern">
-
-      <div class="max-w-md container mx-auto py-10 px-16">
+    <div class="w-full lg:w-1/2 lg:h-screen bg-grey-lightest bg-pattern">
+      <hr class="w-full lg:hidden border border-dotted border-grey-dark">
+      <div class="max-w-md container mx-auto lg:p-20 p-4">
 
         <div class="my-8 text-grey-dark font-medium text-lg">
           Login Details
@@ -165,7 +165,7 @@
 
         </div>
 
-        <div class="mt-4 mb-4 inline-flex justify-between w-full">
+        <div class="mt-4 mb-4 inline-flex justify-around lg:justify-end w-full">
           <button class="inline-flex items-center justify-center p-1 px-4 h-12 bg-blue rounded-sm text-white shadow-md"
             @click="submit">
             CREATE ACCOUNT
@@ -186,144 +186,139 @@
           </button>
         </div>
 
-        <div class="mt-16 mb-4">
+        <div class="my-8">
           <p class="is-dashed text-grey">
             <span>or</span>
           </p>
         </div>
 
-        <div class="mt-4 inline-flex w-full shadow-md" @click="$router.replace({name: 'login'})">
+        <div class="inline-flex w-full shadow-md" @click="$router.replace({name: 'login'})">
           <button class="bg-blue-dark h-12 w-12 p-2">
 
             <svg class="h-6 w-6 fill-current text-white" viewBox="-7 0 429 429.5" xmlns="http://www.w3.org/2000/svg">
               <path d="m241.148438 88.699219c0 48.988281-39.710938 88.699219-88.699219 88.699219s-88.699219-39.710938-88.699219-88.699219 39.710938-88.699219 88.699219-88.699219 88.699219 39.710938 88.699219 88.699219zm0 0" />
               <path d="m245.449219 266.800781c-26.5-20.699219-58.597657-31.601562-92.800781-31.601562h-.296876c-41.101562.101562-79.402343 16.101562-107.703124 45.101562-27.199219 28-42.898438 65.699219-44.398438 107l262.898438-.5c-11.601563-19.511719-17.71875-41.796875-17.699219-64.5zm0 0" />
               <path d="m259.449219 266.5v55.800781c.046875 44.824219 26.617187 85.371094 67.699219 103.300781l8.800781 3.898438 10.300781-4.5c41.875-17.535156 69.121094-58.503906 69.101562-103.898438v-54.601562l-79.101562-42.199219zm122.800781 35c2.425781 2.984375 1.980469 7.367188-1 9.800781l-52.800781 42.898438c-1.230469 1.035156-2.789063 1.601562-4.398438 1.601562-2.058593.019531-4.011719-.898437-5.300781-2.5l-22.699219-26.5c-2.515625-2.957031-2.15625-7.386719.800781-9.902343 2.953126-2.511719 7.386719-2.152344 9.898438.800781l18.199219 21.300781 47.5-38.601562c3.027343-2.34375 7.367187-1.855469 9.800781 1.101562zm0 0" /></svg>
-
           </button>
-
           <button class="h-12 bg-blue w-full text-white">
             LOGIN TO ACCOUNT
           </button>
         </div>
-
       </div>
-
     </div>
   </div>
-
 </template>
 
 <script>
-import {
-  MESSAGE_TYPES
-} from '@/utils'
+  import {
+    MESSAGE_TYPES
+  } from '@/utils'
 
-export default {
-  name: 'LoginPage',
-  data () {
-    return {
-      displayMessage: '',
-      displayMessageType: MESSAGE_TYPES.info,
-      shouldDisplayMessage: false,
-      MESSAGE_TYPES: MESSAGE_TYPES,
-      loadingForm: false,
-      church_name: '',
-      church_location: '',
-      church_motto: '',
-      church_photo: '',
-      email: '',
-      password: '',
-      confirm_password: ''
-    }
-  },
-  created () {
-    this.setPageTitle('Sign Up')
-  },
-  computed: {
-    loadingButtonClass () {
+  export default {
+    name: 'LoginPage',
+    data() {
       return {
-        loading: this.loadingForm
+        displayMessage: '',
+        displayMessageType: MESSAGE_TYPES.info,
+        shouldDisplayMessage: false,
+        MESSAGE_TYPES: MESSAGE_TYPES,
+        loadingForm: false,
+        church_name: '',
+        church_location: '',
+        church_motto: '',
+        church_photo: '',
+        email: '',
+        password: '',
+        confirm_password: ''
       }
     },
-    alertClass () {
-      switch (this.displayMessageType) {
-        case MESSAGE_TYPES.warning:
-          return ['bg-yellow-dark']
-        case MESSAGE_TYPES.error:
-          return ['bg-red-light']
-        default:
-          return ['bg-blue-light']
-      }
-    }
-  },
-  methods: {
-    photoUploaded (event) {
-      const file = event.target.files && event.target.files[0]
-
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          this.church_photo = e.target.result
+    created() {
+      this.setPageTitle('Sign Up')
+    },
+    computed: {
+      loadingButtonClass() {
+        return {
+          loading: this.loadingForm
         }
-
-        reader.readAsDataURL(file)
-      } else {
-        this.church_photo = null
+      },
+      alertClass() {
+        switch (this.displayMessageType) {
+          case MESSAGE_TYPES.warning:
+            return ['bg-yellow-dark']
+          case MESSAGE_TYPES.error:
+            return ['bg-red-light']
+          default:
+            return ['bg-blue-light']
+        }
       }
     },
-    submit () {
-      if (this.loadingForm) return false
-      this.shouldDisplayMessage = false
+    methods: {
+      photoUploaded(event) {
+        const file = event.target.files && event.target.files[0]
 
-      this.validateForm(async state => {
-        if (!state) return false
-        this.loadingForm = true
+        if (file) {
+          const reader = new FileReader()
+          reader.onload = (e) => {
+            this.church_photo = e.target.result
+          }
 
-        try {
-          // create church
+          reader.readAsDataURL(file)
+        } else {
+          this.church_photo = null
+        }
+      },
+      submit() {
+        if (this.loadingForm) return false
+        this.shouldDisplayMessage = false
 
-          let path = 'churches'
+        this.validateForm(async state => {
+          if (!state) return false
+          this.loadingForm = true
 
-          const church = await this.$http.post(path, {
-            name: this.church_name,
-            location: this.church_location,
-            photo: null, // TODO upload photo
-            motto: this.church_motto
-          })
+          try {
+            // create church
 
-          // create user
-          path = 'users'
+            let path = 'churches'
 
-          const user = await this.$http.post(path, {
-            church_id: church.id,
-            email: this.email,
-            password: this.password,
-            access_level: 'super_admin'
-          })
+            const church = await this.$http.post(path, {
+              name: this.church_name,
+              location: this.church_location,
+              photo: null, // TODO upload photo
+              motto: this.church_motto
+            })
 
-          // return user to login
+            // create user
+            path = 'users'
 
-          this.$store.commit('SET_LOGIN_DATA', {
-            message: 'Account successfully created.',
-            type: MESSAGE_TYPES.info,
-            route: null
-          })
+            const user = await this.$http.post(path, {
+              church_id: church.id,
+              email: this.email,
+              password: this.password,
+              access_level: 'super_admin'
+            })
 
-          return this.$router.replace({
-            name: 'login'
-          })
-        } catch (err) {
-          this.loadingForm = false
-          this.displayMessage = err.status === 401
-            ? 'Invalid email and password provided.'
-            : 'There was an error processing your request.'
-          this.displayMessageType = MESSAGE_TYPES.error
-          this.shouldDisplayMessage = true
-        } finally {}
-      })
+            // return user to login
+
+            this.$store.commit('SET_LOGIN_DATA', {
+              message: 'Account successfully created.',
+              type: MESSAGE_TYPES.info,
+              route: null
+            })
+
+            return this.$router.replace({
+              name: 'login'
+            })
+          } catch (err) {
+            this.loadingForm = false
+            this.displayMessage = err.status === 401 ?
+              'Invalid email and password provided.' :
+              'There was an error processing your request.'
+            this.displayMessageType = MESSAGE_TYPES.error
+            this.shouldDisplayMessage = true
+          } finally {}
+        })
+      }
     }
   }
-}
 
 </script>

@@ -1,11 +1,11 @@
 <template>
   <div class="flex h-screen w-screen font-sans" id="login">
 
-    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative" id="form-section" v-if="currentPage === 'login'">
-      <login @forgotten="currentPage = 'forgotten'" class="animated fadeIn" />
+    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInRight" id="form-section" v-if="currentPage === 'login'">
+      <login @forgotten="currentPage = 'forgotten'"/>
     </div>
 
-    <div class="invisible w-full md:visible lg:visible md:w-1/3 lg:w-2/3 h-screen bg-grey bg-center bg-no-repeat bg-cover"
+    <div class="hidden w-full md:flex md:w-1/3 lg:w-2/3 h-screen bg-grey bg-center bg-no-repeat bg-cover z-10"
       id="login-cover" v-bind:style="style">
       <div class="bg-black w-full h-full opacity-50 flex items-end">
         <div class="text-white p-24">
@@ -41,8 +41,8 @@
       </div>
     </div>
 
-    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative" id="form-section" v-if="currentPage === 'forgotten'">
-      <forgotten @login="currentPage = 'login'" class="animated fadeIn" />
+    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInLeft" id="form-section-forgotten" v-if="currentPage === 'forgotten'">
+      <forgotten @login="currentPage = 'login'" />
     </div>
 
   </div>

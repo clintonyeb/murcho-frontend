@@ -543,7 +543,7 @@ export default {
       const startDate = startDateComp && startDateComp.selectedDates[0]
       return this.createRRule(startDate).toText()
     },
-    selectedByDates(){
+    selectedByDates () {
       return this.byDates.filter(day => day.selected === true)
     }
   },
