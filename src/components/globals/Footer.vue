@@ -1,16 +1,8 @@
 <template>
-  <footer class="w-full font-sans pt-4 bg-blue-lightest-more" id="people">
-    <div class="w-full flex bg-grey-darker text-white p-4">
-      <div class="w-1/2">
-        <nav class="flex items-center justify-between">
-          <div class="block lg:hidden">
-            <button class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white">
-              <svg class="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <title>Menu</title>
-                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-              </svg>
-            </button>
-          </div>
+  <footer class="w-full font-sans pt-4 bg-blue-lightest-more" id="footer">
+    <div class="w-full flex flex-wrap bg-grey-darker text-white p-4">
+      <div class="w-full lg:w-1/2 flex flex-wrap items-center justify-center lg:justify-start">
+        <nav class="w-full lg:w-1/2 flex items-center justify-between">
           <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto h-8">
             <div class="text-sm lg:flex-grow text-white">
               <router-link :to="{name: 'home'}" class="text-blue-light hover:text-blue lg:mt-0 mr-5 no-underline">
@@ -29,8 +21,8 @@
           </div>
         </nav>
 
-        <div class="inline-flex justify-between items-center mt-4">
-          <h4 class="mr-10">Connect</h4>
+        <div class="w-full inline-flex justify-start items-center mt-4">
+          <h4 class="mr-2 lg:mr-10">Connect:</h4>
           <a href="" class="mr-6">
             <svg version="1.1" class="text-white hover:text-blue-light fill-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
               x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
@@ -68,12 +60,12 @@
         </div>
 
       </div>
-      <div class="w-1/2 inline-flex items-center">
-        <div class="flex items-center flex-no-shrink mr-24 h-8">
+      <div class="w-full lg:w-1/2 flex flex-wrap items-center mt-4 lg:mt-0">
+        <div class="w-full lg:w-1/4 flex items-center h-8">
           <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-8">
         </div>
 
-        <div>
+        <div class="w-full lg:w-3/4 mt-4 lg:mt-0">
           <h4>Hear From Us</h4>
           <div class="inline-flex items-center justify-center relative mt-4">
             <input class="appearance-none w-full h-8 p-2 text-grey bg-grey-lighter rounded-l border border-blue focus:bg-white border-transparent focus:border-blue-light border-animated"
@@ -86,22 +78,22 @@
 
       </div>
     </div>
-    <div class="text-xs bg-black w-full p-4 text-white flex justify-between flex">
-      <div class="inline-flex w-1/2 items-center, justify-start">
-        <p class="mr-2">
+    <div class="w-full text-xs bg-black w-full p-4 text-white flex flex-wrap justify-between">
+      <div class="flex w-full lg:w-1/2 items-center justify-between lg:justify-start">
+        <p class="lg:mr-2 w-1/2">
           New Delhi, India.
         </p>
-        <p>
+        <p class="text-right lg:text-left w-1/2">
           +91 9152105353, info@murcho.com
         </p>
       </div>
-      <div class="inline-flex w-1/2 items-center justify-end">
-        <p class="mr-2">
+      <div class="flex w-full lg:w-1/2 items-center justify-between lg:justify-end mt-4 lg:mt-0">
+        <p class="lg:mr-2 w-1/2">
           <a href="" class="text-grey-light no-underline hover:text-blue">Site Terms</a> 
-          | 
+          &#124;
           <a href="" class="text-grey-light no-underline hover:text-blue">Privacy</a>
         </p>
-        <p>
+        <p class="w-1/2">
           &copy; 2019, Murcho.com. All rights reserved.
         </p>
       </div>
