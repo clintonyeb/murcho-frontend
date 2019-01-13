@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex min-h-screen bg-blue-lightest-more font-serif" id="people">
+  <div class="w-full flex flex-wrap lg:min-h-screen bg-blue-lightest-more font-serif" id="people">
     <div class="lg:w-4/5 w-full lg:min-h-screen">
       <div class="mx-auto w-full">
         <div class="w-full church-info py-4 lg:px-8 px-4">
@@ -93,7 +93,7 @@
       </div>
 
     </div>
-    <div class="hidden lg:block w-1/5 overflow-hidden">
+    <div class="w-full lg:w-1/5 overflow-hidden">
       <div class="mx-auto py-4 px-2 w-full">
         <div class="inline-flex w-full items-center justify-between">
           <h3 class="text-blue-light font-semibold text-base h-10 flex items-center">Upcoming Events</h3>
