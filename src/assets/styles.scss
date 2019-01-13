@@ -33,20 +33,6 @@
   animation: slide 20s linear infinite;
 }
 
-nav {
-  .nav-items {
-    a {
-      color: #B8C2CC;
-
-      &.router-link-active {
-        color: #8795a1;
-        font-weight: 700;
-        border-bottom: 2px solid #6CB2EB;
-      }
-    }
-  }
-}
-
 @keyframes slide {
   from {
     background-position: 0 0;
@@ -320,25 +306,56 @@ nav {
   }
 }
 
+nav {
+  .nav-items-container {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+  .nav-items {
+    a {
+      color: #B8C2CC;
+
+      &.router-link-active {
+        color: #8795a1;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
 // Small devices (sm)
 @media (min-width: 576px) {
-  // .anim
+
 }
 
 // Mobile devices (md)
-@media (min-width: 768px) {
-  
-}
+@media (min-width: 768px) {}
 
 // Large devices (lg)
 @media (min-width: 992px) {
-  
+  nav {
+    .nav-items-container {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    .nav-items {
+      a {
+        &.router-link-active {
+          border-bottom: 2px solid #6CB2EB;
+        }
+      }
+    }
+  }
+
+  .animated {
+    &.is-sm {
+      animation: none;
+    }
+  }
 }
 
 // Extra Large devices (xl)
-@media (min-width: 1200px) {
-  
-}
+@media (min-width: 1200px) {}
 
 @media (max-width: 768px) {
   .animated {
