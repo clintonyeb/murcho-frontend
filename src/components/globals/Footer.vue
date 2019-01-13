@@ -86,15 +86,23 @@
 
       </div>
     </div>
-    <div class="text-xs bg-black w-full p-4 text-white flex justify-between">
-      <div>
-        <p>
+    <div class="text-xs bg-black w-full p-4 text-white flex justify-between flex">
+      <div class="inline-flex w-1/2 items-center, justify-start">
+        <p class="mr-2">
           New Delhi, India.
         </p>
-      </div>
-      <div class="text-right">
         <p>
           +91 9152105353, info@murcho.com
+        </p>
+      </div>
+      <div class="inline-flex w-1/2 items-center justify-end">
+        <p class="mr-2">
+          <a href="" class="text-grey-light no-underline hover:text-blue">Site Terms</a> 
+          | 
+          <a href="" class="text-grey-light no-underline hover:text-blue">Privacy</a>
+        </p>
+        <p>
+          &copy; 2019, Murcho.com. All rights reserved.
         </p>
       </div>
     </div>
