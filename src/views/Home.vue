@@ -1,17 +1,17 @@
 <template>
   <div class="w-full flex min-h-screen bg-blue-lightest-more font-serif" id="people">
-    <div class="w-4/5 min-h-screen">
+    <div class="lg:w-4/5 w-full lg:min-h-screen">
       <div class="mx-auto w-full">
-        <div class="w-full church-info py-4 px-8">
+        <div class="w-full church-info py-4 lg:px-8 px-4">
           <div class="w-full flex items-center justify-between">
-            <div class="w-full flex items-center justify-start">
-              <p>
-                <avatar :username="`${church.name}`" :src="church.photo" class="" :size="180" />
+            <div class="w-full flex flex-wrap items-center lg:justify-start justify-center">
+              <p class="w-full lg:w-auto flex items-center justify-center">
+                <avatar :username="`${church.name}`" :src="church.photo" class="text-center" :size="180" />
               </p>
-              <div class="w-full ml-8">
-                <div class="w-full inline-flex items-center justify-between">
-                  <h3 class="text-blue font-black text-3xl flex-grow">{{church.name}}</h3>
-                  <div class="inline-flex items-center">
+              <div class="w-full lg:w-auto lg:ml-8 mt-4 lg:mt-0">
+                <div class="w-full flex flex-wrap items-center justify-between">
+                  <h3 class="text-blue font-black text-xl lg:text-3xl flex-grow w-full lg:w-auto">{{church.name}}</h3>
+                  <div class="w-full lg:w-auto inline-flex items-center mt-2">
                     <button class="h-8 w-8 p-2 bg-grey-light rounded-full text-grey-dark font-bold">
                       <svg version="1.1" class="h-4 w-4 fill-current"
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -86,14 +86,14 @@
 
       </div>
 
-      <div class="m-8">
+      <div class=" mt-4 lg:m-8">
         <updates></updates>
-        <analytics class="mt-4"></analytics>
+        <analytics></analytics>
         <!-- <actions class="mt-4"></actions> -->
       </div>
 
     </div>
-    <div class="w-1/5 overflow-hidden">
+    <div class="hidden lg:block w-1/5 overflow-hidden">
       <div class="mx-auto py-4 px-2 w-full">
         <div class="inline-flex w-full items-center justify-between">
           <h3 class="text-blue-light font-semibold text-base h-10 flex items-center">Upcoming Events</h3>

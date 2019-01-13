@@ -22,6 +22,18 @@ export default {
     Event
   },
   methods: {
+    isSmallDevice () {
+      return window.matchMedia('(min-width: 576px)')
+    },
+    isMobileDevice () {
+      return window.matchMedia('(min-width: 768px)')
+    },
+    isLargeDevice () {
+      return window.matchMedia('(min-width: 992px)')
+    },
+    isExtraLargeDevice () {
+      return window.matchMedia('(min-width: 1200px)')
+    },
     getInputErrorMessage (name) {
       return this.errors.first(name)
     },

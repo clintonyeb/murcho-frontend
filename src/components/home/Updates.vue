@@ -1,8 +1,8 @@
 <template>
-  <div class="mb-20">
-    <h4 class="text-grey font-bold pl-5">Church Updates</h4>
-    <div class="mt-4 flex items-stretch justify-between flex-wrap p-4">
-      <div class="w-1/3">
+  <div>
+    <h4 class="text-grey font-bold px-4 lg:pl-5">Church Updates</h4>
+    <div class="mt-4 flex items-stretch justify-between flex-wrap lg:p-4">
+      <div class="w-full lg:w-1/3">
         <div class="h-full bg-white shadow p-4 m-1 rounded">
 
           <div class="text-grey-light w-full inline-flex justify-between items-center mb-4">
@@ -27,7 +27,7 @@
           </table>
         </div>
       </div>
-      <div class="w-1/3">
+      <div class="w-full lg:w-1/3 mt-4 lg:mt-0">
         <div class="h-full bg-white shadow p-4 m-1 rounded">
 
           <div class="text-grey-light w-full inline-flex justify-between items-center mb-4">
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div class="w-1/3">
+      <div class="w-full lg:w-1/3 mt-4 lg:mt-0">
         <div class="h-full bg-white shadow p-4 m-1 rounded">
 
           <div class="text-grey-light w-full inline-flex justify-between items-center mb-4">
@@ -83,7 +83,7 @@
     </div>
 
     <div class="mt-4 flex items-stretch justify-between flex-wrap p-4">
-      <div class="flex items-center justify-center w-1/3" @click="$router.push({name: 'people'})">
+      <div class="flex items-center justify-center w-full lg:w-1/3" @click="$router.push({name: 'people'})">
         <div class="bg-white shadow p-4 rounded cursor-pointer group hover:bg-blue-light">
           <div class="h-full w-64  flex justify-center items-center">
             <div class="flex items-center justify-center w-32 h-32">
@@ -103,7 +103,7 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-center w-1/3" @click="$router.push({name: 'groups'})">
+      <div class="flex items-center justify-center w-full lg:w-1/3 mt-4 lg:mt-0" @click="$router.push({name: 'groups'})">
         <div class="bg-white shadow p-4 rounded cursor-pointer group hover:bg-blue-light">
           <div class="h-full w-64  flex justify-center items-center">
             <div class="flex items-center justify-center w-32 h-32">
@@ -119,7 +119,7 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-center w-1/3" @click="$router.push({name: 'events'})">
+      <div class="flex items-center justify-center w-full lg:w-1/3 mt-4 lg:mt-0" @click="$router.push({name: 'events'})">
         <div class="bg-white shadow p-4 rounded cursor-pointer group hover:bg-blue-light">
           <div class="h-full w-64  flex justify-center items-center">
             <div class="flex items-center justify-center w-32 h-32">
