@@ -33,8 +33,8 @@
 
         <div class="max-w-md container mx-auto lg:p-20 p-4">
 
-          <div class="mb-4">
-            <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="w-64">
+          <div class="mb-4 h-10">
+            <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-10">
           </div>
 
           <div class="my-8 text-grey-dark font-medium text-lg">

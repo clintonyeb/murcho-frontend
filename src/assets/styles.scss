@@ -319,3 +319,31 @@ nav {
     // border-bottom: 2px solid #6CB2EB;
   }
 }
+
+// Small devices (sm)
+@media (min-width: 576px) {
+  // .anim
+}
+
+// Mobile devices (md)
+@media (min-width: 768px) {
+  
+}
+
+// Large devices (lg)
+@media (min-width: 992px) {
+  
+}
+
+// Extra Large devices (xl)
+@media (min-width: 1200px) {
+  
+}
+
+@media (max-width: 768px) {
+  .animated {
+    &.is-lg {
+      animation: none !important;
+    }
+  }
+}

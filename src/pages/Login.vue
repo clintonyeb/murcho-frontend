@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-screen w-screen font-sans" id="login">
 
-    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInRight" id="form-section" v-if="currentPage === 'login'">
+    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInRight is-lg" id="form-section" v-if="currentPage === 'login'">
       <login @forgotten="currentPage = 'forgotten'"/>
     </div>
 
@@ -41,7 +41,8 @@
       </div>
     </div>
 
-    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInLeft" id="form-section-forgotten" v-if="currentPage === 'forgotten'">
+    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInLeft is-lg" id="form-section-forgotten" 
+    v-if="currentPage === 'forgotten'">
       <forgotten @login="currentPage = 'login'" />
     </div>
 

@@ -29,7 +29,7 @@
 
     </div>
 
-    <div class="container mx-auto lg:p-20 p-4 bg-pattern">
+    <div class="container mx-auto lg:p-20 p-4 h-screen bg-pattern">
 
       <div class="mb-4 h-10">
         <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-10">
@@ -42,7 +42,7 @@
       <div class="mt-8 lg:mt-16">
         <div class="control mb-4 mt-4 h-16">
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Email')">
-            <button class="hidden md:flex border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
+            <button class="hidden md:flex items-center justify-center border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
 
               <svg class="h-6 w-6 fill-current text-grey-light" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 350 350" style="enable-background:new 0 0 50 50;"
@@ -58,14 +58,14 @@
             <input type="text" placeholder="Email address" class="w-full mx-2 bg-grey-lightest" v-model="email" name="Email"
               v-validate="{required: true, email: true}" tabindex="1" v-autofocus>
           </div>
-          <p class="text-red-light text-xs md:ml-8 pt-1 animated shake" v-show="getInputState('Email')">
+          <p class="text-red-light text-xs md:ml-12 pt-1 animated shake" v-show="getInputState('Email')">
             {{getInputErrorMessage('Email')}}
           </p>
         </div>
 
         <div class="control mt-4 mb-4 h-16">
           <div class="h-12 inline-flex border max-w-full w-full rounded-sm relative" :class="getInputColor('Password')">
-            <button class="hidden md:flex border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
+            <button class="hidden md:flex items-center justify-center border border-l-0 border-t-0 border-b-0 border-grey-light p-1 h-12 w-12">
 
               <svg class="h-6 w-6 fill-current text-grey-light" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 58" style="enable-background:new 0 0 50 50;"
@@ -99,7 +99,7 @@
             </button>
           </div>
 
-          <p class="text-red-light text-xs md:ml-8 pt-1 h-1 pt-1 animated shake" v-show="getInputState('Password')">
+          <p class="text-red-light text-xs md:ml-12 pt-1 h-1 pt-1 animated shake" v-show="getInputState('Password')">
             {{getInputErrorMessage('Password')}}
           </p>
 
