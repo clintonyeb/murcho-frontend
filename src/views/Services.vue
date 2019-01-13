@@ -4,8 +4,12 @@
 
 <script>
 export default {
-  created () {
-    this.setPageTitle('Services')
-  }
+   metaInfo: {
+      title: 'Services',
+      meta: [{
+        name: 'description',
+        content: 'Services Page for the Murcho Platform. Gain access to vast number of services to manage your church.'
+      }]
+    },
 }
 </script>

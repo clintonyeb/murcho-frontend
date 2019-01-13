@@ -44,9 +44,6 @@ export default {
       return this.errors.has(name)
     },
     pluralize: pluralize,
-    setPageTitle (title) {
-      document.title = `${title} | Murcho`
-    },
     getPersonName (firstName, lastName) {
       return firstName + ' ' + lastName
     },

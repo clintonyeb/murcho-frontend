@@ -1,12 +1,13 @@
 <template>
   <div class="flex h-screen w-screen font-sans" id="login">
 
-    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInRight is-lg" id="form-section" v-if="currentPage === 'login'">
-      <login @forgotten="currentPage = 'forgotten'"/>
+    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInRight is-lg"
+      id="form-section" v-if="currentPage === 'login'">
+      <login @forgotten="currentPage = 'forgotten'" />
     </div>
 
-    <div class="hidden w-full md:flex md:w-1/3 lg:w-2/3 h-screen bg-grey bg-center bg-no-repeat bg-cover z-10"
-      id="login-cover" v-bind:style="style">
+    <div class="hidden w-full md:flex md:w-1/3 lg:w-2/3 h-screen bg-grey bg-center bg-no-repeat bg-cover z-10" id="login-cover"
+      v-bind:style="style">
       <div class="bg-black w-full h-full opacity-50 flex items-end">
         <div class="text-white p-24">
           <button class="bg-blue-dark h-16 w-16 rounded-full shadow-md" @click="nextCover">
@@ -41,8 +42,8 @@
       </div>
     </div>
 
-    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInLeft is-lg" id="form-section-forgotten" 
-    v-if="currentPage === 'forgotten'">
+    <div class="w-screen sm:w-screen md:w-2/3 lg:w-1/3 h-screen bg-grey-lightest relative animated slideInLeft is-lg"
+      id="form-section-forgotten" v-if="currentPage === 'forgotten'">
       <forgotten @login="currentPage = 'login'" />
     </div>
 
@@ -51,73 +52,77 @@
 </template>
 
 <script>
-export default {
-  name: 'LoginPage',
-  data () {
-    return {
-      coverImages: [{
-        index: 0,
-        title: 'Create & Manage People',
-        description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
-        image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_people.jpeg'
-      },
-      {
-        index: 1,
-        title: 'Create & Manage Groups',
-        description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
-        image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_groups.jpeg'
-      },
-      {
-        index: 2,
-        title: 'Schedule Events and notifications',
-        description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
-        image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_events.jpeg'
-      }
-      ],
-      currentCoverIndex: 0,
-      loadingNextImage: false,
-      currentPage: 'login'
-    }
-  },
-  created () {
-    this.setPageTitle('Login')
-  },
-  computed: {
-    cover () {
-      return this.coverImages[this.currentCoverIndex]
-    },
-    style () {
+  export default {
+    name: 'LoginPage',
+    data() {
       return {
-        backgroundImage: `url(${this.cover.image})`
+        coverImages: [{
+            index: 0,
+            title: 'Create & Manage People',
+            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
+            image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_people.jpeg'
+          },
+          {
+            index: 1,
+            title: 'Create & Manage Groups',
+            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
+            image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_groups.jpeg'
+          },
+          {
+            index: 2,
+            title: 'Schedule Events and notifications',
+            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
+            image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_events.jpeg'
+          }
+        ],
+        currentCoverIndex: 0,
+        loadingNextImage: false,
+        currentPage: 'login'
       }
-    }
-  },
-  components: {
-    'login': () => import('@/components/login/Login'),
-    'forgotten': () => import('@/components/login/Forgotten')
-  },
-  methods: {
-    nextCover () {
-      if (this.loadingNextImage) return false
-      const nextIndex = (this.currentCoverIndex + 1) >= (this.coverImages.length) ? 0 : (this.currentCoverIndex +
+    },
+    computed: {
+      cover() {
+        return this.coverImages[this.currentCoverIndex]
+      },
+      style() {
+        return {
+          backgroundImage: `url(${this.cover.image})`
+        }
+      }
+    },
+    components: {
+      'login': () => import('@/components/login/Login'),
+      'forgotten': () => import('@/components/login/Forgotten')
+    },
+    methods: {
+      nextCover() {
+        if (this.loadingNextImage) return false
+        const nextIndex = (this.currentCoverIndex + 1) >= (this.coverImages.length) ? 0 : (this.currentCoverIndex +
           1)
 
-      this.loadingNextImage = true
+        this.loadingNextImage = true
 
-      this.downloadImage(this.coverImages[nextIndex].image, err => {
-        this.currentCoverIndex = nextIndex
-        this.loadingNextImage = false
-      })
-    },
-    downloadImage (src, cb) {
-      const image = new Image()
-      image.onload = function () {
-        cb(null)
+        this.downloadImage(this.coverImages[nextIndex].image, err => {
+          this.currentCoverIndex = nextIndex
+          this.loadingNextImage = false
+        })
+      },
+      downloadImage(src, cb) {
+        const image = new Image()
+        image.onload = function () {
+          cb(null)
+        }
+
+        image.src = src
       }
-
-      image.src = src
+    },
+    metaInfo: {
+      title: 'Login',
+      meta: [{
+        name: 'description',
+        content: 'Login Page for the Murcho Platform. Login to access our platform'
+      }]
     }
   }
-}
 
 </script>

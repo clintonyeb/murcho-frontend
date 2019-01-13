@@ -60,6 +60,11 @@ export default new Router({
       path: '/signup',
       name: 'signup',
       component: () => import(/* webpackChunkName: "signup" */ './pages/Register.vue')
+    },
+    {
+      path: '/signup-options',
+      name: 'signup-options',
+      component: () => import(/* webpackChunkName: "signup-options" */ './pages/RegOpt.vue')
     }
   ]
 })

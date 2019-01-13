@@ -9,6 +9,7 @@ import http from '@/plugins/http'
 import globalMixin from '@/mixins/global'
 import './assets/main.css'
 import autofocus from 'vue-autofocus-directive'
+import Meta from 'vue-meta'
 
 Vue.config.productionTip = false
 Vue.use(http)
@@ -32,6 +33,8 @@ const ifDependentPresent = (value, args) => {
 }
 
 VeeValidate.Validator.extend('isDependent', ifDependentPresent)
+
+Vue.use(Meta)
 
 new Vue({
   router,

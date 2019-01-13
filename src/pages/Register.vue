@@ -232,8 +232,12 @@
         confirm_password: ''
       }
     },
-    created() {
-      this.setPageTitle('Sign Up')
+    metaInfo: {
+      title: 'Sign Up',
+      meta: [{
+        name: 'description',
+        content: 'Registration Page for the Murcho Platform. Register your church on the platform to access our platform.'
+      }]
     },
     computed: {
       loadingButtonClass() {

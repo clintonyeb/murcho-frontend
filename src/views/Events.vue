@@ -280,8 +280,14 @@ export default {
     'edit-event': () => import('@/components/events/Edit'),
     'confirm-delete': () => import('@/components/events/ConfirmDelete')
   },
+  metaInfo: {
+      title: 'Events',
+      meta: [{
+        name: 'description',
+        content: 'Events Page for the Murcho Platform. Create and manage events in your church.'
+      }]
+    },
   created () {
-    this.setPageTitle('Events')
     this.viewMode = this.viewModes[0]
     this.readyCallbacks([this.loadUpcomingEvents])
   },

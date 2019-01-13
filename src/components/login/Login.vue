@@ -141,7 +141,7 @@
         </p>
       </div>
 
-      <div class="inline-flex w-full shadow-md" @click="$router.replace({name: 'signup'})">
+      <div class="inline-flex w-full shadow-md" @click="$router.replace({name: 'signup-options'})">
         <button class="bg-blue-dark h-12 w-12 p-2">
 
           <svg class="h-6 w-6 fill-current text-white" viewBox="-7 0 429 429.5" xmlns="http://www.w3.org/2000/svg">

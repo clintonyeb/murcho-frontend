@@ -272,8 +272,14 @@ export default {
     }
 
     this.readyCallbacks([this.refresh])
-    this.setPageTitle('Groups')
   },
+   metaInfo: {
+      title: 'Groups',
+      meta: [{
+        name: 'description',
+        content: 'Groups Page for the Murcho Platform. Create and manage groups in your church.'
+      }]
+    },
   components: {
     'list-view': () => import('@/components/groups/ListView'),
     'people': () => import('@/components/groups/People'),

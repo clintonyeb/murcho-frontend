@@ -1,6 +1,6 @@
 <template>
-  <div class="flex min-h-screen bg-blue-lightest-more font-serif" id="people">
-    <div class="w-4/5 min-h-screen">
+  <div class="w-full flex flex-wrap lg:min-h-screen bg-blue-lightest-more font-serif" id="people">
+    <div class="lg:w-4/5 w-full lg:min-h-screen">
       <div class="mx-auto py-4 px-8 w-full">
         <div class="w-full flex align-center justify-between">
           <div class="flex items-center justify-between w-full">
@@ -480,8 +480,14 @@ export default {
   },
   created () {
     this.setUpPeopleUI()
-    this.setPageTitle('People')
   },
+  metaInfo: {
+      title: 'People',
+      meta: [{
+        name: 'description',
+        content: 'People Page for the Murcho Platform. Create and manage people in your church.'
+      }]
+    },
   mounted () {
     this.readyCallbacks([this.refresh])
   },

@@ -26,6 +26,7 @@
     "vue": "^2.5.17",
     "vue-autofocus-directive": "0.0.5",
     "vue-avatar": "^2.1.7",
+    "vue-meta": "^1.5.8",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

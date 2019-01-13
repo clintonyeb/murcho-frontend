@@ -194,9 +194,15 @@ export default {
     }
   },
   created () {
-    this.setPageTitle('Home')
     this.readyCallbacks([this.refresh])
-  },
+  }, 
+  metaInfo: {
+      title: 'Home',
+      meta: [{
+        name: 'description',
+        content: 'Dashboard Page for the Murcho Platform. Have an overview of people, events and church groups.'
+      }]
+    },
   components: {
     Updates,
     Actions,
