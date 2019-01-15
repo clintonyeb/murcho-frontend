@@ -15,7 +15,7 @@ Vue.config.productionTip = false
 Vue.use(http)
 Vue.mixin(globalMixin)
 Vue.use(VeeValidate, {
-  events: 'blur'
+  events: 'change'
 })
 Vue.directive('autofocus', autofocus)
 
