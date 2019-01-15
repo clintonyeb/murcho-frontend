@@ -122,9 +122,16 @@
       <hr class="w-full lg:hidden border border-dotted border-grey-dark">
       <div class="max-w-md container mx-auto lg:p-20 p-4">
 
-        <div class="my-8 text-grey-dark font-medium text-lg">
-          Login Details
+        <div class="my-8 text-grey-dark">
+          <p class="font-black text-lg">
+            Login Details
+          </p>
+          <p class="mt-2 text-grey-dark text-xs">
+            This user is your admin user. You will use his email and password to login to your account. You will be
+            able to manage your account after login.
+          </p>
         </div>
+
         <div class="mt-8">
 
           <div class="control mb-4">
@@ -215,7 +222,7 @@
   } from '@/utils'
 
   export default {
-    name: 'LoginPage',
+    name: 'RegisterSingle',
     data() {
       return {
         displayMessage: '',
@@ -233,7 +240,7 @@
       }
     },
     metaInfo: {
-      title: 'Sign Up',
+      title: 'Sign Up Single',
       meta: [{
         name: 'description',
         content: 'Registration Page for the Murcho Platform. Register your church on the platform to access our platform.'

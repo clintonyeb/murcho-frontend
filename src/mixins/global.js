@@ -102,6 +102,7 @@ export default {
       const selector = `${scope}.*`
       this.$validator.validate(selector).then(result => {
         if (!result) {
+          console.log(this.$validator.errors.items, 'errors')
           const fieldName = this.$validator.errors.items[0].field
           const fieldEl = document.getElementsByName(fieldName)[0]
           fieldEl.focus()

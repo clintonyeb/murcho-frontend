@@ -57,14 +57,30 @@ export default new Router({
       ]
     },
     {
-      path: '/signup',
-      name: 'signup',
-      component: () => import(/* webpackChunkName: "signup" */ './pages/Register.vue')
+      path: '/signup_single',
+      name: 'signup-single',
+      component: () => import(/* webpackChunkName: "signup" */ './pages/RegisterSingle.vue')
+    },
+    {
+      path: '/signup_group',
+      name: 'signup-group',
+      component: () => import(/* webpackChunkName: "signup" */ './pages/RegisterGroup.vue')
+    },
+    {
+      path: '/add_church/:church_id',
+      name: 'add-church',
+      props: true,
+      component: () => import(/* webpackChunkName: "add-church" */ './pages/AddChurch.vue')
     },
     {
       path: '/signup_options',
       name: 'signup-options',
       component: () => import(/* webpackChunkName: "signup-options" */ './pages/RegOpt.vue')
+    },
+    {
+      path: '**',
+      name: 'not-found',
+      component: () => import(/* webpackChunkName: "not-found" */ './pages/404.vue')
     }
   ]
 })
