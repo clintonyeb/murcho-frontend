@@ -1,4 +1,4 @@
-# frontend
+# Murcho
 
 ## Project setup
 ```

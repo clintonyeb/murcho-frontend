@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-wrap h-screen w-screen font-sans" id="register">
+  <div class="flex flex-wrap lg:h-screen w-screen font-sans" id="register">
     <div class="w-full lg:w-1/2 lg:h-screen bg-grey-lightest relative border-r-2 border-dashed bg-pattern" id="form-section">
       <div>
         <div class="absolute flex items-center text-white text-sm font-bold px-4 py-3 w-full mb-4 " role="alert" v-if="shouldDisplayMessage"
