@@ -78,7 +78,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "signup-options" */ './pages/RegOpt.vue')
     },
     {
-      path: '**',
+      path: '*',
       name: 'not-found',
       component: () => import(/* webpackChunkName: "not-found" */ './pages/404.vue')
     }
