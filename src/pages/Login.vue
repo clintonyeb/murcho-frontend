@@ -59,19 +59,18 @@
         coverImages: [{
             index: 0,
             title: 'Create & Manage People',
-            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
-            image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_people.jpeg'
+            description: 'Easily add and organize members, guests and former members in your church.'
           },
           {
             index: 1,
             title: 'Create & Manage Groups',
-            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
+            description: 'Easily add and organize groups and fellowships your church.',
             image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_groups.jpeg'
           },
           {
             index: 2,
-            title: 'Schedule Events and notifications',
-            description: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia pariatur iste eaque numquam dolore rem commodi quod repudiandae obcaecati',
+            title: 'Schedule Events and Notifications',
+            description: 'Schedule events, emails, SMS for groups and people in your church.',
             image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_events.jpeg'
           }
         ],

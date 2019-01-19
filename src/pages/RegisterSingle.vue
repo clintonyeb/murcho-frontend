@@ -311,7 +311,7 @@
             // return user to login
 
             this.$store.commit('SET_LOGIN_DATA', {
-              message: 'Account successfully created.',
+              message: 'Account successfully created. Please check your email to validate your account.',
               type: MESSAGE_TYPES.info,
               route: null
             })

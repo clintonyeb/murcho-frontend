@@ -78,6 +78,18 @@ export default new Router({
       component: () => import(/* webpackChunkName: "signup-options" */ './pages/RegOpt.vue')
     },
     {
+      path: '/validate_email/:email_token',
+      name: 'validate-email',
+      props: true,
+      component: () => import(/* webpackChunkName: "validate-email" */ './pages/ValidateEmail.vue')
+    },
+    {
+      path: '/reset_password/:password_token',
+      name: 'reset-password',
+      props: true,
+      component: () => import(/* webpackChunkName: "reset-password" */ './pages/ResetPassword.vue')
+    },
+    {
       path: '*',
       name: 'not-found',
       component: () => import(/* webpackChunkName: "not-found" */ './pages/404.vue')
