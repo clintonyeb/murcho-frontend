@@ -170,6 +170,10 @@
             </p>
           </div>
 
+          <div class="control mb-4 mt-4">
+            <vue-recaptcha ref="recaptcha" @verify="onCaptchaVerified" @expired="resetCaptcha" size="invisible"
+              :sitekey="siteKey"></vue-recaptcha>
+          </div>
         </div>
 
         <div class="mt-4 mb-4 inline-flex justify-around lg:justify-end w-full">
@@ -217,6 +221,8 @@
 </template>
 
 <script>
+  import VueRecaptcha from 'vue-recaptcha'
+
   import {
     MESSAGE_TYPES
   } from '@/utils'
@@ -236,7 +242,8 @@
         church_photo: '',
         email: '',
         password: '',
-        confirm_password: ''
+        confirm_password: '',
+        siteKey: process.env.VUE_APP_CAPTCHA_SITE_KEY
       }
     },
     metaInfo: {
@@ -264,6 +271,13 @@
       }
     },
     methods: {
+      onCaptchaVerified(token) {
+        this.resetCaptcha()
+        this.submitForm(token)
+      },
+      resetCaptcha() {
+        this.$refs.recaptcha.reset()
+      },
       photoUploaded(event) {
         const file = event.target.files && event.target.files[0]
 
@@ -278,58 +292,65 @@
           this.church_photo = null
         }
       },
+      async submitForm(token) {
+        try {
+          // create church
+
+          let path = 'churches'
+
+          const church = await this.$http.post(path, {
+            name: this.church_name,
+            location: this.church_location,
+            photo: null, // TODO upload photo
+            motto: this.church_motto,
+            'g-recaptcha-response': token
+          })
+
+          // create user
+          path = 'users'
+
+          const user = await this.$http.post(path, {
+            church_id: church.id,
+            email: this.email,
+            password: this.password,
+            access_level: 'super_admin'
+          })
+
+          // return user to login
+
+          this.$store.commit('SET_LOGIN_DATA', {
+            message: 'Account successfully created. Please check your email to validate your account.',
+            type: MESSAGE_TYPES.info,
+            route: null
+          })
+
+          return this.$router.replace({
+            name: 'login'
+          })
+
+        } catch (err) {
+          this.loadingForm = false
+          const message = err.response ? JSON.parse(err.response).error :
+              'There was an error processing your request.'
+            this.displayMessage = message
+            this.displayMessageType = MESSAGE_TYPES.error
+            this.shouldDisplayMessage = true
+        } finally {}
+      },
       submit() {
         if (this.loadingForm) return false
         this.shouldDisplayMessage = false
 
-        this.validateForm(async state => {
+        this.validateForm(state => {
           if (!state) return false
           this.loadingForm = true
-
-          try {
-            // create church
-
-            let path = 'churches'
-
-            const church = await this.$http.post(path, {
-              name: this.church_name,
-              location: this.church_location,
-              photo: null, // TODO upload photo
-              motto: this.church_motto
-            })
-
-            // create user
-            path = 'users'
-
-            const user = await this.$http.post(path, {
-              church_id: church.id,
-              email: this.email,
-              password: this.password,
-              access_level: 'super_admin'
-            })
-
-            // return user to login
-
-            this.$store.commit('SET_LOGIN_DATA', {
-              message: 'Account successfully created. Please check your email to validate your account.',
-              type: MESSAGE_TYPES.info,
-              route: null
-            })
-
-            return this.$router.replace({
-              name: 'login'
-            })
-          } catch (err) {
-            this.loadingForm = false
-            this.displayMessage = err.status === 401 ?
-              'Invalid email and password provided.' :
-              'There was an error processing your request.'
-            this.displayMessageType = MESSAGE_TYPES.error
-            this.shouldDisplayMessage = true
-          } finally {}
+          this.$refs.recaptcha.execute()
         })
       }
-    }
+    },
+    components: {
+      VueRecaptcha
+    },
   }
 
 </script>
