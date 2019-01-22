@@ -274,7 +274,7 @@ export default {
         const response = await this.$http.get(path, this.authToken)
         this.calendar = response[0]
       } catch (err) {
-
+        
       } finally {
         // this.loadingMore = false
       }

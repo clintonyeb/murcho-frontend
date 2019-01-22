@@ -10,11 +10,11 @@
       v-bind:style="style">
       <div class="bg-black w-full h-full opacity-50 flex items-end">
         <div class="text-white p-24">
-          <button class="bg-blue-dark h-16 w-16 rounded-full shadow-md" @click="nextCover">
+          <button class="bg-blue-dark h-16 w-16 rounded-full shadow-md">
 
             <svg class="spinner ml-2 h-6 w-6 text-white fill-current font-black" version="1.1" xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26.349 26.35" style="enable-background:new 0 0 26.349 26.35;"
-              xml:space="preserve" v-if="loadingNextImage">
+              xml:space="preserve" v-if="loadingNextImage" @click="nextCover">
               <g>
                 <circle cx="13.792" cy="3.082" r="3.082" />
                 <circle cx="13.792" cy="24.501" r="1.849" />
@@ -59,7 +59,8 @@
         coverImages: [{
             index: 0,
             title: 'Create & Manage People',
-            description: 'Easily add and organize members, guests and former members in your church.'
+            description: 'Easily add and organize members, guests and former members in your church.',
+            image: 'https://s3.ap-south-1.amazonaws.com/murch-assets/cover_people.jpeg'
           },
           {
             index: 1,

@@ -239,8 +239,7 @@
             })
           } catch (err) {
             this.loadingForm = false
-            const message = err.response ? JSON.parse(err.response).error : 'There was an error processing your request.'
-            this.displayMessage = message
+            this.displayMessage = this.$http.getErrorMessage(err)
             this.displayMessageType = MESSAGE_TYPES.error
             this.shouldDisplayMessage = true
           } finally {}
