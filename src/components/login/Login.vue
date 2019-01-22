@@ -223,10 +223,12 @@
           const path = 'authentication'
 
           try {
-            const response = await this.$http.login(path, {
+            const response = await this.$http.sessionLogin(path, {
               email,
               password
             })
+
+            console.log(response)
 
             this.$store.commit('SET_TOKEN', response.auth_token)
 

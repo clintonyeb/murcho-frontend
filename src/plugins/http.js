@@ -1,7 +1,8 @@
 import router from '../router'
 import store from '../store'
 import {
-  MESSAGE_TYPES
+  MESSAGE_TYPES,
+  getCookie
 } from '@/utils'
 
 class Http {
@@ -24,6 +25,21 @@ class Http {
     })
   }
 
+  sessionGet (link) {
+    const self = this
+    const url = this.getURL(link)
+    return new Promise((resolve, reject) => {
+      const http = new XMLHttpRequest()
+      http.open('GET', url, true)
+      http.setRequestHeader('content-type', 'application/json')
+      http.setRequestHeader('accept', 'application/json')
+      http.setRequestHeader('Access-Control-Allow-Origin', '*')
+      http.setRequestHeader('X-CSRF-Token', getCookie('CSRF-TOKEN'))
+      http.onreadystatechange = () => self._handleResponse(http, resolve, reject)
+      http.send()
+    })
+  }
+
   put (link, data, token) {
     const self = this
     const url = this.getURL(link)
@@ -33,9 +49,25 @@ class Http {
       http.setRequestHeader('content-type', 'application/json')
       http.setRequestHeader('accept', 'application/json')
       http.setRequestHeader('Access-Control-Allow-Origin', '*')
+      http.setRequestHeader('X-CSRF-Token', getCookie('CSRF-TOKEN'))
       if (token) {
         http.setRequestHeader('Authorization', token)
       }
+      http.onreadystatechange = () => self._handleResponse(http, resolve, reject)
+      http.send(JSON.stringify(data))
+    })
+  }
+
+  sessionPut (link, data) {
+    const self = this
+    const url = this.getURL(link)
+    return new Promise((resolve, reject) => {
+      const http = new XMLHttpRequest()
+      http.open('PUT', url, true)
+      http.setRequestHeader('content-type', 'application/json')
+      http.setRequestHeader('accept', 'application/json')
+      http.setRequestHeader('Access-Control-Allow-Origin', '*')
+      http.setRequestHeader('X-CSRF-Token', getCookie('CSRF-TOKEN'))
       http.onreadystatechange = () => self._handleResponse(http, resolve, reject)
       http.send(JSON.stringify(data))
     })
@@ -56,6 +88,21 @@ class Http {
     })
   }
 
+  sessionPost (link, data) {
+    const self = this
+    const url = this.getURL(link)
+    return new Promise((resolve, reject) => {
+      const http = new XMLHttpRequest()
+      http.open('POST', url, true)
+      http.setRequestHeader('content-type', 'application/json')
+      http.setRequestHeader('accept', 'application/json')
+      http.setRequestHeader('Access-Control-Allow-Origin', '*')
+      http.setRequestHeader('X-CSRF-Token', getCookie('CSRF-TOKEN'))
+      http.onreadystatechange = () => self._handleResponse(http, resolve, reject)
+      http.send(JSON.stringify(data))
+    })
+  }
+
   create (link, data, token) {
     const self = this
     const url = this.getURL(link)
@@ -66,6 +113,21 @@ class Http {
       http.setRequestHeader('accept', 'application/json')
       http.setRequestHeader('Access-Control-Allow-Origin', '*')
       http.setRequestHeader('Authorization', token)
+      http.onreadystatechange = () => self._handleResponse(http, resolve, reject)
+      http.send(JSON.stringify(data))
+    })
+  }
+
+  sessionCreate (link, data) {
+    const self = this
+    const url = this.getURL(link)
+    return new Promise((resolve, reject) => {
+      const http = new XMLHttpRequest()
+      http.open('POST', url, true)
+      http.setRequestHeader('content-type', 'application/json')
+      http.setRequestHeader('accept', 'application/json')
+      http.setRequestHeader('Access-Control-Allow-Origin', '*')
+      http.setRequestHeader('X-CSRF-Token', getCookie('CSRF-TOKEN'))
       http.onreadystatechange = () => self._handleResponse(http, resolve, reject)
       http.send(JSON.stringify(data))
     })
@@ -87,7 +149,49 @@ class Http {
     })
   }
 
+  sessionDelete (link) {
+    const self = this
+    const url = this.getURL(link)
+    return new Promise((resolve, reject) => {
+      const http = new XMLHttpRequest()
+      http.open('DELETE', url, true)
+      http.setRequestHeader('content-type', 'application/json')
+      http.setRequestHeader('accept', 'application/json')
+      http.setRequestHeader('X-CSRF-Token', getCookie('CSRF-TOKEN'))
+      http.setRequestHeader('Access-Control-Allow-Origin', '*')
+
+      http.onreadystatechange = () => self._handleResponse(http, resolve, reject)
+      http.send()
+    })
+  }
+
   login (link, data) {
+    // const self = this
+    const url = this.getURL(link)
+    return new Promise((resolve, reject) => {
+      const http = new XMLHttpRequest()
+      http.open('POST', url, true)
+      http.setRequestHeader('content-type', 'application/json')
+      http.setRequestHeader('accept', 'application/json')
+      http.setRequestHeader('Access-Control-Allow-Origin', '*')
+      http.onreadystatechange = () => {
+        if (http.readyState === 4) {
+          if (http.status === 200) {
+            if (http.responseText) {
+              return resolve(JSON.parse(http.responseText))
+            } else {
+              return reject(http)
+            }
+          } else {
+            return reject(http)
+          }
+        }
+      }
+      http.send(JSON.stringify(data))
+    })
+  }
+
+  sessionLogin (link, data) {
     // const self = this
     const url = this.getURL(link)
     return new Promise((resolve, reject) => {
@@ -150,6 +254,24 @@ class Http {
             content_type: contentType
           },
           store.state.user.authToken
+        )
+        resolve(response)
+      } catch (err) {
+        reject(err)
+      } finally {}
+    })
+  }
+
+  getSessionSignedURL (fileName, contentType) {
+    return new Promise(async (resolve, reject) => {
+      const path = 'sign_url_for_upload'
+
+      try {
+        const response = await this.sessionPost(
+          path, {
+            file_name: fileName,
+            content_type: contentType
+          }
         )
         resolve(response)
       } catch (err) {
