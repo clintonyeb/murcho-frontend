@@ -1,4 +1,4 @@
-let defaultConfig = require('tailwindcss/defaultConfig')()
+require('tailwindcss/defaultConfig')()
 
 let colors = {
   'transparent': 'transparent',
@@ -91,7 +91,7 @@ module.exports = {
   colors: colors,
 
   screens: {
-    // 'sm': '576px',
+    'sm': '576px',
     'md': '768px',
     'lg': '992px'
     // 'xl': '1200px'
@@ -376,7 +376,7 @@ module.exports = {
   modules: {
     appearance: [],
     backgroundAttachment: [],
-    backgroundColors: [],
+    backgroundColors: ['hover', 'focus', 'group-hover'],
     backgroundPosition: [],
     backgroundRepeat: [],
     backgroundSize: [],

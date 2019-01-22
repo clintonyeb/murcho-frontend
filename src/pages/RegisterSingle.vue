@@ -170,10 +170,7 @@
             </p>
           </div>
 
-          <div class="control mb-4 mt-4">
-            <vue-recaptcha ref="recaptcha" @verify="onCaptchaVerified" @expired="resetCaptcha" size="invisible"
-              :sitekey="siteKey"></vue-recaptcha>
-          </div>
+          <vue-recaptcha ref="recaptcha" @verify="onCaptchaVerified" @expired="resetCaptcha" size="invisible" :sitekey="siteKey"></vue-recaptcha>
         </div>
 
         <div class="mt-4 mb-4 inline-flex justify-around lg:justify-end w-full">
@@ -253,6 +250,11 @@
         content: 'Registration Page for the Murcho Platform. Register your church on the platform to access our platform.'
       }]
     },
+    mounted() {
+      let recaptchaScript = document.createElement('script')
+      recaptchaScript.setAttribute('src', 'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit')
+      document.head.appendChild(recaptchaScript)
+    },
     computed: {
       loadingButtonClass() {
         return {
@@ -331,10 +333,10 @@
         } catch (err) {
           this.loadingForm = false
           const message = err.response ? JSON.parse(err.response).error :
-              'There was an error processing your request.'
-            this.displayMessage = message
-            this.displayMessageType = MESSAGE_TYPES.error
-            this.shouldDisplayMessage = true
+            'There was an error processing your request.'
+          this.displayMessage = message
+          this.displayMessageType = MESSAGE_TYPES.error
+          this.shouldDisplayMessage = true
         } finally {}
       },
       submit() {

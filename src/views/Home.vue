@@ -4,7 +4,7 @@
       <div class="mx-auto w-full">
         <div class="w-full church-info py-4 lg:px-8 px-4">
           <div class="w-full flex items-center justify-between">
-            <div class="w-full flex flex-wrap items-center lg:justify-start justify-center">
+            <div class="w-full flex flex-wrap lg:flex-no-wrap items-center lg:justify-start justify-center">
               <p class="w-full lg:w-auto flex items-center justify-center">
                 <avatar :username="`${church.name}`" :src="church.photo" class="text-center" :size="180" />
               </p>

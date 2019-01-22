@@ -1,0 +1,37 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <url>
+    <loc>https://murcho.com/login</loc>
+  </url>
+  <url>
+    <loc>https://murcho.com/home</loc>
+  </url>
+  <url>
+    <loc>https://murcho.com/people</loc>
+  </url>
+  <url>
+    <loc>https://murcho.com/groups</loc>
+  </url>
+   <url>
+    <loc>https://murcho.com/events</loc>
+  </url>
+   <url>
+    <loc>https://murcho.com/services</loc>
+  </url>
+   <url>
+    <loc>https://murcho.com/signup_single</loc>
+  </url>
+   <url>
+    <loc>https://murcho.com/add_church</loc>
+  </url>
+  <url>
+    <loc>https://murcho.com/signup_options</loc>
+  </url>
+  <url>
+    <loc>https://murcho.com/validate_email</loc>
+  </url>
+  <url>
+    <loc>https://murcho.com/reset_password</loc>
+  </url>
+</urlset>
