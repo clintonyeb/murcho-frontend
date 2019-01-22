@@ -35,7 +35,7 @@ let colors = {
   'blue': '#3490dc',
   'blue-light': '#6cb2eb',
   'blue-lighter': '#bcdefa',
-  'blue-lightest': '#eff8ff'
+  'blue-lightest': '#eff8ff',
 
   // 'orange-darkest': '#462a16',
   // 'orange-darker': '#613b1f',
@@ -47,10 +47,10 @@ let colors = {
 
   // 'green-darkest': '#0f2f21',
   // 'green-darker': '#1a4731',
-  // 'green-dark': '#1f9d55',
+  'green-dark': '#1f9d55',
   // 'green': '#38c172',
   // 'green-light': '#51d88a',
-  // 'green-lighter': '#a2f5bf',
+  'green-lighter': '#a2f5bf',
   // 'green-lightest': '#e3fcec',
 
   // 'teal-darkest': '#0d3331',
@@ -71,10 +71,10 @@ let colors = {
 
   // 'purple-darkest': '#21183c',
   // 'purple-darker': '#382b5f',
-  // 'purple-dark': '#794acf',
+  'purple-dark': '#794acf',
   // 'purple': '#9561e2',
   // 'purple-light': '#a779e9',
-  // 'purple-lighter': '#d6bbfc',
+  'purple-lighter': '#d6bbfc'
   // 'purple-lightest': '#f3ebff',
 
   // 'pink-darkest': '#451225',

@@ -22,6 +22,9 @@ export default {
     Event
   },
   methods: {
+    submitOnEnter () {
+
+    },
     isSmallDevice () {
       return window.matchMedia('(min-width: 576px)')
     },

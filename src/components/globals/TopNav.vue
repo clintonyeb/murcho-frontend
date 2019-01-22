@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex items-center justify-between flex-wrap p-4 shadow-md lg:shadow h-16 font-sans bg-white">
+  <nav class="flex items-center justify-between flex-wrap p-3 shadow-md lg:shadow  font-sans bg-white">
     <div class="flex items-center flex-no-shrink mr-24 h-8">
       <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-8">
     </div>
@@ -22,19 +22,19 @@
     <div class="nav-items-container w-full block flex-grow lg:flex lg:items-center lg:w-auto lg:h-8 bg-white z-10 shadow lg:shadow-none animated zoomIn is-sm pt-4 lg:pt-0 mt-2 lg:mt-0"
       :class="hideNavBar ? 'hidden' : '' ">
       <div class="text-sm lg:flex-grow nav-items">
-        <router-link :to="{name: 'home'}" class="flex mt-4 lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-5">
+        <router-link :to="{name: 'home'}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative">
           <span v-html="icons.home" class="mr-1"></span>
           <span>My Home</span>
         </router-link>
-        <router-link :to="{name: 'people'}" class="flex mt-4 lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-5">
+        <router-link :to="{name: 'people'}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative">
           <span v-html="icons.people" class="mr-1"></span>
           <span>My People</span>
         </router-link>
-        <router-link :to="{name: 'groups'}" class="flex mt-4 lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-5">
+        <router-link :to="{name: 'groups'}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative">
           <span v-html="icons.group" class="mr-1"></span>
           <span>My Groups</span>
         </router-link>
-        <router-link :to="{name: 'events'}" class="flex mt-4 lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-5">
+        <router-link :to="{name: 'events'}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative">
           <span v-html="icons.event" class="mr-1"></span>
           <span>My Events</span>
         </router-link>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap min-h-screen w-screen font-sans max-w-full" id="add-church">
-    <div class="w-full lg:w-1/2 lg:min-h-screen bg-grey-lightest relative border-r-2 border-dashed bg-pattern" id="form-section">
+    <div class="w-full lg:w-1/2 lg:min-h-screen bg-grey-lightest relative border-r-2 border-dashed" id="form-section">
       <div>
         <div class="absolute flex items-center text-white text-sm font-bold px-4 py-3 w-full mb-4 " role="alert" v-if="shouldDisplayMessage"
           :class="alertClass" style="animation-delay: 1s;">
@@ -117,7 +117,7 @@
       </div>
     </div>
 
-    <div class="w-full lg:w-1/2 lg:min-h-screen bg-grey-lightest bg-pattern">
+    <div class="w-full lg:w-1/2 lg:min-h-screen bg-grey-lightest">
       <hr class="w-full lg:hidden border border-dotted border-grey-dark">
 
       <div class="">

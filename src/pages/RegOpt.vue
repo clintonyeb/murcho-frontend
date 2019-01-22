@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-wrap h-screen w-screen font-sans" id="register-opts">
-    <div class="w-full lg:w-1/2 lg:h-screen relative lg:p-10 flex items-center justify-center bg-pattern" id="form-section">
+    <div class="w-full lg:w-1/2 lg:h-screen relative lg:p-10 flex items-center justify-center" id="form-section">
       <div class="lg:h-full shadow bg-grey-lightest w-full max-w-md rounded flex-col justify-between items-start">
         <div class="w-full h-64 flex items-center justify-center">
           <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/church_single.png" alt="Single Church" style="transform: scale(2);">
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-       <div class="w-full lg:w-1/2 lg:h-screen relative lg:p-10 flex items-center justify-center bg-pattern" id="form-section">
+       <div class="w-full lg:w-1/2 lg:h-screen relative lg:p-10 flex items-center justify-center" id="form-section">
       <div class="lg:h-full shadow bg-grey-lightest w-full max-w-md rounded flex-col justify-between items-start">
         <div class="w-full h-64 flex items-center justify-center">
           <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/church_group.png" alt="Single Church">
