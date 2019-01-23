@@ -51,8 +51,34 @@ export default new Router({
         },
         {
           path: 'services',
-          name: 'services',
-          component: () => import(/* webpackChunkName: "services" */ './views/Services.vue')
+          component: () => import(/* webpackChunkName: "services" */ './views/Services.vue'),
+          children: [
+            {
+              path: '',
+              name: 'services',
+              component: () => import(/* webpackChunkName: "all-services" */ './components/services/Services.vue')
+            },
+            {
+              path: 'email',
+              name: 'email-services',
+              component: () => import(/* webpackChunkName: "email-services" */ './components/services/Email.vue')
+            },
+            {
+              path: 'sms',
+              name: 'sms-services',
+              component: () => import(/* webpackChunkName: "sms-services" */ './components/services/SMS.vue')
+            },
+            {
+              path: 'import',
+              name: 'import-services',
+              component: () => import(/* webpackChunkName: "import-services" */ './components/services/Import.vue')
+            },
+            {
+              path: 'export',
+              name: 'export-services',
+              component: () => import(/* webpackChunkName: "export-services" */ './components/services/Export.vue')
+            },
+          ]
         }
       ]
     },

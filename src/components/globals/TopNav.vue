@@ -1,8 +1,8 @@
 <template>
   <nav class="flex items-center justify-between flex-wrap p-3 shadow-md lg:shadow  font-sans bg-white">
-    <div class="flex items-center flex-no-shrink mr-24 h-8">
+    <router-link class="flex items-center flex-no-shrink mr-24 h-8 text-black no-underline w-32" :to="{name: 'home'}">
       <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-8">
-    </div>
+    </router-link>
     <div class="block lg:hidden">
       <button class="flex items-center px-3 py-2 border rounded text-blue-light border-blue-light hover:text-blue hover:border-blue"
         @click="hideNavBar = !hideNavBar">
@@ -22,26 +22,11 @@
     <div class="nav-items-container w-full block flex-grow lg:flex lg:items-center lg:w-auto lg:h-8 bg-white z-10 shadow lg:shadow-none animated zoomIn is-sm pt-4 lg:pt-0 mt-2 lg:mt-0"
       :class="hideNavBar ? 'hidden' : '' ">
       <div class="text-sm lg:flex-grow nav-items">
-        <router-link :to="{name: 'home'}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative">
-          <span v-html="icons.home" class="mr-1"></span>
-          <span>My Home</span>
+        <router-link :to="{name: menu.value}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative" 
+        v-for="menu in topMenus" :key="menu.id">
+          <span v-html="menu.icon" class="mr-1"></span>
+          <span>{{menu.title}}</span>
         </router-link>
-        <router-link :to="{name: 'people'}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative">
-          <span v-html="icons.people" class="mr-1"></span>
-          <span>My People</span>
-        </router-link>
-        <router-link :to="{name: 'groups'}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative">
-          <span v-html="icons.group" class="mr-1"></span>
-          <span>My Groups</span>
-        </router-link>
-        <router-link :to="{name: 'events'}" class="flex lg:inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-2 lg:py-0 relative">
-          <span v-html="icons.event" class="mr-1"></span>
-          <span>My Events</span>
-        </router-link>
-        <!-- <router-link :to="{name: 'services'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
-          <span v-html="icons.service" class="mr-1"></span>
-          <span>All Services</span>
-        </router-link> -->
       </div>
       <div class="relative lg:inline-flex flex items-center justify-center h-12 mt-4 lg:mt-0">
 
@@ -135,6 +120,38 @@
     name: 'TopBar',
     data() {
       return {
+        topMenus: [
+          {
+            id: 1,
+            title: 'My Home',
+            icon: homeIcon,
+            value: 'home'
+          },
+          {
+            id: 2,
+            title: 'My People',
+            icon: peopleIcon,
+            value: 'people'
+          },
+          {
+            id: 3,
+            title: 'My Groups',
+            icon: groupIcon,
+            value: 'groups'
+          },
+          {
+            id: 4,
+            title: 'My Events',
+            icon: eventIcon,
+            value: 'events'
+          },
+          {
+            id: 5,
+            title: 'My Services',
+            icon: servicesIcon,
+            value: 'services'
+          }
+        ],
         hideNavBar: true,
         adminIcon: defaultAdminIcon,
         userMenu: false,
@@ -157,13 +174,6 @@
             handler: this.logout
           }
         ],
-        icons: {
-          event: eventIcon,
-          group: groupIcon,
-          people: peopleIcon,
-          service: servicesIcon,
-          home: homeIcon
-        }
       }
     },
     methods: {
