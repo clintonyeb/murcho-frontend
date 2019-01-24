@@ -90,6 +90,16 @@ export default new Router({
       component: () => import(/* webpackChunkName: "reset-password" */ './pages/ResetPassword.vue')
     },
     {
+      path: '/settings',
+      name: 'user-settings',
+      component: () => import(/* webpackChunkName: "user-settings" */ './pages/Settings.vue')
+    },
+    {
+      path: '/help',
+      name: 'user-help',
+      component: () => import(/* webpackChunkName: "user-help" */ './pages/Help.vue')
+    },
+    {
       path: '*',
       name: 'not-found',
       component: () => import(/* webpackChunkName: "not-found" */ './pages/404.vue')

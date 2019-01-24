@@ -4,6 +4,8 @@ import OnClickOutside from '@/components/globals/OnClickOutside'
 import Avatar from 'vue-avatar'
 import Message from '@/components/globals/Message'
 import Event from '@/components/globals/Event'
+import Spinner from '@/components/globals/Spinner'
+import EmptyPage from '@/pages/EmptyPage'
 
 let hash = null
 const pluralize = require('pluralize')
@@ -19,7 +21,9 @@ export default {
     OnClickOutside,
     Message,
     Avatar,
-    Event
+    Event,
+    Spinner,
+    EmptyPage
   },
   methods: {
     submitOnEnter () {

@@ -38,10 +38,6 @@
           <span v-html="icons.event" class="mr-1"></span>
           <span>My Events</span>
         </router-link>
-        <!-- <router-link :to="{name: 'services'}" class="block mt-4 inline-flex items-center justify-center lg:mt-0 mr-10 no-underline font-bold py-6">
-          <span v-html="icons.service" class="mr-1"></span>
-          <span>All Services</span>
-        </router-link> -->
       </div>
       <div class="relative lg:inline-flex flex items-center justify-center h-12 mt-4 lg:mt-0">
 
@@ -142,13 +138,17 @@
             id: 3,
             text: 'Settings',
             icon: settingsIcon,
-            handler: () => {}
+            handler: () => {
+              this.$router.push({name: 'user-settings'})
+            }
           },
           {
             id: 2,
             text: 'Help',
             icon: helpIcon,
-            handler: () => {}
+            handler: () => {
+              this.$router.push({name: 'user-help'})
+            }
           },
           {
             id: 1,
