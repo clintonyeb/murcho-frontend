@@ -76,41 +76,6 @@
               </p>
             </div>
 
-            <!-- <div class="w-full relative">
-              <div class="w-full">
-                <div class="w-full control mb-4 mt-4 relative">
-                  <label class="block text-grey text-sm font-bold mb-2">
-                    Church Logo
-                  </label>
-                  <div class="w-full flex items-top justify-between">
-
-                    <div class="w-full relative pr-1 h-16">
-                      <input type="file" id="Church Logo" placeholder="Upload Church Logo" class="text-grey-darker is-custom"
-                        name="Church Logo" tabindex="4" @change="photoUploaded" v-validate.continues="{image: true, ext: ['jpeg', 'jpg', 'png', 'svg']}"
-                        ref="church-photo">
-                      <label class="cursor-pointer hover:shadow w-full h-16 bg-grey-lighter p-2 rounded-lg absolute inline-flex items-center justify-center text-grey hover:text-grey-dark"
-                        for="Church Logo">
-                        Click to choose a photo
-                      </label>
-                      <p class="text-red-light text-xs  animated shake" v-show="getInputState('Church Logo')">
-                        {{getInputErrorMessage('Church Logo')}}
-                      </p>
-                    </div>
-
-                    <div class="w-1/3 pl-1 self-end" v-show="church_photo">
-                      <div class="w-full flex-col items-center justify-center">
-                        <img :src="church_photo" alt="Church Logo" width="90px" class="center">
-                        <p class="text-xs text-grey hover:underline cursor-pointer mt-1 text-center hover:text-grey-dark"
-                          @click="church_photo = null" v-show="church_photo">
-                          Remove
-                        </p>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            </div> -->
           </div>
 
         </div>
@@ -296,10 +261,6 @@
       },
        async submitForm(token) {
         try {
-          //  let fileURL = null
-          // if(this.church_photo) {
-          //   fileURL = await this.$http.uploadFile(this.church_photo)
-          // }
           // create church
 
           let path = 'churches'
@@ -307,7 +268,6 @@
           const church = await this.$http.post(path, {
             name: this.church_name,
             location: this.church_location,
-            // photo: fileURL,
             motto: this.church_motto,
             'g-recaptcha-response': token
           })

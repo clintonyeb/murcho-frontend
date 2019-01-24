@@ -12,38 +12,19 @@
                 <div class="w-full flex flex-wrap items-center justify-between">
                   <h3 class="text-blue font-black text-xl lg:text-3xl flex-grow w-full lg:w-auto">{{church.name}}</h3>
                   <div class="w-full lg:w-auto inline-flex items-center mt-2">
-                    <button class="h-8 w-8 p-2 bg-grey-light rounded-full text-grey-dark font-bold">
-                      <svg version="1.1" class="h-4 w-4 fill-current"
+                    <!-- <button class="text-blue-dark">
+                      <svg version="1.1" class="h-6 w-6 fill-current"
                         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                         viewBox="0 0 55 55" style="enable-background:new 0 0 55 55;" xml:space="preserve">
                         <path d="M54.5,10c0-5.514-4.486-10-10-10c-4.469,0-8.261,2.948-9.539,7H5.735C2.849,7,0.5,9.349,0.5,12.235v37.529C0.5,52.651,2.849,55,5.735,55h37.529c2.887,0,5.235-2.349,5.235-5.235V19.159C52.027,17.612,54.5,14.091,54.5,10z M46.5,49.765c0,1.784-1.451,3.235-3.235,3.235H5.735C3.951,53,2.5,51.549,2.5,49.765V12.235C2.5,10.451,3.951,9,5.735,9h28.815C34.518,9.329,34.5,9.662,34.5,10c0,5.514,4.486,10,10,10c0.685,0,1.354-0.07,2-0.202V49.765z M47.154,17.538c-0.198,0.07-0.398,0.13-0.599,0.185c-0.036,0.01-0.073,0.019-0.109,0.028c-0.177,0.045-0.355,0.084-0.534,0.117c-0.092,0.017-0.186,0.029-0.279,0.043c-0.134,0.02-0.269,0.04-0.403,0.053C44.989,17.985,44.746,18,44.5,18c-4.411,0-8-3.589-8-8c0-0.58,0.069-1.177,0.206-1.777C37.517,4.665,40.7,2,44.5,2c4.411,0,8,3.589,8,8C52.5,13.48,50.262,16.44,47.154,17.538z" />
                       </svg>
+                    </button> -->
+
+                    <button class="text-blue-dark" @click="editChurch">
+                      <svg class="fill-current h-6 w-6" viewBox="0 -1 401.52289 401" xmlns="http://www.w3.org/2000/svg">
+                        <path d="m370.589844 250.972656c-5.523438 0-10 4.476563-10 10v88.789063c-.019532 16.5625-13.4375 29.984375-30 30h-280.589844c-16.5625-.015625-29.980469-13.4375-30-30v-260.589844c.019531-16.558594 13.4375-29.980469 30-30h88.789062c5.523438 0 10-4.476563 10-10 0-5.519531-4.476562-10-10-10h-88.789062c-27.601562.03125-49.96875 22.398437-50 50v260.59375c.03125 27.601563 22.398438 49.96875 50 50h280.589844c27.601562-.03125 49.96875-22.398437 50-50v-88.792969c0-5.523437-4.476563-10-10-10zm0 0" />
+                        <path d="m376.628906 13.441406c-17.574218-17.574218-46.066406-17.574218-63.640625 0l-178.40625 178.40625c-1.222656 1.222656-2.105469 2.738282-2.566406 4.402344l-23.460937 84.699219c-.964844 3.472656.015624 7.191406 2.5625 9.742187 2.550781 2.546875 6.269531 3.527344 9.742187 2.566406l84.699219-23.464843c1.664062-.460938 3.179687-1.34375 4.402344-2.566407l178.402343-178.410156c17.546875-17.585937 17.546875-46.054687 0-63.640625zm-220.257812 184.90625 146.011718-146.015625 47.089844 47.089844-146.015625 146.015625zm-9.40625 18.875 37.621094 37.625-52.039063 14.417969zm227.257812-142.546875-10.605468 10.605469-47.09375-47.09375 10.609374-10.605469c9.761719-9.761719 25.589844-9.761719 35.351563 0l11.738281 11.734375c9.746094 9.773438 9.746094 25.589844 0 35.359375zm0 0" /></svg>
                     </button>
-
-                    <on-click-outside :do="() => showChurchMore = false" :active="showChurchMore === true">
-                      <div class="inline-flex items-center justify-center cursor-pointer relative">
-
-                        <button class="h-8 w-8 ml-4 text-grey-dark font-bold bg-grey-light rounded-full p-2" @click="showChurchMore = true">
-                          <svg aria-hidden="true" data-prefix="fas" data-icon="ellipsis-h" class="h-4 w-4 fill-current"
-                            role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" @click.stop="activeHiddenGroup = activeHiddenGroup ? null : person.id">
-                            <path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"
-                              style="padding: .5rem;"></path>
-                          </svg>
-                        </button>
-
-                        <div v-show="showChurchMore === true" class="inline-flex mt-px shadow-md rounded bg-white border absolute animated zoomIn flex flex-col z-10"
-                          style="min-width: 250px; top: 100%; right: 0;">
-                          <div class="inline-flex flex-wrap p-2">
-
-                            <a v-for="menu in churchMore" :key="menu.id" class="w-full text-xs cursor-pointer no-underline flex items-center justify-start px-4 py-2 whitespace-no-wrap group hover:text-grey-darker hover:bg-blue-lightest rounded">
-                              <span v-html="menu.icon" class="mr-2 hover:text-grey-darker"></span>
-                              <span class="hover:text-grey-darker text-grey-dark">{{menu.text}}</span>
-                            </a>
-                          </div>
-                        </div>
-
-                      </div>
-                    </on-click-outside>
 
                   </div>
                 </div>
@@ -142,115 +123,162 @@
         <event v-for="event in upcomingEvents" :key="event.id" :event="event" :loading="loadingUpcomingEvents" class="mt-6"></event>
       </div>
     </div>
+
+
+    <transition enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
+      <div class="bg-white p-6 fixed pin-t pin-r w-1/3 h-screen shadow-lg z-20 overflow-y-auto" v-if="drawer.state"
+        style="animation-duration: 500ms;">
+        <div class="w-full inline-flex items-center justify-between">
+          <p class="inline-flex text-grey ml-2">
+            <!-- <span v-html="icons.sms" class="mr-2"></span> -->
+            <span>Editing Church Details..</span>
+          </p>
+
+          <svg class="cursor-pointer fill-current h-5 w-5 text-blue-light float-right mr-2" role="button" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20" @click="hideActionDrawer">
+            <title>Close</title>
+            <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"></path>
+          </svg>
+
+        </div>
+
+        <div class="mt-8">
+          <edit-church :church="church" @updated="churchUpdated" @cancel="hideActionDrawer"></edit-church>
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
 <script>
-import {
-  editIcon
-} from '@/utils/icons'
+  import {
+    editIcon
+  } from '@/utils/icons'
 
-import Updates from '@/components/home/Updates'
-import Analytics from '@/components/home/Analytics'
-import Actions from '@/components/home/Actions'
+  import Updates from '@/components/home/Updates'
+  import Analytics from '@/components/home/Analytics'
+  import Actions from '@/components/home/Actions'
 
-export default {
-  name: 'dashboard',
-  data () {
-    return {
-      upcomingEvents: [],
-      loadingUpcomingEvents: false,
-      upcomingLoaded: false,
-      homeTabMenu: [{
-        id: 1,
-        text: 'Church Updates',
-        value: 'Updates',
-        icon: ''
-      },
-      {
-        id: 2,
-        text: 'Church Analytics',
-        value: 'Analytics',
-        icon: ''
-      },
-      {
-        id: 3,
-        text: 'Church Actions',
-        value: 'Actions',
-        icon: ''
+  export default {
+    name: 'dashboard',
+    data() {
+      return {
+        drawer: {
+          state: false,
+          action: null,
+          cancel: null,
+          data: null,
+          loading: false,
+          results: null
+        },
+        upcomingEvents: [],
+        loadingUpcomingEvents: false,
+        upcomingLoaded: false,
+        homeTabMenu: [{
+            id: 1,
+            text: 'Church Updates',
+            value: 'Updates',
+            icon: ''
+          },
+          {
+            id: 2,
+            text: 'Church Analytics',
+            value: 'Analytics',
+            icon: ''
+          },
+          {
+            id: 3,
+            text: 'Church Actions',
+            value: 'Actions',
+            icon: ''
+          }
+        ],
+        church: {},
+        churchInfo: {},
+        loadingChurchInfo: false,
+        showChurchMore: false,
+        churchMore: [{
+          id: 1,
+          text: 'Edit Church',
+          value: 'edit',
+          icon: editIcon
+        }],
+        currentTabComponent: 'Updates'
       }
-      ],
-      church: {},
-      churchInfo: {},
-      loadingChurchInfo: false,
-      showChurchMore: false,
-      churchMore: [{
-        id: 1,
-        text: 'Edit Church',
-        value: 'edit',
-        icon: editIcon
-      }],
-      currentTabComponent: 'Updates'
-    }
-  },
-  created () {
-    this.readyCallbacks([this.refresh])
-  }, 
-  metaInfo: {
+    },
+    created() {
+      this.readyCallbacks([this.refresh])
+    },
+    metaInfo: {
       title: 'Home',
       meta: [{
         name: 'description',
         content: 'Dashboard Page for the Murcho Platform. Have an overview of people, events and church groups.'
       }]
     },
-  components: {
-    Updates,
-    Actions,
-    Analytics
-  },
-  methods: {
-    refresh () {
-      this.getChurchInfo(this.$store.state.user.church_id)
-      this.loadUpcomingEvents()
+    components: {
+      Updates,
+      Actions,
+      Analytics,
+      'edit-church': () => import('@/components/home/EditChurch'),
     },
-    async loadUpcomingEvents () {
-      if (this.loadingUpcomingEvents) return
+    methods: {
+      churchUpdated(church){
+        this.church = church
+        this.hideActionDrawer()
+      },
+      editChurch(){
+         this.drawer.state = true
+      },
+      hideActionDrawer() {
+        this.drawer.data = null
+        this.activeAction = null
+        this.drawer.state = false
+      },
+      refresh() {
+        this.getChurchInfo(this.$store.state.user.church_id)
+        this.loadUpcomingEvents()
+      },
+      async loadUpcomingEvents() {
+        if (this.loadingUpcomingEvents) return
 
-      this.loadingUpcomingEvents = true
-      this.upcomingLoaded = false
+        this.loadingUpcomingEvents = true
+        this.upcomingLoaded = false
 
-      const limit = 10
-      const path = `upcoming_events?limit=${limit}`
-      this.loadingUpcomingEvents = true
-      try {
-        const response = await this.$http.get(path, this.authToken)
-        this.upcomingEvents = response
-        this.upcomingLoaded = true
-      } catch (err) {
-        console.log(err)
-      } finally {
-        this.loadingUpcomingEvents = false
-      }
-    },
-    async getChurchInfo (churchId) {
-      try {
-        this.loadingChurchInfo = true
-        const path = `get_church_info/${churchId}`
-        const response = await this.$http.get(path, this.authToken)
-        this.church = response.church
-        this.churchInfo = response
-      } catch (error) {
+        const limit = 10
+        const path = `upcoming_events?limit=${limit}`
+        this.loadingUpcomingEvents = true
+        try {
+          const response = await this.$http.get(path, this.authToken)
+          this.upcomingEvents = response
+          this.upcomingLoaded = true
+        } catch (err) {
+          console.log(err)
+        } finally {
+          this.loadingUpcomingEvents = false
+        }
+      },
+      async getChurchInfo(churchId) {
+        try {
+          this.loadingChurchInfo = true
+          const path = `get_church_info/${churchId}`
+          const response = await this.$http.get(path, this.authToken)
+          this.church = response.church
+          this.churchInfo = response
+        } catch (error) {
 
-      } finally {
-        this.loadingChurchInfo = false
+        } finally {
+          this.loadingChurchInfo = false
+        }
       }
     }
   }
-}
 
 </script>
 
 <style lang="scss">
-@import "../assets/charts.scss";
-@import "chartist/dist/scss/chartist.scss";
+  @import "../assets/charts.scss";
+  @import "chartist/dist/scss/chartist.scss";
+
 </style>
