@@ -76,7 +76,7 @@
               </p>
             </div>
 
-            <div class="w-full relative">
+            <!-- <div class="w-full relative">
               <div class="w-full">
                 <div class="w-full control mb-4 mt-4 relative">
                   <label class="block text-grey text-sm font-bold mb-2">
@@ -110,7 +110,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
 
         </div>
@@ -296,6 +296,10 @@
       },
        async submitForm(token) {
         try {
+          //  let fileURL = null
+          // if(this.church_photo) {
+          //   fileURL = await this.$http.uploadFile(this.church_photo)
+          // }
           // create church
 
           let path = 'churches'
@@ -303,7 +307,7 @@
           const church = await this.$http.post(path, {
             name: this.church_name,
             location: this.church_location,
-            photo: null, // TODO upload photo
+            // photo: fileURL,
             motto: this.church_motto,
             'g-recaptcha-response': token
           })
