@@ -8,7 +8,7 @@
         </p>
       </div>
 
-      <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded" @click="$emit('create')">
+      <button class="bg-blue text-white h-8 px-3 inline-flex items-center justify-between rounded" @click="$emit('create')">
         <span v-html="icons.plus" class="mr-2 text-white"></span>
         <span class="mr-2">Add Group</span>
       </button>

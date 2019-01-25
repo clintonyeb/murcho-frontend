@@ -53,7 +53,7 @@
               </div>
             </on-click-outside>
 
-            <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded" @click="showAddPersonSearch = true" v-else>
+            <button class="bg-blue text-white h-8 px-3 inline-flex items-center justify-between rounded" @click="showAddPersonSearch = true" v-else>
               <span v-html="icons.plus" class="mr-2 text-white"></span>
               <span class="mr-2">Add Person</span>
             </button>

@@ -106,9 +106,9 @@
                   </div>
                 </on-click-outside> -->
 
-                <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded-l" @click="createPerson">
+                <button class="bg-blue text-white h-8 px-3 inline-flex items-center justify-between rounded-l" @click="createPerson">
                   <span v-html="icons.plus" class="mr-2 text-white"></span>
-                  <span class="mr-2">Add Person</span>
+                  <span class="">Add Person</span>
                 </button>
 
                 <on-click-outside :do="() => moreMenu = false" :active="moreMenu">

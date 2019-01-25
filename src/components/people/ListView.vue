@@ -3,7 +3,7 @@
     <table class="w-full border-separate table-auto relative" style="border-spacing: 0 .4rem;">
       <thead>
         <tr class="text-grey text-xs text-left">
-          <th class="pb-4 pl-4">
+          <th class="w-8 h-6 flex items-start justify-center">
             <label class="checkbox-container checkbox">
               <input type="checkbox" @click="selectAll" ref="select-all">
               <span class="checkmark"></span>
@@ -42,7 +42,7 @@
         <tr v-for="(person, index) in people" :key="person.id" class="text-grey-dark text-xs bg-white my-2 rounded shadow cursor-pointer person-item hover:text-grey-darkest hover:bg-blue-lightest select-none"
           :class="{'bg-blue-lightest text-grey-darkest': (activePeople.indexOf(person.id) !== -1 || activePerson === person.id)}"
           @click="personRowClicked(person.id)">
-          <td class="w-14 px-4 py-2">
+          <td class="w-8 h-6 flex items-center justify-center">
             <label class="checkbox-container checkbox">
               <input type="checkbox" v-model="selectedPeople" :value="person.id">
               <span class="checkmark"></span>

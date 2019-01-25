@@ -8,11 +8,11 @@
             <div class="inline-flex items-center justify-between">
               <h3 class="text-blue-light font-black text-2xl mr-4">Events</h3>
               <div class="inline-flex items-center">
-                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-l"
+                <button class="bg-white text-grey-dark h-8 px-3 inline-flex items-center border border-grey-light rounded-l"
                   @click="previousMonth">
                   <span v-html="icons.back" class="text-grey"></span>
                 </button>
-                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center justify-between border border-grey-light w-48">
+                <button class="bg-white text-grey-dark h-8 px-3 inline-flex items-center justify-between border border-grey-light w-48">
                   <span class="mr-2">{{displayedMonth}}</span>
                   <!-- <svg class="h-2 w-2 fill-current text-grey ml-2" version="1.1" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="292.362px" height="292.362px"
@@ -20,7 +20,7 @@
                     <path d="M286.935,69.377c-3.614-3.617-7.898-5.424-12.848-5.424H18.274c-4.952,0-9.233,1.807-12.85,5.424C1.807,72.998,0,77.279,0,82.228c0,4.948,1.807,9.229,5.424,12.847l127.907,127.907c3.621,3.617,7.902,5.428,12.85,5.428s9.233-1.811,12.847-5.428L286.935,95.074c3.613-3.617,5.427-7.898,5.427-12.847C292.362,77.279,290.548,72.998,286.935,69.377z" />
                   </svg> -->
                 </button>
-                <button class="bg-white text-grey-dark h-8 p-3 inline-flex items-center border border-grey-light rounded-r"
+                <button class="bg-white text-grey-dark h-8 px-3 inline-flex items-center border border-grey-light rounded-r"
                   @click="nextMonth">
                   <span v-html="icons.forward"></span>
                 </button>
@@ -53,7 +53,7 @@
                   </div>
                 </on-click-outside>
 
-                <button class="bg-blue text-white h-8 p-3 inline-flex items-center justify-between rounded" @click="createEvent">
+                <button class="bg-blue text-white h-8 px-3 inline-flex items-center justify-between rounded" @click="createEvent">
                   <span v-html="icons.plus" class="mr-2 text-white"></span>
                   <span class="mr-2">Create Event</span>
                 </button>
