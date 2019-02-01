@@ -10,6 +10,9 @@ import globalMixin from '@/mixins/global'
 import './assets/main.css'
 import autofocus from 'vue-autofocus-directive'
 import Meta from 'vue-meta'
+import {
+  parse
+} from 'date-fns'
 
 Vue.config.productionTip = false
 Vue.use(http)
@@ -32,7 +35,22 @@ const ifDependentPresent = (value, args) => {
   return true
 }
 
+const dateFormat = 'dd/MM/yyyy'
+const today = new Date()
+const invalidDate = 'Invalid Date'
+
+const isValidDate = {
+  getMessage (field, args) {
+    return 'Please provide a valid date.'
+  },
+  validate (value, args) {
+    if (!value) return true
+    return parse(value, dateFormat, today).toString() !== invalidDate
+  }
+}
+
 VeeValidate.Validator.extend('isDependent', ifDependentPresent)
+VeeValidate.Validator.extend('validateDate', isValidDate)
 
 Vue.use(Meta)
 

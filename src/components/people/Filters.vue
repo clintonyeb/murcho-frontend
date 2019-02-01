@@ -173,7 +173,7 @@ export default {
       {
         id: 2,
         text: 'Phone Number',
-        value: 'phone_number'
+        value: 'cell_phone_1'
       },
       {
         id: 3,
@@ -280,9 +280,8 @@ export default {
     searchedGroupItemClicked (group) {
       this.clearGroupSearch()
       if (this.groups.selected.find(g => g.id === group.id)) return false
-
       this.groups.selected.unshift(group)
-      this.groups.pickedFromSelected.push(group)
+      // this.groups.pickedFromSelected.push(group)
     },
     searchGroups: debounce(function (e) {
       this.doGroupsSearch(e.target.value)

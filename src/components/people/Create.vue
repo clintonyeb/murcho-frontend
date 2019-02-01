@@ -33,35 +33,6 @@
     <div class="w-full inline-flex mt-4">
       <div class="w-full control mr-1">
         <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="Email Address">
-            Email Address
-          </label>
-          <input type="email" placeholder="Enter Email Address" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
-            v-model="email" name="Email Address" tabindex="3" id="Email Address" :class="getInputColor('Email Address')">
-          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Email Address')">
-            {{getInputErrorMessage('Email Address')}}
-          </p>
-        </div>
-      </div>
-
-      <div class="w-full control ml-1">
-        <div>
-          <label class="block text-grey text-sm font-bold mb-2" for="Phone Number">
-            Phone Number
-          </label>
-          <input type="text" placeholder="Enter Phone Number" class="w-full text-grey-darker h-10 inline-flex border rounded-sm mb-1 pl-2"
-            v-model="phone_number" name="Phone Number" tabindex="4" id="Phone Number" :class="getInputColor('Phone Number')">
-          <p class="text-red-light text-xs  pt-1 animated shake h-4" v-show="getInputState('Phone Number')">
-            {{getInputErrorMessage('Phone Number')}}
-          </p>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="w-full inline-flex mt-4">
-      <div class="w-full control mr-1">
-        <div>
           <label class="block text-grey text-sm font-bold mb-2" for="Date Joined">
             Date Person Joined
           </label>
@@ -84,39 +55,6 @@
           </select>
           <p class="text-red-light text-xs  pt-1 animated shake" v-show="getInputState('Membership Status')">
             {{getInputErrorMessage('Membership Status')}}
-          </p>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="w-full inline-flex items-center mt-4">
-      <div class="w-2/3 control mr-1">
-        <div>
-          <label class="block text-grey text-sm font-bold mb-2">
-            Profile Photo
-          </label>
-          <div class="h-32 relative" :class="getInputColor('Profile Photo')">
-            <input type="file" id="Profile Photo" placeholder="Upload Profile Photo" class="text-grey-darker is-custom"
-              name="Profile Photo" tabindex="6" @change="photoUploaded" v-validate.continues="{image: true, ext: ['jpeg', 'jpg', 'png', 'svg']}"
-              ref="avatar-input">
-            <label class="cursor-pointer hover:shadow w-full h-24 bg-grey-lighter p-2 rounded-lg absolute inline-flex items-center justify-center text-grey hover:text-grey-dark"
-              for="Profile Photo">
-              Click to choose a photo
-            </label>
-            <p class="text-red-light text-xs  animated shake absolute pin-b" v-show="getInputState('Profile Photo')">
-              {{getInputErrorMessage('Profile Photo')}}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="w-1/3 control" v-if="photo">
-        <div class="w-full flex-col items-center justify-center">
-          <avatar :username="`${first_name} ${last_name}`" :src="photo" class="m-auto" :size="70" :rounded="false" ref="avatar" />
-          <p class="text-xs text-grey hover:underline cursor-pointer mt-1 text-center hover:text-grey-dark" @click="photo = null"
-            v-if="photo">
-            Remove
           </p>
         </div>
       </div>
@@ -166,84 +104,58 @@
 </template>
 
 <script>
-import {
-  tickIcon
-} from '@/utils/icons'
+  import {
+    tickIcon
+  } from '@/utils/icons'
 
-import flatpickr from 'flatpickr'
-import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
-const dateFormat = 'EEEE, do; h:m a'
+  import flatpickr from 'flatpickr'
+  import confirmDatePlugin from 'flatpickr/dist/plugins/confirmDate/confirmDate.js'
+  const dateFormat = 'EEEE, do; h:m a'
 
-let dateJoinedComp = null
+  let dateJoinedComp = null
 
-export default {
-  name: 'Create',
-  data () {
-    return {
-      loadingForm: false,
-      first_name: '',
-      last_name: '',
-      email: '',
-      phone_number: '',
-      membership_status: 'member',
-      photo: '',
-      membershipStatuses: [{
-        text: 'Member',
-        value: 'member'
-      },
-      {
-        text: 'Guest',
-        value: 'guest'
-      },
-      {
-        text: 'Former Member',
-        value: 'former_member'
-      }
-      ]
-    }
-  },
-  mounted () {
-    this.initializeDatePickers()
-  },
-  beforeDestroy () {
-    if (dateJoinedComp !== null) dateJoinedComp.destroy()
-  },
-  methods: {
-    photoUploaded (event) {
-      const file = event.target.files && event.target.files[0]
-
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          this.photo = e.target.result
-        }
-
-        reader.readAsDataURL(file)
-      } else {
-        this.photo = null
+  export default {
+    name: 'Create',
+    data() {
+      return {
+        loadingForm: false,
+        first_name: '',
+        last_name: '',
+        membership_status: 'member',
+        membershipStatuses: [{
+            text: 'Member',
+            value: 'member'
+          },
+          {
+            text: 'Guest',
+            value: 'guest'
+          },
+          {
+            text: 'Former Member',
+            value: 'former_member'
+          }
+        ]
       }
     },
-    submit () {
-      if (this.loadingForm) return false
-      this.validateForm(state => {
-        if (!state) return false
+    mounted() {
+      this.initializeDatePickers()
+    },
+    beforeDestroy() {
+      if (dateJoinedComp !== null) dateJoinedComp.destroy()
+    },
+    methods: {
+      submit() {
+        if (this.loadingForm) return false
+        this.validateForm(async state => {
+          if (!state) return false
 
-        this.loadingForm = true
-
-        this.uploadPhoto(async (err, fileURL) => {
-          if (err) {
-            return false
-          }
+          this.loadingForm = true
 
           const fields = {
             first_name: this.first_name,
             last_name: this.last_name,
-            email: this.email,
-            phone_number: this.phone_number,
             date_joined: dateJoinedComp.selectedDates[0],
             membership_status: this.membership_status,
-            photo: fileURL || null,
-            thumbnail: fileURL || null
           }
 
           const path = `people`
@@ -257,36 +169,35 @@ export default {
             this.loadingForm = false
           }
         })
-      })
-    },
-    async uploadPhoto (cb) {
-      const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
+      },
+      async uploadPhoto(cb) {
+        const file = this.$refs['avatar-input'].files && this.$refs['avatar-input'].files[0]
 
-      if (file) {
-        try {
-          const file_url = await this.$http.uploadFile(file)
-          cb(null, file_url)
-        } catch (error) {
-          cb(error)
+        if (file) {
+          try {
+            const file_url = await this.$http.uploadFile(file)
+            cb(null, file_url)
+          } catch (error) {
+            cb(error)
+          }
+        } else {
+          cb(null, false)
         }
-      } else {
-        cb(null, false)
-      }
-    },
-    initializeDatePickers () {
-      const defaultDate = new Date()
+      },
+      initializeDatePickers() {
+        const defaultDate = new Date()
 
-      dateJoinedComp = flatpickr(this.$refs['date_joined'], {
-        dateFormat: 'J M, Y',
-        defaultDate: defaultDate,
-        plugins: [new confirmDatePlugin({
-          confirmIcon: tickIcon,
-          confirmText: 'Done',
-          showAlways: true
-        })]
-      })
+        dateJoinedComp = flatpickr(this.$refs['date_joined'], {
+          dateFormat: 'J M, Y',
+          defaultDate: defaultDate,
+          plugins: [new confirmDatePlugin({
+            confirmIcon: tickIcon,
+            confirmText: 'Done',
+            showAlways: true
+          })]
+        })
+      }
     }
   }
-}
 
 </script>

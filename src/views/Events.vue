@@ -65,7 +65,7 @@
         </div>
 
         <div class="w-full mt-2">
-          <calendar :selectedMonth="selectedMonth" @calendar="activeCalendar = $event" ref="calendar" @edit-event="showEditEvent"
+          <calendar :selectedMonth="selectedMonth" ref="calendar" @edit-event="showEditEvent"
             @reschedule="rescheduleEvent"></calendar>
         </div>
 
@@ -163,9 +163,9 @@
 
         <div class="mt-8">
           <message :info="info" />
-          <create v-if="activeAction === 'create'" :calendar_id="activeCalendar.id" @done="eventsCreated" :startDate="startDate"
+          <create v-if="activeAction === 'create'" @done="eventsCreated" :startDate="startDate"
             :endDate="endDate" @cancel="hideActionDrawer" />
-          <edit-event v-if="activeAction === 'edit-event'" :calendar_id="activeCalendar.id" @edit="editEvent"
+          <edit-event v-if="activeAction === 'edit-event'" @edit="editEvent"
             :startDate="startDate" :endDate="endDate" :data="drawer.data" @cancel="hideActionDrawer" @delete="deleteEvent" />
         </div>
       </div>
@@ -223,7 +223,6 @@ export default {
       icons: {
         edit: editIcon
       },
-      activeCalendar: null,
       activeAction: null,
       modal: {
         state: false,

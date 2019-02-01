@@ -7,6 +7,10 @@ import Event from '@/components/globals/Event'
 import Spinner from '@/components/globals/Spinner'
 import EmptyPage from '@/pages/EmptyPage'
 
+import {
+  MESSAGE_TYPES
+} from '@/utils'
+
 let hash = null
 const pluralize = require('pluralize')
 
@@ -23,7 +27,8 @@ export default {
     Avatar,
     Event,
     Spinner,
-    EmptyPage
+    EmptyPage,
+    'page-nav': () => import('@/components/globals/PageNav')
   },
   methods: {
     submitOnEnter () {
@@ -189,6 +194,16 @@ export default {
     },
     salt () {
       return store.state.user.salt
+    },
+    alertClass () {
+      switch (this.displayMessageType) {
+        case MESSAGE_TYPES.warning:
+          return ['bg-yellow-dark']
+        case MESSAGE_TYPES.error:
+          return ['bg-red-light']
+        default:
+          return ['bg-blue-light']
+      }
     }
   },
   watch: {

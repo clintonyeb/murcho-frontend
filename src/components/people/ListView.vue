@@ -54,7 +54,7 @@
           <td class="px-1 py-2">{{person.first_name}}</td>
           <td class="px-1 py-2">{{person.last_name}}</td>
           <td class="px-1 py-2">{{person.email || '-'}}</td>
-          <td class="px-1 py-2">{{person.phone_number || '-'}}</td>
+          <td class="px-1 py-2">{{person.cell_phone_1 || '-'}}</td>
           <td class="px-1 py-2">{{person.membership_status | capitalize}}</td>
           <td class="px-1 py-2 w-64">
             <div class="inline-flex ">

@@ -62,11 +62,6 @@
               </on-click-outside>
             </div>
 
-            <!-- <div v-if="addingEventDay === day.id" class="event-detail mt-px text-sm shadow-lg text-grey-darker leading-normal rounded bg-white border absolute animated zoomIn flex flex-col z-20 flex flex-col"
-              style="top: 0; left: 105%; width: 20rem;">
-              <create-event :start_date="day.value" @close="addingEventDay = null" :calendar_id="calendar.id" @saved="eventCreated"></create-event>
-            </div> -->
-
           </td>
         </tr>
       </tbody>
@@ -108,7 +103,6 @@ export default {
       showingMoreDay: null,
       hoveredDay: null,
       addingEventDay: null,
-      calendar: {},
       eventsLoaded: false,
       activeAction: null,
       draggingOverId: null,
@@ -267,18 +261,6 @@ export default {
       this.events.unshift(event)
       this.addingEventDay = null
     },
-    async getCalendar () {
-      const path = `calendars`
-
-      try {
-        const response = await this.$http.get(path, this.authToken)
-        this.calendar = response[0]
-      } catch (err) {
-        
-      } finally {
-        // this.loadingMore = false
-      }
-    },
     showMore (day, events) {
       if (day.id === this.showingMoreDay) {
         return events
@@ -335,9 +317,6 @@ export default {
         this.getEventsForSelectedMonth(month)
       }
     },
-    calendar (val) {
-      if (val) this.$emit('calendar', val)
-    }
   },
   filters: {
     formatDate (dateString) {

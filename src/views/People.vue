@@ -202,7 +202,8 @@
     </div>
 
     <transition enter-active-class="animated slideInRight" leave-active-class="animated slideOutRight">
-      <div class="bg-white p-6 fixed pin-t pin-r w-1/3 h-screen shadow-lg z-20" v-show="takingAction" style="animation-duration: 500ms;">
+      <div class="bg-white p-6 fixed pin-t pin-r h-screen overflow-y-auto shadow-lg z-20" :class="`${sideBarWith}`"
+        v-show="takingAction" style="animation-duration: 500ms;">
         <div class="w-full inline-flex items-center justify-between">
           <p class="inline-flex text-grey" v-if="activeAction === 'email'">
             <span>
@@ -234,7 +235,7 @@
           </svg>
         </div>
 
-        <div class="mt-16 pa-4">
+        <div>
           <div class="absolute flex items-center text-white text-sm font-bold px-4 py-3 w-full mb-4 animated tada" role="alert"
             v-if="shouldDisplayMessage" :class="alertClass" style="animation-delay: 1s;">
             <svg class="h-4 w-4 fill-current text-white mr-4" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -266,10 +267,11 @@
           </div>
 
           <email v-if="activeAction === 'email'" :people_ids="actionablePeople" @sent=" hideActionDrawer" />
-          <sms v-if="activeAction === 'sms'" :people_ids="actionablePeople" @sent=" hideActionDrawer" />
+          <sms v-if="activeAction === 'sms'" :people_ids="actionablePeople" @sent="hideActionDrawer" />
           <edit-person v-if="activeAction === 'edit-person'" :person="editingPerson" @updated="updatePerson"></edit-person>
           <add-groups v-if="activeAction === 'add-groups' && actionablePeople.length" :people="actionablePeople"
             @groups-added="groupsCreated"></add-groups>
+          <view-person v-if="activeAction === 'view'" :person="editingPerson" @close="hideActionDrawer"></view-person>
         </div>
       </div>
     </transition>
@@ -285,7 +287,6 @@
         </svg>
 
         <create v-if="activeAction === 'create'" @close="closeModal" @created="personCreated"></create>
-        <view-person v-if="activeAction === 'view'" :person="editingPerson" @close="closeModal"></view-person>
         <confirm-delete v-if="activeAction === 'delete'" :action="modalAction" :people_ids="actionablePeople" :cancel="modalCancel"></confirm-delete>
         <export-people v-if="activeAction === 'export'" :action="modalAction" :people_ids="actionablePeople" :cancel="modalCancel"
           @change="modalData = $event" :loading="modalLoading"></export-people>
@@ -298,508 +299,520 @@
 </template>
 
 <script>
-import Filters from '@/components/people/Filters'
+  import Filters from '@/components/people/Filters'
 
-import {
-  listViewIcon,
-  gridViewIcon,
-  smallListViewIcon,
-  filterIcon,
-  userPlusIcon,
-  trashIcon,
-  editIcon,
-  groupIcon,
-  mailIconNew,
-  smsIcon,
-  fileIcon,
-  importIcon
-} from '@/utils/icons'
-import {
-  MESSAGE_TYPES
-} from '@/utils'
-import {
-  debounce
-} from 'debounce'
+  import {
+    listViewIcon,
+    gridViewIcon,
+    smallListViewIcon,
+    filterIcon,
+    userPlusIcon,
+    trashIcon,
+    editIcon,
+    groupIcon,
+    mailIconNew,
+    smsIcon,
+    fileIcon,
+    importIcon
+  } from '@/utils/icons'
+  import {
+    MESSAGE_TYPES
+  } from '@/utils'
+  import {
+    debounce
+  } from 'debounce'
 
-export default {
-  name: 'People',
-  data () {
-    return {
-      filters: null,
-      modal: false,
-      displayMessage: '',
-      displayMessageType: MESSAGE_TYPES.info,
-      shouldDisplayMessage: false,
-      MESSAGE_TYPES: MESSAGE_TYPES,
-      activeAction: null,
-      takingAction: false,
-      selectedPeople: [],
-      people: [],
-      total: 0,
-      loadingMore: false,
-      page: 1,
-      ended: false,
-      order: null,
-      peopleOrders: [{
-        id: 1,
-        text: 'Date Updated',
-        value: 'updated_at'
-      },
-      {
-        id: 2,
-        text: 'Date Created',
-        value: 'created_at'
-      },
-      {
-        id: 3,
-        text: 'First Name',
-        value: 'first_name'
-      },
-      {
-        id: 4,
-        text: 'Last Name',
-        value: 'last_name'
-      },
-      {
-        id: 5,
-        text: 'Phone Number',
-        value: 'phone_number'
-      },
-      {
-        id: 6,
-        text: 'Email Address',
-        value: 'email'
-      },
-      {
-        id: 7,
-        text: 'Membership Status',
-        value: 'membership_status'
-      },
-      {
-        id: 8,
-        text: 'Date Joined',
-        value: 'date_joined'
+  export default {
+    name: 'People',
+    data() {
+      return {
+        sideBarWith: 'w-1/3',
+        filters: null,
+        modal: false,
+        displayMessage: '',
+        displayMessageType: MESSAGE_TYPES.info,
+        shouldDisplayMessage: false,
+        MESSAGE_TYPES: MESSAGE_TYPES,
+        activeAction: null,
+        takingAction: false,
+        selectedPeople: [],
+        people: [],
+        total: 0,
+        loadingMore: false,
+        page: 1,
+        ended: false,
+        order: null,
+        peopleOrders: [{
+            id: 1,
+            text: 'Date Updated',
+            value: 'updated_at'
+          },
+          {
+            id: 2,
+            text: 'Date Created',
+            value: 'created_at'
+          },
+          {
+            id: 3,
+            text: 'First Name',
+            value: 'first_name'
+          },
+          {
+            id: 4,
+            text: 'Last Name',
+            value: 'last_name'
+          },
+          {
+            id: 5,
+            text: 'Phone Number',
+            value: 'phone_number'
+          },
+          {
+            id: 6,
+            text: 'Email Address',
+            value: 'email'
+          },
+          {
+            id: 7,
+            text: 'Membership Status',
+            value: 'membership_status'
+          },
+          {
+            id: 8,
+            text: 'Date Joined',
+            value: 'date_joined'
+          }
+        ],
+        orderMenu: false,
+        sort: null,
+        sortMenu: false,
+        peopleSorts: [{
+            id: 1,
+            text: 'Descending',
+            value: 'DESC'
+          },
+          {
+            id: 2,
+            text: 'Ascending',
+            value: 'ASC'
+          }
+        ],
+        viewMenu: false,
+        PeopleViews: [{
+            id: 1,
+            text: 'List View',
+            value: 'list-view',
+            icon: listViewIcon
+          },
+          {
+            id: 2,
+            text: 'Grid View',
+            value: 'grid-view',
+            icon: gridViewIcon
+          }
+        ],
+        view: null,
+        icons: {
+          filter: filterIcon,
+          plus: userPlusIcon,
+          sms: smsIcon,
+          edit: editIcon
+        },
+        peopleMores: [{
+          text: 'Import People',
+          value: 'import-people',
+          icon: importIcon
+        }],
+        moreMenu: false,
+        bulkActions: [{
+            id: 1,
+            text: 'Email People',
+            value: 'email',
+            icon: mailIconNew
+          },
+          {
+            id: 2,
+            text: 'SMS People',
+            value: 'sms',
+            icon: smsIcon
+          },
+          {
+            id: 3,
+            text: 'Assign Groups',
+            value: 'add-groups',
+            icon: groupIcon
+          },
+          {
+            id: 4,
+            text: 'Export People',
+            value: 'export',
+            icon: fileIcon
+          },
+          {
+            id: 8,
+            text: 'Delete People',
+            value: 'delete',
+            icon: trashIcon
+          }
+        ],
+        editingPerson: {},
+        actionablePeople: [],
+        modalAction: null,
+        modalCancel: null,
+        modalData: null,
+        modalLoading: false,
+        export_file_url: null,
+        loaded: false
       }
-      ],
-      orderMenu: false,
-      sort: null,
-      sortMenu: false,
-      peopleSorts: [{
-        id: 1,
-        text: 'Descending',
-        value: 'DESC'
-      },
-      {
-        id: 2,
-        text: 'Ascending',
-        value: 'ASC'
-      }
-      ],
-      viewMenu: false,
-      PeopleViews: [{
-        id: 1,
-        text: 'List View',
-        value: 'list-view',
-        icon: listViewIcon
-      },
-      {
-        id: 2,
-        text: 'Grid View',
-        value: 'grid-view',
-        icon: gridViewIcon
-      }
-      ],
-      view: null,
-      icons: {
-        filter: filterIcon,
-        plus: userPlusIcon,
-        sms: smsIcon,
-        edit: editIcon
-      },
-      peopleMores: [{
-        text: 'Import People',
-        value: 'import-people',
-        icon: importIcon
-      }],
-      moreMenu: false,
-      bulkActions: [{
-        id: 1,
-        text: 'Email People',
-        value: 'email',
-        icon: mailIconNew
-      },
-      {
-        id: 2,
-        text: 'SMS People',
-        value: 'sms',
-        icon: smsIcon
-      },
-      {
-        id: 3,
-        text: 'Assign Groups',
-        value: 'add-groups',
-        icon: groupIcon
-      },
-      {
-        id: 4,
-        text: 'Export People',
-        value: 'export',
-        icon: fileIcon
-      },
-      {
-        id: 8,
-        text: 'Delete People',
-        value: 'delete',
-        icon: trashIcon
-      }
-      ],
-      editingPerson: {},
-      actionablePeople: [],
-      modalAction: null,
-      modalCancel: null,
-      modalData: null,
-      modalLoading: false,
-      export_file_url: null,
-      loaded: false
-    }
-  },
-  components: {
-    'list-view': () => import('@/components/people/ListView'),
-    'grid-view': () => import('@/components/people/GridView'),
-    'email': () => import('@/components/people/Email'),
-    'sms': () => import('@/components/people/SMS'),
-    'edit-person': () => import('@/components/people/Edit'),
-    'add-groups': () => import('@/components/people/AddGroups'),
-    'create': () => import('@/components/people/Create'),
-    'view-person': () => import('@/components/people/View'),
-    'confirm-delete': () => import('@/components/people/ConfirmDelete'),
-    'export-people': () => import('@/components/people/ExportPeople'),
-    'download-export': () => import('@/components/people/DownloadExport'),
-    'import-people': () => import('@/components/people/ImportPeople'),
-    Filters
-  },
-  created () {
-    this.setUpPeopleUI()
-  },
-  metaInfo: {
+    },
+    components: {
+      'list-view': () => import('@/components/people/ListView'),
+      'grid-view': () => import('@/components/people/GridView'),
+      'email': () => import('@/components/people/Email'),
+      'sms': () => import('@/components/people/SMS'),
+      'edit-person': () => import('@/components/people/Edit'),
+      'add-groups': () => import('@/components/people/AddGroups'),
+      'create': () => import('@/components/people/Create'),
+      'view-person': () => import('@/components/people/View'),
+      'confirm-delete': () => import('@/components/people/ConfirmDelete'),
+      'export-people': () => import('@/components/people/ExportPeople'),
+      'download-export': () => import('@/components/people/DownloadExport'),
+      'import-people': () => import('@/components/people/ImportPeople'),
+      Filters
+    },
+    created() {
+      this.setUpPeopleUI()
+    },
+    metaInfo: {
       title: 'People',
       meta: [{
         name: 'description',
         content: 'People Page for the Murcho Platform. Create and manage people in your church.'
       }]
     },
-  mounted () {
-    this.readyCallbacks([this.refresh])
-  },
-  computed: {
-    alertClass () {
-      switch (this.displayMessageType) {
-        case MESSAGE_TYPES.warning:
-          return ['bg-yellow-dark']
-        case MESSAGE_TYPES.error:
-          return ['bg-red-light']
-        default:
-          return ['bg-blue-light']
+    mounted() {
+      this.readyCallbacks([this.refresh])
+    },
+    computed: {
+      alertClass() {
+        switch (this.displayMessageType) {
+          case MESSAGE_TYPES.warning:
+            return ['bg-yellow-dark']
+          case MESSAGE_TYPES.error:
+            return ['bg-red-light']
+          default:
+            return ['bg-blue-light']
+        }
+      },
+      showActions() {
+        console.log(this.selectedPeople.length > 0, 'actions')
+        return this.selectedPeople.length > 0
       }
     },
-    showActions () {
-      console.log(this.selectedPeople.length > 0, 'actions')
-      return this.selectedPeople.length > 0
-    }
-  },
-  methods: {
-    peopleImported () {
-      this.closeModal()
-      this.refresh()
-    },
-    showImport () {
-      this.activeAction = 'import-people'
-      this.modalAction = () => {}
-      this.modalCancel = () => this.closeModal()
-      this.modal = true
-    },
-    searchPeople: debounce(function (e) {
-      this.doPeopleSearch(e)
-    }, 200),
-    async doPeopleSearch (name, page = 1, size = 25) {
-      if (!name) {
-        this.refresh()
-        return
-      }
-
-      const search = name.toLowerCase()
-      const path =
-          `filter_search_people/${search}?page=${page}&size=${size}&order=${
-            this.order.value
-          }&sort=${this.sort.value}`
-      this.loadingMore = true
-
-      try {
-        const response = await this.$http.get(path, this.authToken)
-        this.people = response
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.loadingMore = false
-      }
-    },
-    personCreated (person) {
-      this.people.unshift(person)
-      this.closeModal()
-    },
-    closeModal () {
-      this.modal = false
-      this.activeAction = null
-    },
-    createPerson () {
-      this.activeAction = 'create'
-      this.modal = true
-    },
-    hideActionDrawer () {
-      this.editingPerson = null
-      this.activeAction = null
-      this.takingAction = false
-    },
-    groupsCreated () {
-      this.hideActionDrawer()
-      this.refresh()
-    },
-    updatePerson (person) {
-      if (person) {
-        const index = this.people.findIndex(p => person.id === p.id)
-        this.people.splice(index, 1, person)
-      }
-
-      this.hideActionDrawer()
-    },
-    actionHandler (value) {
-      this.actionablePeople = this.selectedPeople
-      this.activeAction = value
-
-      if (value === 'export') {
-        this.modalAction = () => this.exportPeople(this.actionablePeople)
-        this.modalCancel = () => this.closeModal()
-        this.modal = true
-      } else if (value === 'delete') {
-        this.modalAction = () => this.deletePeople(this.actionablePeople)
-        this.modalCancel = () => this.closeModal()
-        this.modal = true
-      } else {
-        this.takingAction = true
-      }
-    },
-    async exportPeople (peopleIds) {
-      if (!this.modalData) return false
-
-      const path = 'people_bulk_export'
-
-      try {
-        const response = await this.$http.post(
-          path, {
-            people_ids: peopleIds,
-            export_format: this.modalData
-          },
-          this.authToken
-        )
-        this.selectedPeople = []
-        this.actionablePeople = []
+    methods: {
+      peopleImported() {
         this.closeModal()
-
-        this.export_file_url = response.file_url
-        this.activeAction = 'download-export'
+        this.refresh()
+      },
+      showImport() {
+        this.activeAction = 'import-people'
         this.modalAction = () => {}
         this.modalCancel = () => this.closeModal()
         this.modal = true
-      } catch (err) {} finally {}
-    },
-    setUpPeopleUI () {
-      if (!this.order) {
-        const order = localStorage.getItem('people-order')
-        this.order =
-            this.peopleOrders.find(o => o.value === order) ||
-            this.peopleOrders[0]
-      }
+      },
+      searchPeople: debounce(function (e) {
+        this.doPeopleSearch(e)
+      }, 200),
+      async doPeopleSearch(name, page = 1, size = 25) {
+        if (!name) {
+          this.refresh()
+          return
+        }
 
-      if (!this.sort) {
-        const sort = localStorage.getItem('people-sort')
-        this.sort =
-            this.peopleSorts.find(s => s.value === sort) || this.peopleSorts[0]
-      }
+        const search = name.toLowerCase()
+        const path =
+          `filter_search_people/${search}?page=${page}&size=${size}&order=${
+            this.order.value
+          }&sort=${this.sort.value}`
+        this.loadingMore = true
 
-      if (!this.view) {
-        const view = localStorage.getItem('people-view')
-        this.view =
-            this.PeopleViews.find(v => v.value === view) || this.PeopleViews[0]
-      }
-    },
-    handlePersonAction (data) {
-      // console.log(data.action)
-      switch (data.action) {
-        case 'delete':
-          // this.deletePerson(data.person.id, data.index)
-          // show modal for confirmation
-          this.activeAction = data.action
-          this.actionablePeople = [data.person.id]
-          this.modalAction = () =>
-            this.deletePerson(data.person.id, data.index)
+        try {
+          const response = await this.$http.get(path, this.authToken)
+          this.people = response
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.loadingMore = false
+        }
+      },
+      personCreated(person) {
+        this.people.unshift(person)
+        this.closeModal()
+        this.$router.push({
+          name: 'people-person_details',
+          params: {
+            person
+          }
+        })
+      },
+      closeModal() {
+        this.modal = false
+        this.activeAction = null
+      },
+      createPerson() {
+        this.activeAction = 'create'
+        this.modal = true
+      },
+      hideActionDrawer() {
+        this.editingPerson = null
+        this.activeAction = null
+        this.takingAction = false
+        this.sideBarWith = 'w-1/3'
+      },
+      groupsCreated() {
+        this.hideActionDrawer()
+        this.refresh()
+      },
+      updatePerson(person) {
+        if (person) {
+          const index = this.people.findIndex(p => person.id === p.id)
+          this.people.splice(index, 1, person)
+        }
+
+        this.hideActionDrawer()
+      },
+      actionHandler(value) {
+        this.actionablePeople = this.selectedPeople
+        this.activeAction = value
+
+        if (value === 'export') {
+          this.modalAction = () => this.exportPeople(this.actionablePeople)
           this.modalCancel = () => this.closeModal()
           this.modal = true
-          break
-        case 'edit':
-          this.editingPerson = data.person
-          this.activeAction = 'edit-person'
-          this.takingAction = true
-          break
-        case 'add-groups':
-          this.actionablePeople = [data.person.id]
-
-          this.activeAction = 'add-groups'
-          this.takingAction = true
-          break
-        case 'email':
-        case 'sms':
-          this.actionablePeople = [data.person.id]
-
-          this.activeAction = data.action
-          this.takingAction = true
-          break
-        case 'removed-group':
-          this.people.splice(data.personIndex, 1, data.person)
-          break
-        case 'view':
-          this.editingPerson = data.person
-          this.activeAction = 'view'
+        } else if (value === 'delete') {
+          this.modalAction = () => this.deletePeople(this.actionablePeople)
+          this.modalCancel = () => this.closeModal()
           this.modal = true
-          break
-        default:
-          throw new Error('Invalid action provided.')
-      }
-    },
-    async deletePerson (personId, index) {
-      const path = `people/${personId}`
+        } else {
+          this.takingAction = true
+        }
+      },
+      async exportPeople(peopleIds) {
+        if (!this.modalData) return false
 
-      try {
-        await this.$http.delete(path, this.authToken)
-        this.people.splice(index, 1)
-        this.total--
-        this.closeModal()
-      } catch (err) {} finally {}
-    },
-    async deletePeople (peopleIds) {
-      const path = 'people_bulk_delete'
+        const path = 'people_bulk_export'
 
-      try {
-        await this.$http.post(
-          path, {
-            people_ids: peopleIds
-          },
-          this.authToken
-        )
+        try {
+          const response = await this.$http.post(
+            path, {
+              people_ids: peopleIds,
+              export_format: this.modalData
+            },
+            this.authToken
+          )
+          this.selectedPeople = []
+          this.actionablePeople = []
+          this.closeModal()
 
-        this.people = this.people.filter(p => peopleIds.indexOf(p.id) === -1)
-        this.total = this.total - peopleIds.length
-        this.selectedPeople = []
-        this.actionablePeople = []
-        this.closeModal()
-      } catch (err) {} finally {}
-    },
-    async setPeopleView (view) {
-      if (view.id === this.view.id) {
+          this.export_file_url = response.file_url
+          this.activeAction = 'download-export'
+          this.modalAction = () => {}
+          this.modalCancel = () => this.closeModal()
+          this.modal = true
+        } catch (err) {} finally {}
+      },
+      setUpPeopleUI() {
+        if (!this.order) {
+          const order = localStorage.getItem('people-order')
+          this.order =
+            this.peopleOrders.find(o => o.value === order) ||
+            this.peopleOrders[0]
+        }
+
+        if (!this.sort) {
+          const sort = localStorage.getItem('people-sort')
+          this.sort =
+            this.peopleSorts.find(s => s.value === sort) || this.peopleSorts[0]
+        }
+
+        if (!this.view) {
+          const view = localStorage.getItem('people-view')
+          this.view =
+            this.PeopleViews.find(v => v.value === view) || this.PeopleViews[0]
+        }
+      },
+      handlePersonAction(data) {
+        // console.log(data.action)
+        switch (data.action) {
+          case 'delete':
+            // this.deletePerson(data.person.id, data.index)
+            // show modal for confirmation
+            this.activeAction = data.action
+            this.actionablePeople = [data.person.id]
+            this.modalAction = () =>
+              this.deletePerson(data.person.id, data.index)
+            this.modalCancel = () => this.closeModal()
+            this.modal = true
+            break
+          case 'edit':
+            this.$router.push({
+              name: 'people-edit_person_details',
+              params: {
+                person: data.person
+              }
+            })
+            break
+          case 'add-groups':
+            this.actionablePeople = [data.person.id]
+
+            this.activeAction = 'add-groups'
+            this.takingAction = true
+            break
+          case 'email':
+          case 'sms':
+            this.actionablePeople = [data.person.id]
+
+            this.activeAction = data.action
+            this.takingAction = true
+            break
+          case 'removed-group':
+            this.people.splice(data.personIndex, 1, data.person)
+            break
+          case 'view':
+            this.sideBarWith = 'w-full'
+            this.editingPerson = data.person
+            this.activeAction = 'view'
+            this.takingAction = true
+            break
+          default:
+            throw new Error('Invalid action provided.')
+        }
+      },
+      async deletePerson(personId, index) {
+        const path = `people/${personId}`
+
+        try {
+          await this.$http.delete(path, this.authToken)
+          this.people.splice(index, 1)
+          this.total--
+          this.closeModal()
+        } catch (err) {} finally {}
+      },
+      async deletePeople(peopleIds) {
+        const path = 'people_bulk_delete'
+
+        try {
+          await this.$http.post(
+            path, {
+              people_ids: peopleIds
+            },
+            this.authToken
+          )
+
+          this.people = this.people.filter(p => peopleIds.indexOf(p.id) === -1)
+          this.total = this.total - peopleIds.length
+          this.selectedPeople = []
+          this.actionablePeople = []
+          this.closeModal()
+        } catch (err) {} finally {}
+      },
+      async setPeopleView(view) {
+        if (view.id === this.view.id) {
+          this.viewMenu = false
+          return
+        }
+
+        this.view = view
+        await this.$nextTick()
         this.viewMenu = false
-        return
-      }
 
-      this.view = view
-      await this.$nextTick()
-      this.viewMenu = false
+        localStorage.setItem('people-view', view.value)
+      },
+      async setPeopleOrder(order) {
+        if (order.id === this.order.id) {
+          this.orderMenu = false
+          return
+        }
 
-      localStorage.setItem('people-view', view.value)
-    },
-    async setPeopleOrder (order) {
-      if (order.id === this.order.id) {
+        this.order = order
+        await this.$nextTick()
         this.orderMenu = false
-        return
-      }
 
-      this.order = order
-      await this.$nextTick()
-      this.orderMenu = false
+        localStorage.setItem('people-order', order.value)
+        this.refresh(false)
+      },
+      async setPeopleSort(sort) {
+        if (sort.id === this.sort.id) {
+          this.sortMenu = false
+          return
+        }
 
-      localStorage.setItem('people-order', order.value)
-      this.refresh(false)
-    },
-    async setPeopleSort (sort) {
-      if (sort.id === this.sort.id) {
+        this.sort = sort
+        await this.$nextTick()
         this.sortMenu = false
-        return
-      }
 
-      this.sort = sort
-      await this.$nextTick()
-      this.sortMenu = false
+        localStorage.setItem('people-sort', sort.value)
+        this.refresh(false)
+      },
+      goBack() {
+        if (this.page === 1) return false
+        const page = this.page - 1
+        this.getPeople(page)
+      },
+      goForward() {
+        if (this.ended) return false
+        const page = this.page + 1
+        this.getPeople(page)
+      },
+      refresh(isNew = true) {
+        this.getPeople()
+        if (isNew) this.getPeopleCount()
+      },
+      async getPeopleCount() {
+        const path = 'total_people'
 
-      localStorage.setItem('people-sort', sort.value)
-      this.refresh(false)
-    },
-    goBack () {
-      if (this.page === 1) return false
-      const page = this.page - 1
-      this.getPeople(page)
-    },
-    goForward () {
-      if (this.ended) return false
-      const page = this.page + 1
-      this.getPeople(page)
-    },
-    refresh (isNew = true) {
-      this.getPeople()
-      if (isNew) this.getPeopleCount()
-    },
-    async getPeopleCount () {
-      const path = 'total_people'
+        try {
+          const response = await this.$http.get(path, this.authToken)
+          this.total = response
+          this.loaded = true
+        } catch (error) {}
+      },
+      async getPeople(page = 1, size = 25) {
+        let filters = this.filters
 
-      try {
-        const response = await this.$http.get(path, this.authToken)
-        this.total = response
-        this.loaded = true
-      } catch (error) {}
-    },
-    async getPeople (page = 1, size = 25) {
-      let filters = this.filters
+        if (!filters) {
+          filters = this.$refs['filters'] && this.$refs['filters'].getActiveFilters()
+        }!filters && console.log('filter absent', this.$refs['filters'])
+        if (!filters) return
 
-      if (!filters) {
-        filters = this.$refs['filters'] && this.$refs['filters'].getActiveFilters()
-      }!filters && console.log('filter absent', this.$refs['filters'])
-      if (!filters) return
-
-      const path =
+        const path =
           `get_people_with_filter?page=${page}&size=${size}&order=${
             this.order.value
           }&sort=${this.sort.value}`
-      this.loadingMore = true
+        this.loadingMore = true
 
-      try {
-        const response = await this.$http.post(path, {
-          filters: filters
-        }, this.authToken)
+        try {
+          const response = await this.$http.post(path, {
+            filters: filters
+          }, this.authToken)
 
-        if (response.length) {
-          this.people = response
-          this.page = page
+          if (response.length) {
+            this.people = response
+            this.page = page
+          }
+
+          if (response.length < size) this.ended = true
+          else this.ended = false
+        } catch (err) {} finally {
+          this.loadingMore = false
         }
-
-        if (response.length < size) this.ended = true
-        else this.ended = false
-      } catch (err) {} finally {
-        this.loadingMore = false
+      }
+    },
+    watch: {
+      filters(val) {
+        this.refresh(false)
       }
     }
-  },
-  watch: {
-    filters (val) {
-      this.refresh(false)
-    }
   }
-}
 
 </script>

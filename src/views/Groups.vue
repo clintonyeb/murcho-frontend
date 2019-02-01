@@ -67,7 +67,7 @@
                   This group has no people.
                 </h4>
                 <h4 class="text-grey text-xl text-center mt-4">
-                  You have not added any people to this group.
+                  You have not added any person to this group.
                   Please use the search above to add people here.
                 </h4>
               </div>

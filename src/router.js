@@ -53,6 +53,18 @@ export default new Router({
           path: 'services',
           name: 'services',
           component: () => import(/* webpackChunkName: "services" */ './views/Services.vue')
+        },
+        {
+          path: 'people/person_details',
+          name: 'people-person_details',
+          props: true,
+          component: () => import(/* webpackChunkName: "people-person_details" */ './components/people/PersonDetails.vue')
+        },
+        {
+          path: 'people/edit_person_details',
+          name: 'people-edit_person_details',
+          props: true,
+          component: () => import(/* webpackChunkName: "people-edit_person_details" */ './components/people/EditPerson.vue')
         }
       ]
     },

@@ -92,9 +92,6 @@ let startDateComp = null
 export default {
   name: 'Edit-Event',
   props: {
-    calendar_id: {
-      required: true
-    },
     startDate: {
       required: false
     },

@@ -1,10 +1,6 @@
 <template>
   <div class="w-full lg:h-screen font-sans">
-    <nav class="flex items-center justify-between flex-wrap p-4 h-16  bg-white lg:fixed mb-4 lg:mb-0">
-      <div class="flex items-center flex-no-shrink h-8">
-        <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-8">
-      </div>
-    </nav>
+    <page-nav></page-nav>
 
     <div class="absolute flex items-center text-white text-sm font-bold px-4 py-3 w-full mb-4 animated tada" role="alert"
       v-if="shouldDisplayMessage" :class="alertClass" style="animation-delay: 1s;">
