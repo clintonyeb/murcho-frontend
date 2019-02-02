@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex items-center justify-between flex-wrap p-3 shadow-md lg:shadow  font-sans bg-white">
+  <nav class="flex items-center justify-between flex-wrap p-3 shadow-md lg:shadow font-sans bg-white">
     <div class="flex items-center flex-no-shrink mr-24 h-8">
       <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-8">
     </div>

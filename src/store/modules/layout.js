@@ -19,7 +19,8 @@ const state = {
     state: false,
     message: '',
     type: ''
-  }
+  },
+  cacheState: null
 }
 
 const getters = {}
@@ -27,6 +28,9 @@ const getters = {}
 const actions = {}
 
 const mutations = {
+  SERVICE_WORKER (state, type) {
+    state.cacheState = type
+  },
   SET_APP_READY (state, payload) {
     state.appReady = payload
   },
