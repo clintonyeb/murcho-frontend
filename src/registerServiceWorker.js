@@ -16,9 +16,16 @@ if (process.env.NODE_ENV === 'production') {
       console.log('Content has been cached for offline use.')
       store.commit('SERVICE_WORKER', 'CACHED')
     },
-    updated () {
+    updated (registration) {
       console.log('New content is available; please refresh.')
-      store.commit('SERVICE_WORKER', 'UPDATED')
+
+      if (registration) {
+        registration.unregister().then(function () {
+          store.commit('SERVICE_WORKER', 'UPDATED')
+        })
+      } else {
+        store.commit('SERVICE_WORKER', 'UPDATED')
+      }
     },
     offline () {
       console.log('No internet connection found. App is running in offline mode.')
